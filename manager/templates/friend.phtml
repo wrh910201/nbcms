@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+{if $act eq 'list'}
+<a href="friend.php?act=add">新增友情链接</a>
+<table>
+{foreach from=$friends item=friend}
+<tr><td>{$friend.name}</td><td>{$friend.url}</td><td>{$friend.orderView}</td><td>{$friend.type}</td>
+    <td>
+        <a href="friend.php?act=edit&id={$friend.id}">编辑</a>|
+        <a href="friend.php?act=delete&id={$friend.id}">删除</a>
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq 'add'}
+<form name="friendAddForm" method="POST" enctype="multipart/form-data">
+友情链接名称：<input type="text" name="name"/><br/>
+友情链接URL：<input type="text" name="url"/><br/>
+友情链接类型：<input type="radio" name="type" value="text" checked="checked"/>文本
+              <input type="radio" name="type" value="image"/>图片<br/>
+链接图片：<input type="file" name="img"/><br/>
+允许权重传递：<input type="radio" name="isFollow" value="1" checked="checked"/>是
+              <input type="radio" name="isFollow" value="0"/>否<br/>
+排序：<input type="text" name="orderView" value="50"/>
+<input type="submit" name="submit" value="添加"/>
+<input type="hidden" name="opera" value="add"/>
+</form>
+{/if}
+
+{if $act eq 'edit'}
+<form name="friendEdiForm" method="POST" enctype="multipart/form-data">
+友情链接名称：<input type="text" name="name" value="{$friend.name}"/><br/>
+友情链接URL：<input type="text" name="url" value="{$friend.url}"/><br/>
+友情链接类型：<input type="radio" name="type" value="text" {if $friend.type eq 'text'}checked="checked"{/if}/>文本
+              <input type="radio" name="type" value="image" {if $friend.type eq 'image'}checked="checked"{/if}/>图片<br/>
+链接图片：<input type="file" name="img"/>
+{if $friend.img neq ''}
+<img src="../{$friend.img}"/>
+{/if}<br/>
+允许权重传递：<input type="radio" name="isFollow" value="1" {if $friend.isFollow eq 1}checked="checked"{/if}/>是
+              <input type="radio" name="isFollow" value="0" {if $friend.isFollow eq 0}checked="checked"{/if}/>否<br/>
+排序：<input type="text" name="orderView" value="{$friend.orderView}"/>
+<input type="submit" name="submit" value="添加"/>
+<input type="hidden" name="opera" value="edit"/>
+<input type="hidden" name="id" value="{$friend.id}"/>
+</form>
+{/if}
+</body>
+</html>

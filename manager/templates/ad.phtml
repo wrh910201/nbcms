@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+{if $act eq 'list'}
+<a href="ad.php?act=add">添加广告</a>
+<table>
+{foreach from=$ads item=ad}
+<tr><td><img src="../{$ad.img}" width="320px"/></td><td>{$ad.alt}</td><td>{$ad.url}</td><td>{$ad.clickTime}</td>
+    <td>
+        <a href="ad.php?act=edit&id={$ad.id}">编辑</a>|
+        <a href="ad.php?act=delete&id={$ad.id}">删除</a>
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq 'add'}
+<form name="adAddForm" method="POST" enctype="multipart/form-data">
+替换文字：<input type="text" name="alt"/><br/>
+链接：<input type="text" name="url"/><br/>
+广告图片：<input type="file" name="img"/><br/>
+广告位置：<select name="adPositionId">
+            {foreach from=$adPositions item=adPosition}
+            <option value="{$adPosition.id}">{$adPosition.name}</option>
+            {/foreach}
+          </select><br/>
+开始时间：<input type="text" name="startTime"/><br/>
+结束时间：<input type="text" name="endTime"/><br/>
+<input type="submit" name="submit" value="添加"/>
+<input type="hidden" name="opera" value="add"/>
+</form>
+{/if}
+
+{if $act eq 'edit'}
+<form name="adEditForm" method="POST" enctype="multipart/form-data">
+替换文字：<input type="text" name="alt" value="{$ad.alt}"/><br/>
+链接：<input type="text" name="url" value="{$ad.url}"/><br/>
+广告图片：<input type="file" name="img"/>
+<img src="../{$ad.img}"/>
+<br/>
+广告位置：<select name="adPositionId">
+            {foreach from=$adPositions item=adPosition}
+            <option value="{$adPosition.id}" {if $adPosition.id eq $ad.adPositionId}selected="selected"{/if}>{$adPosition.name}</option>
+            {/foreach}
+          </select><br/>
+开始时间：<input type="text" name="startTime" value="{$ad.startTime}"/><br/>
+结束时间：<input type="text" name="endTime" value="{$ad.endTime}"/><br/>
+<input type="submit" name="submit" value="添加"/>
+<input type="hidden" name="opera" value="edit"/>
+<input type="hidden" name="id" value="{$ad.id}"/>
+</form>
+{/if}
+</body>
+</html>

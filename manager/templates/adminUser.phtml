@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+{if $act eq 'list'}
+<a href="adminUser.php?act=add">添加管理员</a>
+<table>
+{foreach from=$admins item=admin}
+<tr><td>{$admin.account}</td><td>{$admin.name}</td><td>{$admin.email}</td><td>{$admin.mobile}</td>
+    <td>
+        {if $admin.roleId neq 1}
+        <a href="adminUser.php?act=edit&account={$admin.account}">编辑</a>|
+        <a href="adminUser.php?act=delete&account={$admin.account}">删除</a>
+        {/if}
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq 'add'}
+<form name="adminAddForm" method="POST">
+账号：<input type="text" name="account"/><br/>
+密码：<input type="password" name="password"/><br/>
+姓名：<input type="text" name="name"/><br/>
+性别：<input type="radio" name="sex" value="M"/>男
+      <input type="radio" name="sex" value="F"/>女<br/>
+角色：<select name="roleId">
+        {foreach from=$roles item=role}
+        <option value="{$role.id}">{$role.name}</option>
+        {/foreach}
+      </select><br/>
+电子邮箱：<input type="text" name="email"/><br/>
+手机号码：<input type="text" name="mobile"/><br/>
+头像：<input type="file" name="photo"/><br/>
+<input type="submit" name="submit" value="添加管理员"/>
+<input type="hidden" name="opera" value="add"/>
+</form>
+{/if}
+
+{if $act eq 'edit'}
+<form name="adminEditForm" method="POST">
+<input type="hidden" name="account" value="{$admin.account}"/><br/>
+修改密码：<input type="password" name="password"/><br/>
+姓名：<input type="text" name="name" value="{$admin.name}"/><br/>
+性别：<input type="radio" name="sex" value="M" {if $admin.sex eq 'M'}checked="checked"{/if}/>男
+      <input type="radio" name="sex" value="F" {if $admin.sex eq 'F'}checked="checked"{/if}/>女<br/>
+角色：<select name="roleId">
+        {foreach from=$roles item=role}
+        <option value="{$role.id}" {if $role.id eq $admin.roleId}selected="selected"{/if}>{$role.name}</option>
+        {/foreach}
+     </select><br/>
+电子邮箱：<input type="text" name="email" value="{$admin.email}"/><br/>
+手机号码：<input type="text" name="mobile" value="{$admin.mobile}"/><br/>
+头像：<input type="file" name="photo"/><br/>
+{if $admin.photo neq ''}
+<img src="../{$admin.photo}"/>
+{/if}
+<input type="submit" name="submit" value="修改管理员"/>
+<input type="hidden" name="opera" value="edit"/>
+<input type="hidden" name="account" value="{$admin.account}"/>
+</form>
+
+{/if}
+</body>
+</html>

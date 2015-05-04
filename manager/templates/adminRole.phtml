@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+{if $act eq 'list'}
+<a href="adminRole.php?act=add">添加管理员角色</a>
+<table>
+{foreach from=$adminRoles item=role}
+<tr><td>{$role.name}</td>
+    <td>
+        <a href="adminRole.php?act=edit&id={$role.id}">编辑</a>|
+        <a href="adminRole.php?act=delete&id={$role.id}">删除</a>
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq 'add'}
+<form name="adminRoleAddForm" method="POST">
+角色名：<input type="text" name="name" /><br/>
+权限：
+{foreach from=$purview item=pur name=purview}
+<input type="checkbox" name="purviews[]" value="{$pur}"/>{$purviewL.$pur}
+{if $smarty.foreach.purview.iteration mod 4 eq 0}<br/>{/if}
+{/foreach}
+<br/>
+<input type="submit" name="submit" value="添加角色"/>
+<input type="hidden" name="opera" value="add"/>
+</form>
+{/if}
+
+{if $act eq 'edit'}
+<form name="adminRoleEditForm" method="POST">
+角色名：<input type="text" name="name" value="{$adminRole.name}"/><br/>
+权限：
+{foreach from=$purview item=pur name=purview}
+<input type="checkbox" name="purviews[]" value="{$pur}" {if isset($purviewC.$pur)}checked="checked"{/if}/>{$purviewL.$pur}
+{if $smarty.foreach.purview.iteration mod 4 eq 0}<br/>{/if}
+{/foreach}
+<br/>
+<input type="submit" name="submit" value="添加角色"/>
+<input type="hidden" name="opera" value="edit"/>
+<input type="hidden" name="id" value="{$adminRole.id}"/>
+</form>
+{/if}
+</body>
+</html>

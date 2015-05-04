@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+{if $act eq 'list'}
+<a href="category.php?act=add">添加产品分类</a>
+<table>
+    {foreach from=$categorys item=cat}
+    <tr><td>{$cat.name}</td>
+        <td>
+            <a href="../category.php?id={$cat.id}">查看</a>|
+            <a href="category.php?act=edit&id={$cat.id}">编辑</a>|
+            <a href="category.php?act=delete&id={$cat.id}">删除</a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+{/if}
+
+{if $act eq 'add'}
+<form name="categoryAddForm" method="POST">
+分类名称：<input type="text" name="name"/><br/>
+父级分类：<select name="parentId">
+            <option value="0">顶级分类</option>
+            {foreach from=$categorys item=cat}
+            <option value="{$cat.id}">{$cat.name}</option>
+            {/foreach}
+          </select><br/>
+分类关键词：<input type="text" name="keywords"/><br/>
+分类简介：<textarea name="description"></textarea><br/>
+<input type="submit" name="submit" name="添加分类"/>
+<input type="hidden" name="opera" value="add"/>
+</form>
+{/if}
+
+{if $act eq 'edit'}
+<form name="categoryEditForm" method="POST">
+分类名称：<input type="text" name="name" value="{$category.name}"/><br/>
+父级分类：<select name="parentId">
+            <option value="0">顶级分类</option>
+            {foreach from=$categorys item=cat}
+            <option value="{$cat.id}" {if $category.parentId eq $cat.id}selected="selected"{/if}>{$cat.name}</option>
+            {/foreach}
+          </select><br/>
+分类关键词：<input type="text" name="keywords" value="{$category.keywords}"/><br/>
+分类简介：<textarea name="description">{$category.description}</textarea><br/>
+<input type="submit" name="submit" name="提交修改"/>
+<input type="hidden" name="opera" value="edit"/>
+<input type="hidden" name="id" value="{$category.id}"/>
+</form>
+{/if}
+</body>
+</html>

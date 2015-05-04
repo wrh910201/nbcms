@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/sysconf.js"></script>
+</head>
+<body>
+{if $act eq 'list'}
+<table>
+{foreach from=$sysconf item=conf}
+<tr>
+    <td>{$conf.name}</td>
+    <td>
+    {if $conf.type eq 'text' or $conf.type eq 'textarea'}
+        {$conf.value}
+    {/if}
+
+    {if $conf.type eq 'file'}
+        <img src="{$conf.value}"/>
+    {/if}
+    
+    {if $conf.type eq 'radio'}
+        {if $conf.value}
+        是
+        {else}
+        否
+        {/if}
+    {/if}
+    </td>
+    <td>
+        <a href="sysconf.php?act=edit&key={$conf.key}">编辑</a>
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq 'add'}
+<form name="sysconfAddForm" method="POST" enctype="multipart/form-data">
+显示名：<input type="text" name="name"/>
+key：<input type="text" name="key"/>
+类型：<input type="radio" name="type" value="text"/>文本
+      <input type="radio" name="type" value="file"/>图片
+      <input type="radio" name="type" value="radio"/>布尔值
+取值：<input type="text" name="value"/>
+图片：<input type="file" name="value"/>
+<input type="submit" name="submit" value="添加"/>
+<input type="hidden" name="opera" value="add"/>
+</form>
+{/if}
+
+{if $act eq 'edit'}
+<form name="sysconfEditForm" method="POST" enctype="multipart/form-data">
+{$conf.name}：
+{if $conf.type eq 'file' || $conf.type eq 'text'}
+<input type="{$conf.type}" name="value" {if $conf.type eq "text"}value="{$conf.value}"{/if}/>
+{/if}
+
+{if $conf.type eq 'radio'}
+<input type="radio" name="value" value="0" {if $conf.value eq 0}checked="checked"{/if}/>否
+<input type="radio" name="value" value="1" {if $conf.value}checked="checked"{/if}/>是
+{/if}
+
+{if $conf.type eq 'textarea'}
+<textarea name="value">{$conf.value}</textarea>
+{/if}
+<input type="hidden" name="key" value="{$conf.key}"/>
+<input type="hidden" name="type" value="{$conf.type}"/>
+<input type="hidden" name="opera" value="edit"/>
+{if $conf.type eq "file"}
+<img src="{$conf.value}"/>
+{/if}
+<input type="submit" name="submit" value="修改"/>
+</form>
+{/if}
+</body>
+</html>

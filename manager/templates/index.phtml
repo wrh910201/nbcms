@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+{if $act eq 'login'}
+<form method="POST" name="loginForm">
+账号：<input type="text" name="account"/>
+{if isset($error.account)}<font color="red">{$error.account}</font>{/if}
+密码：<input type="password" name="password"/>
+{if isset($error.password)}<font color="red">{$error.password}</font>{/if}
+<input type="submit" name="submit" value="登录"/>
+<input type="hidden" name="opera" value="login"/>
+<a href="index.php?act=forgot">忘记密码</a>
+</form>
+{/if}
+
+{if $act eq 'forgot'}
+<form method="POST" name="forgotForm">
+账号：<input type="text" name="account"/>
+{if isset($error.account)}<font color="red">{$error.account}</font>{/if}
+E-mail：<input type="text" name="email"/>
+{if isset($error.email)}<font color="red">{$error.email}</font>{/if}
+手机号码：<input type="text" name="mobile"/>
+{if isset($error.mobile)}<font color="red">{$error.mobile}</font>{/if}
+<input type="submit" name="submit" value="找回密码"/>
+<input type="hidden" name="opera" value="forgot"/>
+<a href="index.php">立即登录</a>
+</form>
+{/if}
+</body>
+</html>

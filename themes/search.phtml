@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>{$siteName}</title>
+<meta name="keywords" content="{$siteKeywords}"/>
+<meta name="description" content="{$siteDescription}"/>
+<link href="css/style.css" type="text/css" rel="stylesheet"/>
+<link rel="shortcut icon" type="image/x-icon" href="{$domain}/favoriate.ico" media="screen"/>
+<script type="text/javascript" src="js/jquery.js?v=1.0.0"></script>
+<script type="text/javascript" src="js/index.js?v=1.0.0"></script>
+<meta name="author" content="Winsen"/>
+</head>
+<body>
+{include file="library/header.lbi"}
+<div class="content clearfix">
+    <div class="index-ad">
+        {include file="library/ads.lbi"}
+    </div>
+    <div class="fast-nav">
+    </div>
+</div>
+<div class="content clearfix mt">
+    <div class="channel">
+        <h2 class="channel-title">{$LANG.company_introduce}</h2>
+        <div class="channel-content clearfix">
+            <img src="{$bigLogo}" alt="{$siteName}"/>
+            <p>{$companyIntroduce}</p>
+        </div>
+    </div>
+
+    <div class="channel ml">
+        <h2 class="channel-title">{$LANG.news}<span class="channel-more"><a href="article.php">{$LANG.more}</a></span></h2>
+        <ul class="channel-list clearfix">
+        {if $news neq null}
+        {foreach from=$news item=article}
+        <li><a href="{'article'|build_url:$article.id}" title="{$article.title}">{$article.title}</a><span class="date">{$article.publishTime}</span></li>
+        {/foreach}
+        {/if}
+        </ul>
+    </div>
+</div>
+<div class="content mt big-channel clearfix">
+    <h2 class="big-channel-title">{$LANG.product_center}<span class="channel-more"><a href="product.php">{$LANG.more}</a></span></h2>
+    <div class="product-channel">
+    </div>
+</div>
+<div class="content mt big-channel clearfix">
+    <h2 class="big-channel-title">{$LANG.lisence}</h2>
+    <div class="product-channel">
+    </div>
+</div>
+
+{include file="library/footer.lbi"}
+</body>
+</html>

@@ -1,0 +1,22 @@
+<div class="bottom-nav clearfix">
+    {if $bottomNav neq null}
+    {foreach from=$bottomNav item=nav name=bottomNav}
+    <a href="{$nav.url}" title="{$nav.name}" {if $nav.isOpenNew}target="_blank"{/if}>{$nav.name}</a>
+    {if $smarty.foreach.bottomNav.iteration neq $smarty.foreach.bottomNav.last}
+    |
+    {/if}
+    {/foreach}
+    {/if}
+</div>
+<div class="footer clearfix">
+    <p class="copyright">CopyRight &copy; 2008-{$year} {$owner} All rights reserved.</p>
+    <p class="owner-info">
+        {$LANG.address}:{$ownerAddress}&nbsp;&nbsp;
+        {$LANG.hot_line}:{$serverPhone}&nbsp;&nbsp;
+        {$LANG.email}:<a href="mailto:{$serverEmail}" class="email">{$serverEmail}</a>
+    </p>
+    <a href="http://www.miitbeian.gov.cn" class="icp" title="{$icp}">{$icp}</a>
+    <!-- 统计代码位置 -->
+    {$staticsCode}
+    <!-- 统计代码结束 -->
+</div>

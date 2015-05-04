@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>{$pageTitle}-{$siteName}</title>
+<meta name="keywords" content="{$keywords}"/>
+<meta name="description" content="{$description}"/>
+<link href="css/style.css" type="text/css" rel="stylesheet"/>
+<link rel="shortcut icon" type="image/x-icon" href="{$domain}/favoriate.ico" media="screen"/>
+<script type="text/javascript" src="js/jquery.js?v=1.0.0"></script>
+<script type="text/javascript" src="js/index.js?v=1.0.0"></script>
+<meta name="author" content="Winsen"/>
+</head>
+<body>
+{include file="library/header.lbi"}
+<div class="content ur-here">
+{$LANG.urHere}:
+{foreach from=$urHere item=tag}
+{if $tag.link eq ''}
+{$tag.title}
+{else}
+<a href="{$tag.link}" title="{$tag.title}">{$tag.title}></a>
+{/if}
+{/foreach}
+</div>
+
+<div class="content clearfix">
+	<div class="article-left">
+		<h2 class="article-cat-title">{$LANG.articleCat}</h2>
+		<ul class="article-cat">
+		{foreach from=$categoryList item=cat_}
+		<li><a href="{'articleCat'|build_url:$cat_}" title="{$cat_.name}" {if $cat_.id eq $cid}class="cur"{/if}>{$cat_.name}</a></li>
+		{/foreach}
+		</ul>
+	</div>
+	<div class="article-right">
+		<h2 class="article-cat-title">{$cat.name}</h2>
+		{if $articles}
+		<ul class="article-list">
+		{foreach from=$articles item=article}
+			<li class="article-list-item">
+				<a href="{'article'|build_url:$article.id}" title="{$article.title}" class="article-item-title">{$article.title}</a>
+				<p class="article-item-desc">{$article.description|truncate:138:'...'}[<a href="{'article'|build_url:$article.id}" title="{$article.title}">{$LANG.readAll}]</a></p>
+			</li>
+		{/foreach}
+		</ul>
+		{else}
+		{$LANG.notFoundArticle}
+		{/if}
+	</div>
+</div>
+{include file="library/footer.lbi"}
+</body>
+</html>

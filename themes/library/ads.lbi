@@ -1,0 +1,16 @@
+{if $ads}
+<div id={$id}>
+{foreach from=$ads.ad item=ad}
+    <a href="{'ads'|build_url:$ad.id}" title="{$ad.alt}">
+        <img src="{$ad.img}" alt="{$ad.alt}" width="{$ads.width}px" height="{$ads.height}px"/>
+    </a>
+{/foreach}
+</div>
+<div id="pager">
+</div>
+<script type="text/javascript">
+window.onload = function() {
+    {$ads.code}
+}
+</script>
+{/if}

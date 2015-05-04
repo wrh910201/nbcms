@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/product.js"></script>
+<link rel="stylesheet" href="../plugins/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" href="../plugins/kindeditor/plugins/code/prettify.css" />
+<script type="text/javascript" src="../plugins/kindeditor/kindeditor.js"></script>
+<script type="text/javascript" src="../plugins/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript" src="../plugins/kindeditor/plugins/code/prettify.js"></script>
+</head>
+<body>
+{if $act eq 'list'}
+<a href="product.php?act=add">新增产品</a>
+<table>
+{foreach from=$products item=product name=products}
+<tr>
+    <td>{$smarty.foreach.products.iteration}</td>
+    <td>{$product.name}</td>
+    <td>{$product.category}</td>
+    <td>
+        <a href="../product.php?id={$product.id}">查看</a>|
+        <a href="product.php?act=edit&id={$product.id}">编辑</a>|
+        <a href="product.php?act=delete&id={$product.id}">删除</a>
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq 'cycle'}
+<table>
+{foreach from=$products item=product name=products}
+<tr>
+    <td>{$smarty.foreach.products.iteration}</td>
+    <td>{$product.title}</td>
+    <td>{$product.category}</td>
+    <td>{$product.publishTime}</td>
+    <td>
+        <a href="../product.php?id={$product.id}">查看</a>|
+        <a href="product.php?act=remove&id={$product.id}">彻底删除</a>
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq 'add'}
+<form method="POST" name="productAddForm" enctype="multipart/form-data">
+产品名：<input type="text" name="name"/><br/>
+零售价：<input type="text" name="price"/><br/>
+市场价：<input type="text" name="marketPrice"/><br/>
+关键词：<input type="text" name="keywords"/><br/>
+简要描述：<textarea name="description"></textarea><br/>
+产品分类：<select name="categoryId">
+          {foreach from=$category item=cat}
+            <option value="{$cat.id}">{$cat.name}</option>
+          {/foreach}
+          </select><br/>
+详细介绍：<textarea name="detail"></textarea><br/>
+产品相册：<input type="button" onclick="addGallery()" value="添加图片"/>
+          <div id="gallery"><input type="file" name="gallery[]"/>描述：<input type="text" name="alt[]"/><br/></div><br/>
+<input type="submit" name="submit" value="提交"/>
+<input type="hidden" name="opera" value="add"/>
+</form>
+<script type="text/javascript">
+{literal}
+function addGallery()
+{
+    var ele = '<input type="file" name="gallery[]"/>描述：<input type="text" name="alt[]"/><br/>';
+    document.getElementById('gallery').innerHTML += ele;
+}
+KindEditor.ready(function(K)
+{
+    var editor1 = K.create("textarea[name='detail']", {
+    	cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+		uploadJson : '../plugins/kindeditor/upload_json.php',
+		fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
+		allowFileManager : true,
+		afterCreate : function() {
+			var self = this;
+            K.ctrl(document, 13, function() {
+				self.sync();
+				K('form[name=productAddForm]')[0].submit();
+			});
+			K.ctrl(self.edit.doc, 13, function() {
+				self.sync();
+				K('form[name=productAddForm]')[0].submit();
+			});
+		}
+	});		
+    prettyPrint();		
+});
+{/literal}
+</script>
+{/if}
+
+{if $act eq 'edit'}
+<form method="POST" name="productEditForm" enctype="multipart/form-date">
+产品名称：<input type="text" name="name" value="{$product.name}"/><br/>
+零售价：<input type="text" name="price" value="{$product.price}"/><br/>
+市场价：<input type="text" name="marketPrice" value="{$product.marketPrice}"/><br/>
+关键词：<input type="text" name="keywords" value="{$product.keywords}"/><br/>
+简要描述：<textarea name="description">{$product.description}</textarea><br/>
+产品分类：<select name="categoryId">
+          {foreach from=$category item=cat}
+            <option value="{$cat.id}" {if $product.categoryId eq $cat.id}selected="selected"{/if}>{$cat.name}</option>
+          {/foreach}
+          </select><br/>
+详细描述：<textarea name="detail">{$product.detail}</textarea><br/>
+相册：<input type="button" onclick="addGallery()" value="添加图片"/><br/>
+      <div id="gallery">
+        <input type="file" name="gallery[]"/>图片描述：<input type="text" name="alt[]"/>
+      </div><br/>
+<input type="submit" name="submit" value="提交修改"/>
+<input type="hidden" name="opera" value="edit"/>
+<input type="hidden" name="id" value="{$product.id}"/>
+</form>
+<script>
+{literal}
+function addGallery()
+{
+    var ele = '<input type="file" name="gallery[]"/>描述：<input type="text" name="alt[]"/><br/>';
+    document.getElementById('gallery').innerHTML += ele;
+}
+
+	KindEditor.ready(function(K) {
+		var editor1 = K.create('textarea[name="content"]', {
+			cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+			uploadJson : '../plugins/kindeditor/upload_json.php',
+			fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
+			allowFileManager : true,
+			afterCreate : function() {
+				var self = this;
+                K.ctrl(document, 13, function() {
+					self.sync();
+					K('form[name=productAddForm]')[0].submit();
+				});
+				K.ctrl(self.edit.doc, 13, function() {
+					self.sync();
+					K('form[name=productAddForm]')[0].submit();
+				});
+			}
+		});
+		prettyPrint();		
+    });
+{/literal}
+</script>
+
+{/if}
+</body>
+</html>

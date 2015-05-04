@@ -1,0 +1,30 @@
+<div class="header clearfix">
+    <div class="logo">
+        <a href="{$domain}" title="{$siteName}">
+            <img src="{$logo}" alt="{$siteName}"/>
+        </a>
+    </div>
+    <h1 class="theme">{$theme}</h1>
+    <div class="tool-box">
+        <div class="top-nav">
+        {if $topNav neq null}
+        {foreach from=$topNav item=nav name=topNav}
+        <a href="{$nav.url}" title="{$nav.name}" {if $nav.isOpenNew}target="_blank"{/if}>{$nav.name}</a>
+        {if $smarty.foreach.topNav.last neq $smarty.foreach.topNav.iteration}
+        |
+        {/if}
+        {/foreach}
+        {/if}
+        </div>
+        <p class="hot-line">{$LANG.hot_line}<font color="red">{$serverPhone}</font></p>
+    </div>
+</div>
+<div class="middle-nav-wrapper">
+    <div class="middle-nav clearfix">
+    {if $middleNav neq null}
+    {foreach from=$middleNav item=nav name=middleNav}
+    <a href="{$nav.url}" title="{$nav.name}" {if $nav.isActivite}class="cur"{/if} {if $nav.isOpenNew}target="_blank"{/if}>{$nav.name}</a>
+    {/foreach}
+    {/if}
+    </div>
+</div>

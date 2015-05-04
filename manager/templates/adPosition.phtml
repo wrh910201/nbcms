@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+</head>
+<body>
+{if $act eq 'list'}
+<a href="adPosition.php?act=add">添加广告位置</a>
+<table>
+{foreach from=$adPositions item=position}
+<tr><td>{$position.name}</td><td>{$position.targetTemplate}</td><td>{$position.width}px</td>
+    <td>{$position.height}px</td>
+    <td>
+        <a href="adPosition.php?act=edit&id={$position.id}">编辑</a>|
+        <a href="adPosition.php?act=delete&id={$position.id}">删除</a>
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq 'add'}
+<form name="adPositionAddForm" method="POST">
+广告位置名：<input type="text" name="name"/><br/>
+模版文件：<select name="targetTemplate">
+            {foreach from=$templates item=t}
+            <option value="{$t}">{$t}</option>
+            {/foreach}
+          </select><br/>
+广告数量：<input type="text" name="number" value="3"/><br/>
+广告类型：<input type="radio" name="type" value="js" checked="checked"/>JavaScript
+          <input type="radio" name="type" value="flash"/>Flash<br/>
+广告高度：<input type="text" name="height" value="320"/>px<br/>
+广告宽度：<input type="text" name="width" value="480"/>px<br/>
+<input type="hidden" name="code" value="code"/>
+<input type="hidden" name="opera" value="add"/>
+<input type="submit" name="submit" value="添加广告位置"/>
+</form>
+{/if}
+
+{if $act eq 'edit'}
+<form name="adPositionEditForm" method="POST">
+广告位置名：<input type="text" name="name" value="{$adPosition.name}"/><br/>
+模版文件：<select name="targetTemplate">
+            {foreach from=$templates item=t}
+            <option value="{$t}" {if $adPosition.targetTemplate eq $t}selected="selected"{/if}>{$t}</option>
+            {/foreach}
+          </select><br/>
+广告数量：<input type="text" name="number" value="{$adPosition.number}"/><br/>
+广告类型：<input type="radio" name="type" value="js" {if $adPosition.type eq 'js'}checked="checked"{/if}/>JavaScript
+          <input type="radio" name="type" value="flash" {if $adPosition.type eq 'flash'}checked="checked"{/if}/>Flash<br/>
+广告高度：<input type="text" name="height" value="{$adPosition.height}"/>px<br/>
+广告宽度：<input type="text" name="width" value="{$adPosition.width}"/>px<br/>
+<input type="hidden" name="code" value="{$adPosition.code}"/>
+<input type="hidden" name="opera" value="edit"/>
+<input type="hidden" name="id" value="{$adPosition.id}"/>
+<input type="submit" name="submit" value="修改广告位置"/>
+</form>
+{/if}
+</body>
+</html>

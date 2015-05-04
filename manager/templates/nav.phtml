@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<title>{$pageTitle}</title>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/xajax.js"></script>
+<script type="text/javascript" src="js/nav.js"></script>
+</head>
+<body>
+{if $act eq "list"}
+<a href="nav.php?act=add">新增导航条</a>
+<table>
+{foreach from=$navs item=n}
+<tr>
+    <td>{$n.name}</td><td>{$n.url}</td><td>{$n.orderView}</td><td>{$n.position}</td>
+    <td>
+        <a href="nav.php?act=edit&id={$n.id}">编辑</a>|
+        <a href="nav.php?act=delete&id={$n.id}">删除</a>
+    </td>
+</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $act eq "add"}
+<form name="navAddForm" method="POST">
+名称：<input type="text" name="name"/>
+URL：<input type="text" name="url"/>
+排序：<input type="text" name="orderView" value="50"/>
+位置：<select name="position">
+        <option value="top">顶部</option>
+        <option value="middle" selected="selected">中间</option>
+        <option value="bottom">底部</option>
+      </select>
+新窗口打开：<input type="radio" name="isOpenNew" value="0" checked="checked"/>否
+            <input type="radio" name="isOpenNew" value="1"/>是
+是否显示：<input type="radio" name="isShow" value="0"/>否
+          <input type="radio" name="isShow" value="1" checked="checked"/>是
+父级导航栏：<select name="parentId">
+                <option value="0">顶级导航栏</option>
+                {foreach from=$navs item=n}
+                <option value="{$n.id}">{$n.name}</option>
+                {/foreach}
+            </select>
+<input type="submit" name="submit" value="添加"/>
+<input type="hidden" name="opera" value="add"/>
+</form>
+{/if}
+
+{if $act eq "edit"}
+<form name="navEditForm" method="POST">
+名称：<input type="text" name="name" value="{$nav.name}"/>
+URL：<input type="text" name="url" value="{$nav.url}"/>
+排序：<input type="text" name="orderView" value="{$nav.orderView}"/>
+位置：<select name="position">
+        <option value="top" {if $nav.position eq "top"}selected="selected"{/if}>顶部</option>
+        <option value="middle" {if $nav.position eq "middle"}selected="selected"{/if}>中间</option>
+        <option value="bottom" {if $nav.position eq "bottom"}selected="selected"{/if}>底部</option>
+      </select>
+新窗口打开：<input type="radio" name="isOpenNew" value="0" {if $nav.isOpenNew eq false}checked="checked"{/if}/>否
+            <input type="radio" name="isOpenNew" value="1" {if $nav.isOpenNew}checked{/if}="checked"/>是
+是否显示：<input type="radio" name="isShow" value="0" {if $nav.isShow eq false}checked="checked"{/if}/>否
+          <input type="radio" name="isShow" value="1" {if $nav.isShow}checked="checked"{/if}/>是
+父级导航栏：<select name="parentId">
+                <option value="0">顶级导航栏</option>
+                {foreach from=$navs item=n}
+                <option value="{$n.id}" {if $nav.parentId eq $n.id}selected="selected"{/if}>{$n.name}</option>
+                {/foreach}
+            </select>
+<input type="submit" name="submit" value="修改"/>
+<input type="hidden" name="opera" value="edit"/>
+<input type="hidden" name="id" value="{$nav.id}"/>
+{/if}
+</body>
+</html>
