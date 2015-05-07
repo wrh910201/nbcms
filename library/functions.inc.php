@@ -12,9 +12,21 @@
  * @return bool 拥有该权限时返回true,否则返回false
  * @author winsen
  */
-function checkPurview($sys_purview, $user_purview)
-{
-    return $sys_purview & $user_purview;
+//function checkPurview($sys_purview, $user_purview)
+//{
+//    return $sys_purview & $user_purview;
+//}
+
+function checkPurview($sys_purview, $user_purview) {
+    $user_purview = json_decode($user_purview);
+    $has_power = false;
+    foreach( $user_purview as $key => $value ) {
+        if( in_array($sys_purview, $value) ) {
+            $has_power = true;
+            break;
+        }
+    }
+    return $has_power;
 }
 
 /**
@@ -328,23 +340,36 @@ function checkAdminLogin()
     }
 }
 
-function createMenus()
-{
+//function createMenus()
+//{
+//    global $menus;
+//    $temp = 0xf;
+//    $index = 0;
+//    $menu = array();
+//
+//    while($temp <= $_SESSION['purview'])
+//    {
+//        if(checkPurview($temp, $_SESSION['purview']))
+//        {
+//            $menu[] = $menus[$index];
+//        }
+//        $index++;
+//        $temp = $temp<<4;
+//    }
+//
+//    assign('menus', $menu);
+//}
+
+function createMenus() {
     global $menus;
-    $temp = 0xf;
-    $index = 0;
+    $purview = $_SESSION['purview'];
+    $purview = json_decode($purview);
     $menu = array();
-
-    while($temp <= $_SESSION['purview'])
-    {
-        if(checkPurview($temp, $_SESSION['purview']))
-        {
-            $menu[] = $menus[$index];
+    foreach($purview as $key => $value) {
+        if( count($value) > 0 ) {
+            $menu[] = $menus[$key];
         }
-        $index++;
-        $temp = $temp<<4;
     }
-
     assign('menus', $menu);
 }
 
@@ -461,4 +486,171 @@ function buildUrHere($script, $params)
 			break;
 	}
 	return $urHere;
+}
+
+/**
+ * @return string 当前文件名
+ * author wrh
+ */
+function get_active_nav() {
+    $url = $_SERVER['PHP_SELF'];
+    $filename= substr( $url , strrpos($url , '/')+1 );
+    return $filename;
+}
+
+/**
+ * 后台文件初始化
+ * author wrh
+ */
+function back_base_init() {
+    checkAdminLogin();
+    $activeNav = get_active_nav();
+
+    createMenus();
+    if( $activeNav != 'main.php') {
+        $is_main = false;
+        //assign('is_main', false);
+    } else {
+        $is_main = true;
+        //assign('is_main', true);
+    }
+    //var_dump($is_main);exit;
+    assign('is_main', $is_main);
+    assign('activeNav', $activeNav);
+    assign('pageTitle', 'NB_CMS管理后台');
+}
+
+/**
+ * 接收经销商的相关数据并过滤
+ */
+function check_distributor_input($get_post_id = false) {
+    global $db;
+
+    $id = $get_post_id ? getPOST('id') : '';
+    $name = getPOST('name');
+    $contact = getPost('contact');
+    $phone = getPost('phone');
+    $district = getPost('district');
+    $address = getPost('address');
+    $lat = getPost('lat');
+    $lng = getPost('lng');
+    $authCode = getPost('auth_code');
+
+    if( $get_post_id ) {
+        $id = intval($id);
+        if( 0 >= $id ) {
+            showSystemMessage('参数错误', array());
+            exit;
+        } else {
+            $id = $db->escape(htmlspecialchars($id));
+        }
+    }
+
+    if('' == $name)
+    {
+        showSystemMessage('请填写经销商名称', array());
+        exit;
+    } else {
+        $name = $db->escape(htmlspecialchars($name));
+    }
+
+    if('' == $contact)
+    {
+        showSystemMessage('请填写联系人', array());
+        exit;
+    } else {
+        $contact = $db->escape(htmlspecialchars($contact));
+    }
+
+    if('' == $phone)
+    {
+        showSystemMessage('请填写联系方式', array());
+        exit;
+    } else {
+        $phone = $db->escape(htmlspecialchars($phone));
+    }
+
+    if('' == $authCode)
+    {
+        showSystemMessage('请填写授权码', array());
+        exit;
+    } else {
+        $authCode = $db->escape(htmlspecialchars($authCode));
+    }
+
+    if('' == $district)
+    {
+        showSystemMessage('请选择地区', array());
+        exit;
+    } else {
+        $district = intval($district);
+        if($district <= 0) {
+            showSystemMessage('参数错误', array());
+            exit;
+        } else {
+            $district = $db->escape(htmlspecialchars($district));
+        }
+    }
+
+    $data = array(
+        'id' => $id,
+        'name' => $name,
+        'contact' => $contact,
+        'phone' => $phone,
+        'district' => $district,
+        'address' => $address,
+        'lat' => $lat,
+        'lng' => $lng,
+        'authCode' => $authCode,
+    );
+    return $data;
+}
+
+/**
+ * 获取地区数据（省市区），并assign到前端
+ * @author wrh
+ */
+function get_area_data() {
+    global $db;
+    //获取省份
+    $getProvinces = 'select ProvinceID, ProvinceName from '.DB_PREFIX.'Province where 1 order by ProvinceID asc';
+    $provinces = $db->fetchAll($getProvinces);
+    //获取城市
+    $getCities = 'select CityID, CityName, ProvinceID from '.DB_PREFIX.'City where 1 order by ProvinceID asc,CityID asc';
+    $cities = $db->fetchAll($getCities);
+    //获取地区
+    $getDistricts = 'select DistrictID, DistrictName, CityID from '.DB_PREFIX.'District where 1 order by CityID asc, DistrictID asc';
+    $districts = $db->fetchAll($getDistricts);
+
+
+    //转换城市的结构
+    $target_cities = array();
+    $count = count($cities);
+    for($i = 0; $i < $count; ) {
+        $pid = $cities[$i]['ProvinceID'];
+        $temp = array();
+        do {
+            $temp[] = $cities[$i];
+            $i++;
+        } while($i < $count && $cities[$i]['ProvinceID'] == $pid);
+        $target_cities[$pid] = $temp;
+    }
+    //转换地区的结构
+    $target_districts = array();
+    $count = count($districts);
+    for($i = 0; $i < $count; ) {
+        $pid = $districts[$i]['CityID'];
+        $temp = array();
+        do {
+            $temp[] = $districts[$i];
+            $i++;
+        } while($i < $count && $districts[$i]['CityID'] == $pid);
+        $target_districts[$pid] = $temp;
+    }
+
+    assign('provinces', $provinces);
+    assign('cities', $target_cities);
+    assign('districts', $target_districts);
+    assign('json_cities', json_encode($target_cities));
+    assign('json_districts', json_encode($target_districts));
 }

@@ -1,7 +1,8 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
+back_base_init();
+assign('subTitle', '系统参数设置');
 
 $action = 'edit|add|list';
 $operation = 'edit|add';
@@ -17,7 +18,7 @@ if('' === $act)
 //新增系统参数
 if('add' == $opera)
 {
-    if(!checkPurview(0x1, $_SESSION['purview']))
+    if(!checkPurview('pur_sysconf_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -28,7 +29,7 @@ if('add' == $opera)
 //修改系统参数
 if('edit' == $opera)
 {
-    if(!checkPurview(0x4, $_SESSION['purview']))
+    if(!checkPurview('pur_sysconf_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -94,7 +95,7 @@ if('edit' == $opera)
 
 if('list' == $act)
 {
-    if(!checkPurview(0x2, $_SESSION['purview']))
+    if(!checkPurview('pur_sysconf_list', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -107,7 +108,7 @@ if('list' == $act)
 
 if('edit' == $act)
 {
-    if(!checkPurview(0x4, $_SESSION['purview']))
+    if(!checkPurview('pur_sysconf_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -127,5 +128,5 @@ if('edit' == $act)
 }
 
 assign('act', $act);
-assign('pageTitle', '系统参数设置');
+
 $smarty->display('sysconf.phtml');

@@ -9,8 +9,8 @@ ini_set('display_errors', 0);
 //设置系统相关参数
 /*
 @ini_set('session.use_cookies', 1);
-@ini_set('session.cookie_lifetime', 1440);
-@ini_set('session.gc_maxlifetime', 1440);
+//@ini_set('session.cookie_lifetime', 1440);
+//@ini_set('session.gc_maxlifetime', 1440);
  */
 session_start();
 define('ROOT_PATH', str_replace('library/init.inc.php', '',str_replace('\\', '/',__FILE__)));

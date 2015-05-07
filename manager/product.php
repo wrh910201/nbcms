@@ -1,7 +1,7 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
+back_base_init();
 
 $operation = 'add|edit';
 $action = 'add|list|delete|edit|cycle|remove';
@@ -17,7 +17,7 @@ if('' == $act)
 //新增产品
 if('add' == $opera)
 {
-    if(!checkPurview(0x100000, $_SESSION['purview']))
+    if(!checkPurview('pur_product_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -129,7 +129,7 @@ if('add' == $opera)
 //编辑资讯
 if('edit' == $opera)
 {
-    if(!checkPurview(0x400000, $_SESSION['purview']))
+    if(!checkPurview('pur_product_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -213,7 +213,7 @@ if('edit' == $opera)
 
 if('list' == $act)
 {
-    if(!checkPurview(0x200000, $_SESSION['purview']))
+    if(!checkPurview('pur_product_list', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -228,7 +228,7 @@ if('list' == $act)
 
 if('add' == $act)
 {
-    if(!checkPurview(0x100000, $_SESSION['purview']))
+    if(!checkPurview('pur_product_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -260,7 +260,7 @@ if('add' == $act)
 
 if('edit' == $act)
 {
-    if(!checkPurview(0x400000, $_SESSION['purview']))
+    if(!checkPurview('pur_product_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -311,7 +311,7 @@ if('edit' == $act)
 
 if('delete' == $act)
 {
-    if(!checkPurview(0x800000, $_SESSION['purview']))
+    if(!checkPurview('pur_product_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -338,6 +338,6 @@ if('delete' == $act)
     }
 }
 
-assign('pageTitle', '产品管理');
+assign('subTitle', '产品管理');
 assign('act', $act);
 $smarty->display('product.phtml');

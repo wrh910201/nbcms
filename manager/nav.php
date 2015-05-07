@@ -1,7 +1,7 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
+back_base_init();
 
 $action = 'list|add|edit|delete';
 $operation = 'add|edit|ajax';
@@ -21,7 +21,7 @@ if('ajax' == $opera)
 //新增导航条
 if('add' == $opera)
 {
-    if(!checkPurview(0x10, $_SESSION['purview']))
+    if(!checkPurview('pur_nav_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -115,7 +115,7 @@ if('add' == $opera)
 //编辑导航条
 if('edit' == $opera)
 {
-    if(!checkPurview(0x40, $_SESSION['purview']))
+    if(!checkPurview('pur_nav_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -210,7 +210,7 @@ if('edit' == $opera)
 
 if('list' == $act)
 {
-    if(!checkPurview(0x20, $_SESSION['purview']))
+    if(!checkPurview('pur_nav_list', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -244,7 +244,7 @@ if('list' == $act)
 
 if('add' == $act)
 {
-    if(!checkPurview(0x10, $_SESSION['purview']))
+    if(!checkPurview('pur_nav_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -279,7 +279,7 @@ if('add' == $act)
 
 if('edit' == $act)
 {
-    if(!checkPurview(0x40, $_SESSION['purview']))
+    if(!checkPurview('pur_nav_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -332,7 +332,7 @@ if('edit' == $act)
 
 if('delete' == $act)
 {
-    if(!checkPurview(0x80, $_SESSION['purview']))
+    if(!checkPurview('pur_nav_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -365,5 +365,5 @@ if('delete' == $act)
 }
 
 assign('act', $act);
-assign('pageTitle', '导航条管理');
+assign('subTitle', '导航条管理');
 $smarty->display('nav.phtml');

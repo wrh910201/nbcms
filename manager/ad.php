@@ -1,7 +1,8 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
+back_base_init();
+assign('subTitle', '广告管理');
 
 $action = 'add|edit|list|delete';
 $operation = 'add|edit';
@@ -16,7 +17,7 @@ if('' == $act)
 //新增广告
 if('add' == $opera)
 {
-    if(!checkPurview(0x1000, $_SESSION['purview']))
+    if(!checkPurview('pur_ad_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -118,7 +119,7 @@ if('add' == $opera)
 //修改广告
 if('edit' == $opera)
 {
-    if(!checkPurview(0x4000, $_SESSION['purview']))
+    if(!checkPurview('pur_ad_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -239,7 +240,7 @@ if('edit' == $opera)
 
 if('list' == $act)
 {
-    if(!checkPurview(0x2000, $_SESSION['purview']))
+    if(!checkPurview('pur_ad_list', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -256,7 +257,7 @@ if('list' == $act)
 
 if('add' == $act)
 {
-    if(!checkPurview(0x1000, $_SESSION['purview']))
+    if(!checkPurview('pur_ad_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -269,7 +270,7 @@ if('add' == $act)
 
 if('edit' == $act)
 {
-    if(!checkPurview(0x4000, $_SESSION['purview']))
+    if(!checkPurview('pur_ad_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -302,7 +303,7 @@ if('edit' == $act)
 
 if('delete' == $act)
 {
-    if(!checkPurview(0x8000, $_SESSION['purview']))
+    if(!checkPurview('pur_ad_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -336,6 +337,5 @@ if('delete' == $act)
     }
 }
 
-assign('pageTitle', '广告管理');
 assign('act', $act);
 $smarty->display('ad.phtml');

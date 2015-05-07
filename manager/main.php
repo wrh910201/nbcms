@@ -1,7 +1,6 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
-createMenus();
-assign('pageTitle', 'NB_CMS管理后台');
+back_base_init();
+assign('subTitle', '首页');
 $smarty->display('main.phtml');

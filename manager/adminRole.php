@@ -1,7 +1,8 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
+back_base_init();
+assign('subTitle', '管理员角色管理');
 
 $action = 'list|add|edit|delete';
 $operation = 'add|edit';
@@ -16,7 +17,7 @@ if('' == $act)
 //添加管理员角色
 if('add' == $opera)
 {
-    if(!checkPurview(0x10000000, $_SESSION['purview']))
+    if(!checkPurview('pur_adminRole_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -56,7 +57,7 @@ if('add' == $opera)
 //编辑管理员角色
 if('edit' == $opera)
 {
-    if(!checkPurview(0x40000000, $_SESSION['purview']))
+    if(!checkPurview('pur_adminRole_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -105,7 +106,7 @@ if('edit' == $opera)
 
 if('list' == $act)
 {
-    if(!checkPurview(0x20000000, $_SESSION['purview']))
+    if(!checkPurview('pur_adminRole_list', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -119,7 +120,7 @@ if('list' == $act)
 
 if('add' == $act)
 {
-    if(!checkPurview(0x10000000, $_SESSION['purview']))
+    if(!checkPurview('pur_adminRole_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -129,7 +130,7 @@ if('add' == $act)
 
 if('edit' == $act)
 {
-    if(!checkPurview(0x40000000, $_SESSION['purview']))
+    if(!checkPurview('pur_adminRole_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -164,7 +165,7 @@ if('edit' == $act)
 
 if('delete' == $act)
 {
-    if(!checkPurview(0x80000000, $_SESSION['purview']))
+    if(!checkPurview('pur_adminRole_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -200,5 +201,4 @@ if('delete' == $act)
 assign('purview', $purview);
 assign('purviewL', $L_purview);
 assign('act', $act);
-assign('pageTitle', '管理员角色管理');
 $smarty->display('adminRole.phtml');

@@ -1,7 +1,7 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
+back_base_init();
 
 $operation = 'add|edit';
 $action = 'add|list|delete|edit|cycle|remove';
@@ -17,7 +17,7 @@ if('' == $act)
 //新增资讯
 if('add' == $opera)
 {
-    if(!checkPurview(0x100000, $_SESSION['purview']))
+    if(!checkPurview('pur_article_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -110,7 +110,7 @@ if('add' == $opera)
 //编辑资讯
 if('edit' == $opera)
 {
-    if(!checkPurview(0x400000, $_SESSION['purview']))
+    if(!checkPurview('pur_article_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -212,7 +212,7 @@ if('edit' == $opera)
 
 if('list' == $act)
 {
-    if(!checkPurview(0x200000, $_SESSION['purview']))
+    if(!checkPurview('pur_article_list', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -228,7 +228,7 @@ if('list' == $act)
 
 if('cycle' == $act)
 {
-    if(!checkPurview(0x800000, $_SESSION['purview']))
+    if(!checkPurview('pur_article_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -244,7 +244,7 @@ if('cycle' == $act)
 
 if('add' == $act)
 {
-    if(!checkPurview(0x100000, $_SESSION['purview']))
+    if(!checkPurview('pur_article_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -276,7 +276,7 @@ if('add' == $act)
 
 if('edit' == $act)
 {
-    if(!checkPurview(0x400000, $_SESSION['purview']))
+    if(!checkPurview('pur_article_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -327,7 +327,7 @@ if('edit' == $act)
 
 if('delete' == $act)
 {
-    if(!checkPurview(0x800000, $_SESSION['purview']))
+    if(!checkPurview('pur_article_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -356,7 +356,7 @@ if('delete' == $act)
 
 if('remove' == $act)
 {
-    if(!checkPurview(0x800000, $_SESSION['purview']))
+    if(!checkPurview('pur_article_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -383,6 +383,6 @@ if('remove' == $act)
     }
 }
 
-assign('pageTitle', '资讯管理');
+assign('subTitle', '资讯管理');
 assign('act', $act);
 $smarty->display('article.phtml');

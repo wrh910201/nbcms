@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-<title>{$pageTitle}</title>
-<link rel="stylesheet" type="text/css" href="css/style.css"/>
-<script type="text/javascript" src="js/xajax.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
-</head>
-<body>
+{include file="library/sidebar.lbi"}
+<div class="contentpanel">
 {if $act eq 'list'}
 <a href="category.php?act=add">添加产品分类</a>
 <table>
@@ -55,5 +47,5 @@
 <input type="hidden" name="id" value="{$category.id}"/>
 </form>
 {/if}
-</body>
-</html>
+</div><!-- contentpanel -->
+{include file="library/footer.lbi"}

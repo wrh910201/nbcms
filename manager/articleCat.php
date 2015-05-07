@@ -1,7 +1,7 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
+back_base_init();
 
 $operation = 'add|edit';
 $action = 'list|add|edit|delete';
@@ -16,7 +16,7 @@ if('' == $act)
 //添加导航栏
 if('add' == $opera)
 {
-    if(!checkPurview(0x10000, $_SESSION['purview']))
+    if(!checkPurview('pur_articleCat_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -98,7 +98,7 @@ if('add' == $opera)
 //编辑导航栏
 if('edit' == $opera)
 {
-    if(!checkPurview(0x40000, $_SESSION['purview']))
+    if(!checkPurview('pur_articleCat_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -176,7 +176,7 @@ if('edit' == $opera)
 
 if('list' == $act)
 {
-    if(!checkPurview(0x20000, $_SESSION['purview']))
+    if(!checkPurview('pur_articleCat_list', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -206,7 +206,7 @@ if('list' == $act)
 
 if('add' == $act)
 {
-    if(!checkPurview(0x10000, $_SESSION['purview']))
+    if(!checkPurview('pur_articleCat_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -236,7 +236,7 @@ if('add' == $act)
 
 if('edit' == $act)
 {
-    if(!checkPurview(0x40000, $_SESSION['purview']))
+    if(!checkPurview('pur_articleCat_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -280,7 +280,7 @@ if('edit' == $act)
 
 if('delete' == $act)
 {
-    if(!checkPurview(0x80000, $_SESSION['purview']))
+    if(!checkPurview('pur_articleCat_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -323,5 +323,5 @@ if('delete' == $act)
 }
 
 assign('act', $act);
-assign('pageTitle', '资讯分类管理');
+assign('subTitle', '资讯分类管理');
 $smarty->display('articleCat.phtml');

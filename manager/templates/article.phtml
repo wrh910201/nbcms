@@ -1,18 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-<title>{$pageTitle}</title>
-<link rel="stylesheet" type="text/css" href="css/style.css"/>
-<script type="text/javascript" src="js/xajax.js"></script>
-<script type="text/javascript" src="js/article.js"></script>
-<link rel="stylesheet" href="../plugins/kindeditor/themes/default/default.css" />
-<link rel="stylesheet" href="../plugins/kindeditor/plugins/code/prettify.css" />
-<script type="text/javascript" src="../plugins/kindeditor/kindeditor.js"></script>
-<script type="text/javascript" src="../plugins/kindeditor/lang/zh_CN.js"></script>
-<script type="text/javascript" src="../plugins/kindeditor/plugins/code/prettify.js"></script>
-</head>
-<body>
+{include file="library/sidebar.lbi"}
+<div class="contentpanel">
 {if $act eq 'list'}
 <a href="article.php?act=add">新增资讯</a>
 <table>
@@ -139,5 +126,5 @@ KindEditor.ready(function(K)
 </script>
 
 {/if}
-</body>
-</html>
+</div><!-- contentpanel -->
+{include file="library/footer.lbi"}

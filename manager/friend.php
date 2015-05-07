@@ -1,7 +1,7 @@
 <?php
 include 'library/init.inc.php';
 
-checkAdminLogin();
+back_base_init();
 
 $action = 'add|edit|delete|list';
 $operation = 'add|edit';
@@ -17,7 +17,7 @@ if('' == $act)
 //添加友情链接
 if('add' == $opera)
 {
-    if(!checkPurview(0x100000000, $_SESSION['purview']))
+    if(!checkPurview('pur_friend_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -81,7 +81,7 @@ if('add' == $opera)
 //修改友情链接
 if('edit' == $opera)
 {
-    if(!checkPurview(0x400000000, $_SESSION['purview']))
+    if(!checkPurview('pur_friend_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -160,7 +160,7 @@ if('edit' == $opera)
 
 if('list' == $act)
 {
-    if(!checkPurview(0x200000000, $_SESSION['purview']))
+    if(!checkPurview('pur_friend_list', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -174,7 +174,7 @@ if('list' == $act)
 
 if('add' == $act)
 {
-    if(!checkPurview(0x100000000, $_SESSION['purview']))
+    if(!checkPurview('pur_friend_add', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -184,7 +184,7 @@ if('add' == $act)
 
 if('edit' == $act)
 {
-    if(!checkPurview(0x400000000, $_SESSION['purview']))
+    if(!checkPurview('pur_friend_edit', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -213,7 +213,7 @@ if('edit' == $act)
 
 if('delete' == $act)
 {
-    if(!checkPurview(0x800000000, $_SESSION['purview']))
+    if(!checkPurview('pur_friend_delete', $_SESSION['purview']))
     {
         showSystemMessage('权限不足', array());
         exit;
@@ -250,6 +250,6 @@ if('delete' == $act)
     exit;
 }
 
-assign('pageTitle', '友情链接管理');
+assign('subTitle', '友情链接管理');
 assign('act', $act);
 $smarty->display('friend.phtml');

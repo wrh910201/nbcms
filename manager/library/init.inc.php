@@ -8,8 +8,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 //设置系统相关参数
 @ini_set('session.use_cookies', 1);
-@ini_set('session.cookie_lifetime', 1440);
-@ini_set('session.gc_maxlifetime', 1440);
+//@ini_set('session.cookie_lifetime', 1440);
+//@ini_set('session.gc_maxlifetime', 1440);
 @session_start();
 define('ROOT_PATH', str_replace('manager/library/init.inc.php', '',str_replace('\\', '/',__FILE__)));
 //检查是否已安装
