@@ -34,16 +34,30 @@ if('add' == $opera)
         $name = $db->escape(htmlspecialchars($name));
     }
 
-    $purview_value = 0;
-    foreach($purviews as $pur)
-    {
-        $bit = array_search($pur, $purview);
-        $temp = 0x1;
-        $temp = $temp<<$bit;
-        $purview_value |= $temp;
-    }
+    $purview_value = array();
+    //var_dump($purviews);exit;
 
-    $addAdminRole = 'insert into `'.DB_PREFIX.'adminRole` (`name`,`purview`) values (\''.$name.'\','.$purview_value.')';
+    foreach($purviews as $key => $sub_purviews) {
+        if( array_key_exists($key, $purview) ) {
+            $purview_value[$key] = array();
+            foreach( $sub_purviews as $pur ) {
+                if( in_array($pur, $purview[$key]) ) {
+                    $purview_value[$key][] = $pur;
+                }
+            }
+        }
+    }
+    $purview_value = json_encode($purview_value);
+
+//    foreach($purviews as $pur)
+//    {
+//        $bit = array_search($pur, $purview);
+//        $temp = 0x1;
+//        $temp = $temp<<$bit;
+//        $purview_value |= $temp;
+//    }
+
+    $addAdminRole = 'insert into `'.DB_PREFIX.'adminRole` (`name`,`purview`) values (\''.$name.'\',\''.$purview_value.'\')';
     if($db->insert($addAdminRole))
     {
         showSystemMessage('新增管理员角色成功', array(array('alt'=>'查看管理员角色列表','link'=>'adminRole.php')));
@@ -82,16 +96,22 @@ if('edit' == $opera)
         $name = $db->escape(htmlspecialchars($name));
     }
 
-    $purview_value = 0;
-    foreach($purviews as $pur)
-    {
-        $bit = array_search($pur, $purview);
-        $temp = 0x1;
-        $temp = $temp<<$bit;
-        $purview_value |= $temp;
-    }
+    $purview_value = array();
+    //var_dump($purviews);exit;
 
-    $updateAdminRole  = 'update `'.DB_PREFIX.'adminRole` set `name`=\''.$name.'\',`purview`='.$purview_value;
+    foreach($purviews as $key => $sub_purviews) {
+        if( array_key_exists($key, $purview) ) {
+            $purview_value[$key] = array();
+            foreach( $sub_purviews as $pur ) {
+                if( in_array($pur, $purview[$key]) ) {
+                    $purview_value[$key][] = $pur;
+                }
+            }
+        }
+    }
+    $purview_value = json_encode($purview_value);
+
+    $updateAdminRole  = 'update `'.DB_PREFIX.'adminRole` set `name`=\''.$name.'\',`purview`=\''.$purview_value.'\'';
     $updateAdminRole .= ' where `id`='.$id.' limit 1';
     if($db->update($updateAdminRole))
     {
@@ -147,20 +167,34 @@ if('edit' == $act)
 
     $getAdminRole = 'select `id`,`name`,`purview` from `'.DB_PREFIX.'adminRole` where `id`='.$id;
     $adminRole = $db->fetchRow($getAdminRole);
-
+    $adminRole['purview'] = json_decode($adminRole['purview']);
     assign('adminRole', $adminRole);
 
     $purviewC = array();
-    foreach($purview as $key=>$pur)
-    {
-        $temp = 0x01;
-        $temp = $temp<<$key;
-        if($temp & $adminRole['purview'])
-        {
-            $purviewC[$pur] = 1;
+    $sub_purviewC = array();
+
+    foreach($purview as $key => $sub_purviews ) {
+        foreach($sub_purviews as $pur) {
+            $sub_purviewC[$key][$pur] = false;
         }
+        $purviewC[$key] = false;
     }
+
+
+
+    foreach($adminRole['purview'] as $key=>$sub_purviews) {
+        $checked = false;
+        foreach($sub_purviews as $pur) {
+            $sub_purviewC[$key][$pur] = true;
+            $checked = true;
+
+        }
+        $purviewC[$key] = $checked;
+    }
+
+
     assign('purviewC', $purviewC);
+    assign('sub_purviewC', $sub_purviewC);
 }
 
 if('delete' == $act)
