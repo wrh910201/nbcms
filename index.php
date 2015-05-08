@@ -1,12 +1,15 @@
 <?php
 /**
  * CMS首页
- * @author winsen
+ * @author wrh
  * @version 1.0.0
  */
 include 'library/init.inc.php';
 $template = 'index.phtml';
 $currentTime = time();
+
+$activeNav = get_active_nav();
+assign('activeNav', $activeNav);
 
 $getAdPositions  = 'select `id`,`number`,`type`,`code`,`width`,`height` from `'.DB_PREFIX.'adPosition` ';
 $getAdPositions .= ' where `targetTemplate`=\''.$template.'\'';
@@ -35,23 +38,23 @@ foreach($adPositions as $adPosition)
 }
 
 //最新资讯
-$getNews = 'select `title`,`id`,`publishTime` from `'.DB_PREFIX.'article` order by `publishTime` DESC limit 10';
-$news = $db->fetchAll($getNews);
-foreach($news as $key=>$article)
-{
-	$article['publishTime'] = date('Y-m-d', $article['publishTime']);
-	$news[$key] = $article;
-}
-assign('news', $news);
+//$getNews = 'select `title`,`id`,`publishTime` from `'.DB_PREFIX.'article` order by `publishTime` DESC limit 10';
+//$news = $db->fetchAll($getNews);
+//foreach($news as $key=>$article)
+//{
+//	$article['publishTime'] = date('Y-m-d', $article['publishTime']);
+//	$news[$key] = $article;
+//}
+//assign('news', $news);
 
-$getProducts = 'select `id`,`name`,`description` from `'.DB_PREFIX.'product` order by `addTime`';
-$product = $db->fetchAll($getProducts);
-foreach($product as $key=>$p)
-{
-	$getGallery = 'select `normal` from `'.DB_PREFIX.'gallery` where `productId`='.$p['id'].' and `isDefault`=1';
-	$gallery = $db->fetchRow($getGallery);
-	$product[$key]['img'] = $gallery['normal'];
-}
+//$getProducts = 'select `id`,`name`,`description` from `'.DB_PREFIX.'product` order by `addTime`';
+//$product = $db->fetchAll($getProducts);
+//foreach($product as $key=>$p)
+//{
+//	$getGallery = 'select `normal` from `'.DB_PREFIX.'gallery` where `productId`='.$p['id'].' and `isDefault`=1';
+//	$gallery = $db->fetchRow($getGallery);
+//	$product[$key]['img'] = $gallery['normal'];
+//}
 
 assign('product', $product);
 assign('ads', $ads);

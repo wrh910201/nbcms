@@ -1,0 +1,91 @@
+<div class="slider">
+    <ul class="DB_bgSet">
+        <li style="display: list-item;">
+            <a target="_blank" href="http://www.sibu.cn/news/2015/news/201505/2015/0503/2382.html">
+                <img src="http://img.sibu.cn/uploads/allimg/1505/20-150503122F5N4.jpg" alt=""></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://www.sibu.cn/news/201504/2379.html">
+                <img src="http://img.sibu.cn/uploads/allimg/1505/25-150502105150N4.jpg" alt=""></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://www.sibu.cn/news/201504/2377.html">
+                <img src="http://img.sibu.cn/uploads/allimg/1505/22-150504095P2515.jpg" alt=""></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://www.sibu.cn/fangweichaxun/">
+                <img src="http://img.sibu.cn/uploads/allimg/1504/19-1504291PH1464.png" alt=""></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://www.sibu.cn/fangshai/">
+                <img src="http://img.sibu.cn/uploads/allimg/1504/19-150421141H9351.jpg" alt="植美村防晒专题"></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://www.sibu.cn/hushoushuang/">
+                <img src="http://img.sibu.cn/uploads/allimg/1501/19-15010311121D35.jpg" alt="素雅护手霜"></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://www.dailaimei.cn/">
+                <img src="http://img.sibu.cn/uploads/allimg/1503/19-150301162324G3.jpg" alt=""></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://www.tianshizhimei.cn/">
+                <img src="http://img.sibu.cn/uploads/allimg/1504/19-150409100526404.jpg" alt="天使之魅，给你想要的美"></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://www.sibu.cn/shuyaBrand/">
+                <img src="http://img.sibu.cn/uploads/allimg/1503/19-15032G34102514.jpg" alt=""></a>
+        </li>
+        <li style="display: none;">
+            <a target="_blank" href="http://book.sibu.cn/">
+                <img src="http://img.sibu.cn/uploads/allimg/1503/19-150316100505L2.jpg" alt=""></a>
+        </li>
+    </ul>
+    <ul class="DB_imgSet" style="position: relative;">
+        <li style="position: absolute; display: list-item;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <li style="position: absolute; display: none;"></li>
+        <!--  <li></li>
+    -->
+        <!--  <li></li>
+        -->
+    </ul>
+    <div class="DB_menuWrap">
+        <ul class="DB_menuSet">
+            <li class="select">
+                <img src="images/btn_on.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+            <li class="">
+                <img src="images/btn_off.gif"></li>
+        </ul>
+        <div class="DB_next">
+            <a href="javascript:;"></a>
+        </div>
+        <div class="DB_prev">
+            <a href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>

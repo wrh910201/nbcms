@@ -1,66 +1,184 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>{$siteName}</title>
-<meta name="keywords" content="{$siteKeywords}"/>
-<meta name="description" content="{$siteDescription}"/>
-<link href="css/style.css" type="text/css" rel="stylesheet"/>
-<link rel="shortcut icon" type="image/x-icon" href="{$domain}/favoriate.ico" media="screen"/>
-<script type="text/javascript" src="js/jquery.js?v=1.0.0"></script>
-<script type="text/javascript" src="js/jquery.cycle.all.js?v=1.0.0"></script>
-<script type="text/javascript" src="js/index.js?v=1.0.0"></script>
-<meta name="author" content="Winsen"/>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="{$siteKeywords}" name="keywords">
+    <meta content="{$siteDescription}" name="description">
+    <title>{$owner}</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery.slide.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qySui8MiIZKshBmwwQLmX1HU"></script>
+    <script type="text/javascript" src="js/index.js"></script>
 </head>
 <body>
 {include file="library/header.lbi"}
-<div class="content clearfix mt">
-    <div class="index-ad">
-        {include file="library/ads.lbi" ads=$ads.1 id='index-ad'}
+{include file="library/slider.lbi"}
+<div class="main">
+    <div class="about_cabrielle">
+        <div class="about_cabrielle_l">
+            <img src="images/about-cabrielle.jpg" alt="关于佳百莉">
+        </div>
+        <div class="about_cabrielle_r">
+            <h3>佳百莉<span class="small-paragraph">ABOUT US</span></h3>
+            <p>这是关于佳百莉的故事。本公司正规授权的经销商必须严格按照公司规定的价格体系进行销售，凡是发现以低于公司规定价格出售产品、销售假货、串货任何一种情况的经销商，一经查实，将会立刻取消授权资格，并拉入黑名单。这是关于佳百莉的故事。本公司正规授权的经销商必须严格按照公司规定的价格体系进行销售，凡是发现以低于公司规定价格出售产品、销售假货、串货任何一种情况的经销商，一经查实，将会立刻取消授权资格，并拉入黑名单。</p>
+        </div>
+        <div class="clear"></div>
     </div>
-    <div class="fast-nav">
-    </div>
-</div>
-<div class="content clearfix mt">
-    <div class="channel">
-        <h2 class="channel-title">{$LANG.company_introduce}</h2>
-        <div class="channel-content clearfix">
-            <img src="{$bigLogo}" alt="{$siteName}"/>
-            <p>{$companyIntroduce}</p>
+    <div class="main_col">
+        <div class="col_l">
+            <h3><a target="_blank" href="brand-story.html"><img src="images/ico1.png" alt="品牌故事icon"></a></h3>
+            <a class="a_dt" target="_blank" href="#"><img src="images/img1.jpg" alt="品牌故事img"><span>品牌名称的由来</span></a>
+
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <div class="readmore">
+                <a target="_blank" href="#">查看更多→</a>
+            </div>
+        </div>
+        <div class="col_m">
+            <h3><a target="_blank" href="news.html"><img src="images/ico2.png" alt="企业新闻icon"></a></h3>
+            <a class="a_dt" target="_blank" href="#"><img src="images/img2.jpg" alt="企业新闻img"><span>企业网站正式上线</span></a>
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <div class="readmore">
+                <a target="_blank" href="#">查看更多→</a>
+            </div>
+        </div>
+        <div class="col_r">
+            <h3><a target="_blank" href="college.html"><img src="images/ico3.png" alt="美妆学院icon"></a></h3>
+            <a class="a_dt" target="_blank" href="#"><img src="images/img3.jpg" alt="美妆学院img"><span>告诉你面膜的正确打开方式</span></a>
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <dl class="col_dl">
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dd>
+                    <b><a class="link_black" target="_blank" href="#">邂逅佳百莉</a></b>
+                    <p>作者：admin<i>2015-05-04</i></p>
+                </dd>
+            </dl>
+            <div class="readmore">
+                <a target="_blank" href="#">查看更多→</a>
+            </div>
         </div>
     </div>
-
-    <div class="channel ml">
-        <h2 class="channel-title">{$LANG.news}<span class="channel-more"><a href="article.php">{$LANG.more}</a></span></h2>
-        <ul class="channel-list clearfix">
-        {if $news neq null}
-        {foreach from=$news item=article}
-        <li><a href="{'article'|build_url:$article.id}" title="{$article.title}">{$article.title}</a><span class="date">{$article.publishTime}</span></li>
-        {/foreach}
-        {/if}
-        </ul>
+    <div class="clear"></div>
+    <div class="banner">
+        <img src="images/banner.jpg" alt="banner">
     </div>
-</div>
-<div class="content mt big-channel clearfix">
-    <h2 class="big-channel-title">{$LANG.product_center}<span class="channel-more"><a href="product.php">{$LANG.more}</a></span></h2>
-    <div class="product-channel">
-    {foreach from=$product item=p}
-    	<div class="product-item">
-    		<a href="{'product'|build_url:$p.id}" title="{$p.name}">
-    			<img src="{$p.img}" width="{$imgWidth}" height="{$imgHeight}" class="product-img"/>
-    		</a>
-    		<a href="{'product'|build_url:$p.id}" title="{$p.name}" class="product-name">{$p.name}</a>
-    		<p class="product-desc">{$p.description|truncate:70:'...'}</p>
-    	</div>
-    {/foreach}
+    <div class="map">
+        <h3 class="map_title"><span>经销商<i>地图</i></span></h3>
+        <div class="map_con">
+            <div id="map_l"></div>
+            <div class="map_r">
+                <div class="sel_adress">
+                    请选择地点：
+                    <select class="sele" id="provinceDiv"><option>请选择</option><option value="1">广东</option><option value="2">北京</option></select>
+                    <select class="sele" id="cityDiv"><option value="0">请选择</option></select>
+                    <select class="sele" id="countyDiv"><option value="0">请选择</option></select>
+                </div>
+                <div class="address_info" id="address_info">
+                    <select size="2" id="address_info_input">
+                        <option value="广东省广州市白云区旗舰店">广东省广州市白云区旗舰店</option>
+                        <option value="广东省广州市天河区总经销">广东省广州市天河区总经销</option>
+                        <option value="广东省广州市天河区五山分销点">广东省广州市天河区五山分销点</option>
+                    </select>
+                </div>
+                <div class="zs_btn">
+                    <a target="_blank" href="#">招商政策→</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="clear"></div>
 </div>
-<div class="content mt big-channel clearfix">
-    <h2 class="big-channel-title">{$LANG.lisence}</h2>
-    <div class="product-channel">
+<div class="footer">
+    <div class="foo_links">
+        友情链接：
+        <a href="#">友情链接还是要有的，万一有人想要交换呢？</a>
+        <a href="#">友情链接还是要有的，万一有人想要交换呢？</a>
+        <a href="#">君穗信息科技</a>
+        <a href="#">爆米花科技</a>
     </div>
+    <div class="foo_links2">
+        <a href="#">关于我们</a>
+        <a href="#">授权查询</a>
+        <a href="#">招商政策</a>
+        <a href="#">美妆学院</a>
+        <a href="#">网站地图</a>
+    </div>
+    <div class="foo_con">
+        <p>
+            <img src="images/foo-logo.jpg" alt="佳百莉底部logo" height="112px;">
+        </p>
+        <p>
+            公司地址：广东省广州市白云区万达广场B区1栋522<br>
+            客服热线：400-000-0000<br>
+            ICP备案号：<a href="http://www.miibeian.gov.cn/">粤ICP备1234566789号-1</a><br>
+            <img src="images/aqlm.jpg" alt="安全联盟" height="30px;">
+            <img src="images/cxwz.jpg" alt="诚信网站" height="30px;">
+            <img src="images/kxwz.jpg" alt="可信网站" height="30px;">
+        </p>
+        <div class="foo_QR">
+            <img src="images/QR.png" alt="二维码" width="112px;" height="112px;">
+            <br>佳百莉<br> 官方微信<br>扫描关注有惊喜
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="foo_copy">Copyright &copy; 2015 佳百莉, All rights reserved.</div>
 </div>
-
-{include file="library/footer.lbi"}
 </body>
 </html>
+
