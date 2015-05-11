@@ -36,26 +36,49 @@ foreach($adPositions as $adPosition)
         $ads[$adPosition['id']] = $item;
     }
 }
+//var_dump($ads);exit;
 
-//最新资讯
-//$getNews = 'select `title`,`id`,`publishTime` from `'.DB_PREFIX.'article` order by `publishTime` DESC limit 10';
-//$news = $db->fetchAll($getNews);
-//foreach($news as $key=>$article)
-//{
-//	$article['publishTime'] = date('Y-m-d', $article['publishTime']);
-//	$news[$key] = $article;
-//}
-//assign('news', $news);
-
-//$getProducts = 'select `id`,`name`,`description` from `'.DB_PREFIX.'product` order by `addTime`';
-//$product = $db->fetchAll($getProducts);
-//foreach($product as $key=>$p)
-//{
-//	$getGallery = 'select `normal` from `'.DB_PREFIX.'gallery` where `productId`='.$p['id'].' and `isDefault`=1';
-//	$gallery = $db->fetchRow($getGallery);
-//	$product[$key]['img'] = $gallery['normal'];
+//$getCategories = 'select id, name from '.DB_PREFIX.'articleCat where parentId = 0 limit 3 order by id asc';
+//$categories = $db->fetchAll($getCategories);
+//foreach( $categories as $category ) {
+//
 //}
 
-assign('product', $product);
+//资讯 品牌故事
+$getBrandStory = 'select `title`,`id`,`publishTime`,`author` from `'.DB_PREFIX.'article` where `articleCatId` = 1 order by `publishTime` DESC limit 4';
+$brandStory = $db->fetchAll($getBrandStory);
+$news = array();
+foreach($brandStory as $key=>$article)
+{
+	$article['publishTime'] = date('Y-m-d', $article['publishTime']);
+    $news[$key] = $article;
+}
+assign('brandStory', $news);
+
+//资讯 企业新闻
+$getEnterpriseNews = 'select `title`,`id`,`publishTime`,`author` from `'.DB_PREFIX.'article`  where `articleCatId` = 2 order by `publishTime` DESC limit 4';
+$enterpriseNews = $db->fetchAll($getEnterpriseNews);
+$news = array();
+foreach($enterpriseNews as $key=>$article)
+{
+    $article['publishTime'] = date('Y-m-d', $article['publishTime']);
+    $news[$key] = $article;
+}
+assign('enterpriseNews', $news);
+
+//资讯 美妆学院
+$getColleges = 'select `title`,`id`,`publishTime`,`author` from `'.DB_PREFIX.'article`  where `articleCatId` = 3 order by `publishTime` DESC limit 4';
+$colleges = $db->fetchAll($getColleges);
+$news = array();
+foreach($colleges as $key=>$article)
+{
+    $article['publishTime'] = date('Y-m-d', $article['publishTime']);
+    $news[$key] = $article;
+}
+assign('colleges', $news);
+
+get_area_data();
+
+
 assign('ads', $ads);
 $smarty->display($template);

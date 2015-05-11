@@ -53,8 +53,12 @@ if(!$article)
 
     assign('pre', $preArticle);
     assign('next', $nextArticle);
+
+    $getCategory = 'select `id`,`name` from `'.DB_PREFIX.'articleCat` where `id`='.$article['articleCatId'];
+    $cat = $db->fetchRow($getCategory);
+    assign('cat', $cat);
     
-    $getArticleCatList = 'select `id`,`name` from `'.DB_PREFIX.'articleCat` where `parentId`='.$article['parentId'];
+    $getArticleCatList = 'select `id`,`name` from `'.DB_PREFIX.'articleCat` where `parentId`='.$article['articleCatId'];
     $articleCatList = $db->fetchAll($getArticleCatList);
     assign('articleCatList', $articleCatList);
     

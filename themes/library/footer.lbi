@@ -1,22 +1,45 @@
-<div class="bottom-nav clearfix">
-    {if $bottomNav neq null}
-    {foreach from=$bottomNav item=nav name=bottomNav}
-    <a href="{$nav.url}" title="{$nav.name}" {if $nav.isOpenNew}target="_blank"{/if}>{$nav.name}</a>
-    {if $smarty.foreach.bottomNav.iteration neq $smarty.foreach.bottomNav.last}
-    |
-    {/if}
-    {/foreach}
-    {/if}
+<div class="footer">
+    <div class="foo_links">
+        友情链接：
+        {foreach from=$friends item=friend}
+        <a href="{$friend.url}">{$friend.name}</a>
+        {/foreach}
+        <!--a href="#">友情链接还是要有的，万一有人想要交换呢？</a>
+        <a href="#">友情链接还是要有的，万一有人想要交换呢？</a>
+        <a href="#">君穗信息科技</a>
+        <a href="#">爆米花科技</a-->
+    </div>
+    <div class="foo_links2">
+        {foreach from=$bottomNav item=nav}
+        <a href="{$nav.url}">{$nav.name}</a>
+        {/foreach}
+        <!--a href="#">关于我们</a>
+        <a href="#">授权查询</a>
+        <a href="#">招商政策</a>
+        <a href="#">美妆学院</a>
+        <a href="#">网站地图</a-->
+    </div>
+    <div class="foo_con">
+        <p>
+            <img src="images/foo-logo.jpg" alt="佳百莉底部logo" height="112px;">
+        </p>
+        <p>
+            公司地址：广东省广州市白云区万达广场B区1栋522<br>
+            客服热线：400-000-0000<br>
+            ICP备案号：<a href="http://www.miibeian.gov.cn/">{$icp}</a><br>
+            <img src="images/aqlm.jpg" alt="安全联盟" height="30px;">
+            <img src="images/cxwz.jpg" alt="诚信网站" height="30px;">
+            <img src="images/kxwz.jpg" alt="可信网站" height="30px;">
+        </p>
+        <div class="foo_QR">
+            <img src="images/QR.png" alt="二维码" width="112px;" height="112px;">
+            <br>佳百莉<br> 官方微信<br>扫描关注有惊喜
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="foo_copy">Copyright &copy; 2015 佳百莉, All rights reserved.</div>
 </div>
-<div class="footer clearfix">
-    <p class="copyright">CopyRight &copy; 2008-{$year} {$owner} All rights reserved.</p>
-    <p class="owner-info">
-        {$LANG.address}:{$ownerAddress}&nbsp;&nbsp;
-        {$LANG.hot_line}:{$serverPhone}&nbsp;&nbsp;
-        {$LANG.email}:<a href="mailto:{$serverEmail}" class="email">{$serverEmail}</a>
-    </p>
-    <a href="http://www.miitbeian.gov.cn" class="icp" title="{$icp}">{$icp}</a>
     <!-- 统计代码位置 -->
     {$staticsCode}
     <!-- 统计代码结束 -->
-</div>
+

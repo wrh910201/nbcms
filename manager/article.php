@@ -33,6 +33,16 @@ if('add' == $opera)
     $isAutoPublish = getPOST('isAutoPublish');
     $addTime = time();
 
+    $img = '';
+    $response = upload_with_choice($_FILES['img'], 'image');
+
+    if($response['error']) {
+        showSystemMessage($response['msg'], array());
+        exit;
+    } else {
+        $img = $response['msg'];
+    }
+
     if('' == $title)
     {
         showSystemMessage('资讯标题不能为空', array());
@@ -73,7 +83,7 @@ if('add' == $opera)
     }
 
     $content = $db->escape($content);
-
+    $isAutoPublish = intval($isAutoPublish);
     if('' == $isAutoPublish || 0 == $isAutoPublish)
     {
         $isAutoPublish = 0;
@@ -93,9 +103,9 @@ if('add' == $opera)
     }
 
     $addArticle  = 'insert into `'.DB_PREFIX.'article` (`author`,`title`,`articleCatId`,`keywords`,`description`,';
-    $addArticle .= '`isDelete`,`content`,`addTime`,`publishTime`,`isAutoPublish`) values (\''.$author.'\',';
+    $addArticle .= '`isDelete`,`content`,`addTime`,`publishTime`,`isAutoPublish`, `img`) values (\''.$author.'\',';
     $addArticle .= '\''.$title.'\','.$articleCatId.',\''.$keywords.'\',\''.$description.'\',0,\''.$content.'\',';
-    $addArticle .= $addTime.','.$publishTime.','.$isAutoPublish.')';
+    $addArticle .= $addTime.','.$publishTime.','.$isAutoPublish.', \''.$img.'\')';
 
     if($db->insert($addArticle))
     {
@@ -126,6 +136,14 @@ if('edit' == $opera)
     $isAutoPublish = getPOST('isAutoPublish');
     $id = getPOST('id');
     $id = intval($id);
+
+    $img = '';
+    if($response['error']) {
+        showSystemMessage($response['msg'], array());
+        exit;
+    } else {
+        $img = $response['msg'];
+    }
 
     if('' == $id || 0 >= $id)
     {
@@ -194,6 +212,7 @@ if('edit' == $opera)
 
     $updateArticle  = 'update `'.DB_PREFIX.'article` set `title`=\''.$title.'\', `author`=\''.$author.'\',';
     $updateArticle .= '`keywords`=\''.$keywords.'\', `description`=\''.$description.'\', ';
+    $updateArticle .= ($img != '') ? (',`img`=\''.$img.'\'') : '';
     $updateArticle .= '`articleCatId`='.$articleCatId.', `content`=\''.$content.'\', `publishTime`='.$publishTime.',';
     $updateArticle .= '`isAutoPublish`='.$isAutoPublish.' where `id`='.$id.' limit 1';
 
@@ -291,7 +310,7 @@ if('edit' == $act)
 
     $id = intval($id);
 
-    $getArticle = 'select `id`,`author`,`title`,`articleCatId`,`keywords`,`description`,`content`,`publishTime`,`isAutoPublish` from `'.DB_PREFIX.'article` where `id`='.$id.' limit 1';
+    $getArticle = 'select `id`,`author`,`title`,`articleCatId`,`keywords`,`description`,`content`,`publishTime`,`isAutoPublish`, `img` from `'.DB_PREFIX.'article` where `id`='.$id.' limit 1';
     $article = $db->fetchRow($getArticle);
 
     if($article)

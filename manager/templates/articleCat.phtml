@@ -1,6 +1,7 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
+<a href="articleCat.php?act=add">新增资讯分类</a>
 <table>
     {foreach from=$articleCats item=cat}
     <tr><td>{$cat.name}</td>
@@ -15,7 +16,7 @@
 {/if}
 
 {if $act eq 'add'}
-<form name="articleCatAddForm" method="POST">
+<form name="articleCatAddForm" method="POST" enctype="multipart/form-data">
 分类名称：<input type="text" name="name"/><br/>
 父级分类：<select name="parentId">
             <option value="0">顶级分类</option>
@@ -25,13 +26,14 @@
           </select><br/>
 分类关键词：<input type="text" name="keywords"/><br/>
 分类简介：<textarea name="description"></textarea><br/>
+封面：<input type="file" name="img" /><br />
 <input type="submit" name="submit" name="添加分类"/>
 <input type="hidden" name="opera" value="add"/>
 </form>
 {/if}
 
 {if $act eq 'edit'}
-<form name="articleCatEditForm" method="POST">
+<form name="articleCatEditForm" method="POST"  enctype="multipart/form-data">
 分类名称：<input type="text" name="name" value="{$articleCat.name}"/><br/>
 父级分类：<select name="parentId">
             <option value="0">顶级分类</option>
@@ -41,6 +43,10 @@
           </select><br/>
 分类关键词：<input type="text" name="keywords" value="{$articleCat.keywords}"/><br/>
 分类简介：<textarea name="description">{$articleCat.description}</textarea><br/>
+封面：<input type="file" name="img"/><br />
+{if $articleCat.img}
+<img src="{$articleCat.img}" /><br />
+{/if}
 <input type="submit" name="submit" name="提交修改"/>
 <input type="hidden" name="opera" value="edit"/>
 <input type="hidden" name="id" value="{$articleCat.id}"/>

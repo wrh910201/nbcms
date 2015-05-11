@@ -37,7 +37,7 @@
 {/if}
 
 {if $act eq 'add'}
-<form method="POST" name="articleAddForm">
+<form method="POST" name="articleAddForm"  enctype="multipart/form-data">
 标题：<input type="text" name="title"/>
 作者：<input type="text" name="author"/>
 关键词：<input type="text" name="keywords"/>
@@ -51,6 +51,7 @@
 自动发布：<input type="radio" name="isAutoPublish" value="0" checked="checked"/>否
           <input type="radio" name="isAutoPublish" value="1"/>是
 发布时间：<input type="text" name="publishTime"/>
+文章封面：<input type="file" name="img" />
 <input type="submit" name="submit" value="提交"/>
 <input type="hidden" name="opera" value="add"/>
 </form>
@@ -82,7 +83,7 @@ KindEditor.ready(function(K)
 {/if}
 
 {if $act eq 'edit'}
-<form method="POST" name="articleEditForm">
+<form method="POST" name="articleEditForm"  enctype="multipart/form-data">
 标题：<input type="text" name="title" value="{$article.title}"/>
 作者：<input type="text" name="author" value="{$article.author}"/>
 关键词：<input type="text" name="keywords" value="{$article.keywords}"/>
@@ -96,6 +97,10 @@ KindEditor.ready(function(K)
 自动发布：<input type="radio" name="isAutoPublish" value="0" {if $article.isAutoPublish eq 0}checked="checked"{/if}/>否
           <input type="radio" name="isAutoPublish" value="1" {if $article.isAutoPublish eq 1}checked="checked"{/if}/>是
 发布时间：<input type="text" name="publishTime" value="{$article.publishTime}"/>
+封面：<input type="file" name="img" /><br />
+{if $article.img}
+<img src="{$article.img}" />
+{/if}
 <input type="submit" name="submit" value="提交修改"/>
 <input type="hidden" name="opera" value="edit"/>
 <input type="hidden" name="id" value="{$article.id}"/>

@@ -192,6 +192,25 @@ function showSystemMessage($msg, $links, $time = 3)
     exit;
 }
 
+/**
+ * $required = false 没有文件上传不报错
+ * @param $file
+ * @param string $type
+ * @param bool $required
+ * @return array
+ */
+function upload_with_choice($file, $type = '', $required = false) {
+    $response = upload($file, $type);
+    if( $response['error'] ) {
+        if( !$required && $response['msg'] == '没有文件上传' ) {
+            return array('error' => 0, 'msg' => '');
+        } else {
+            return $response;
+        }
+    }
+    return $response;
+}
+
 
 /**
  * 文件上传
@@ -653,4 +672,22 @@ function get_area_data() {
     assign('districts', $target_districts);
     assign('json_cities', json_encode($target_cities));
     assign('json_districts', json_encode($target_districts));
+}
+
+/**
+ * 判断是否跨域
+ * @return bool
+ * @author wrh
+ */
+function check_cross_domain() {
+    $server_name = $_SERVER['SERVER_NAME'];//当前运行脚本所在服务器主机的名字。
+    $sub_from = $_SERVER["HTTP_REFERER"];//链接到当前页面的前一页面的 URL 地址
+    $sub_len = strlen($server_name);//统计服务器的名字长度。
+    $check_from = substr($sub_from,7,$sub_len);//截取提交到前一页面的url，不包含http:://的部分。
+
+    if( $check_from != $server_name ) {
+        return false;
+    } else {
+        return true;
+    }
 }

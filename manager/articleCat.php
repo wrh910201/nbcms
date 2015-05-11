@@ -28,6 +28,15 @@ if('add' == $opera)
     $description = getPOST('description');
     $locked = 0;
     $path = '';
+    $img = '';
+    $response = upload_with_choice($_FILES['img'], 'image');
+
+    if($response['error']) {
+        showSystemMessage($response['msg'], array());
+        exit;
+    } else {
+        $img = $response['msg'];
+    }
 
     if('' == $name)
     {
@@ -60,8 +69,8 @@ if('add' == $opera)
         exit;
     }
 
-    $addArticleCat  = 'insert into `'.DB_PREFIX.'articleCat` (`name`,`parentId`,`keywords`,`description`,`locked`) ';
-    $addArticleCat .= 'values(\''.$name.'\','.$parentId.',\''.$keywords.'\',\''.$description.'\', 0)';
+    $addArticleCat  = 'insert into `'.DB_PREFIX.'articleCat` (`name`,`parentId`,`keywords`,`description`,`locked`, `img`) ';
+    $addArticleCat .= 'values(\''.$name.'\','.$parentId.',\''.$keywords.'\',\''.$description.'\', 0, \''.$img.'\')';
 
     if($db->insert($addArticleCat))
     {
@@ -103,13 +112,21 @@ if('edit' == $opera)
         showSystemMessage('权限不足', array());
         exit;
     }
-
     $name = getPOST('name');
     $parentId = getPOST('parentId');
     $keywords = getPOST('keywords');
     $description = getPOST('description');
     $id = getPOST('id');
     $path = '';
+    $img = '';
+    $response = upload_with_choice($_FILES['img'], 'image');
+
+    if($response['error']) {
+        showSystemMessage($response['msg'], array());
+        exit;
+    } else {
+        $img = $response['msg'];
+    }
 
     $id = intval($id);
     if(0 >= $id)
@@ -159,6 +176,7 @@ if('edit' == $opera)
 
     $updateArticleCat  = 'update `'.DB_PREFIX.'articleCat` set `name`=\''.$name.'\',`parentId`='.$parentId.',';
     $updateArticleCat .= '`keywords`=\''.$keywords.'\',`description`=\''.$description.'\',`path`=\''.$path.'\'';
+    $updateArticleCat .= ($img != '') ? (',`img`=\''.$img.'\'') : '';
     $updateArticleCat .= ' where `id`='.$id.' limit 1';
 
     if($db->update($updateArticleCat))
@@ -271,7 +289,7 @@ if('edit' == $act)
 
     assign('articleCats', $articleCats);
 
-    $getArticleCat  = 'select `id`,`name`,`parentId`,`keywords`,`description` from `'.DB_PREFIX.'articleCat`';
+    $getArticleCat  = 'select `id`,`name`,`parentId`,`keywords`,`description`, `img` from `'.DB_PREFIX.'articleCat`';
     $getArticleCat .= ' where `id`='.$id.' limit 1';
     $articleCat = $db->fetchRow($getArticleCat);
 

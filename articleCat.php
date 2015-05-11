@@ -3,6 +3,9 @@ include 'library/init.inc.php';
 $template = 'articleCat.phtml';
 $display = 'articleCat';
 
+$activeNav = get_active_nav();
+assign('activeNav', $activeNav);
+
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 $id = $db->escape($id);
@@ -34,14 +37,15 @@ if(!$cat)
     {
 	    foreach($articles as $key=>$a)
 	    {
-	    	$articles[$key]['publishTime'] = date('Y-m-d H:i', $a['publishTime']);
+	    	$articles[$key]['publishTime'] = date('Y-m-d', $a['publishTime']);
 	    }
     }
 
     assign('articles', $articles);
 
-    //获得平级的文章分类
-    $getCategoryList = 'select `id`,`name` from `'.DB_PREFIX.'articleCat` where `parentId`='.$cat['parentId'];
+
+    //获取下级的文章分类
+    $getCategoryList = 'select `id`,`name` from `'.DB_PREFIX.'articleCat` where `parentId`='.$cat['id'];
     $categoryList = $db->fetchAll($getCategoryList);
 
     if($categoryList)

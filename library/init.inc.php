@@ -85,6 +85,12 @@ assign('middleNav', $middleNav);
 $getBottomNav = 'select `name`,`url`,`isOpenNew` from `'.DB_PREFIX.'nav` where `position`=\'bottom\' and `isShow`=1 order by `path`,`orderView` ASC';
 $bottomNav = $db->fetchAll($getBottomNav);
 assign('bottomNav', $bottomNav);
+
+$getFriends = 'select `name`,`id`,`url`,`isFollow`,`orderView`,`type` from `'.DB_PREFIX.'friend` order by orderView asc';
+$friends = $db->fetchAll($getFriends);
+
+assign('friends', $friends);
+
 //语言包赋值
 assign('LANG', $LANG);
 assign('year', date('Y'));

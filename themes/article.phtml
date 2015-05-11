@@ -13,63 +13,82 @@
 </head>
 <body>
 {include file="library/header.lbi"}
-{if $display eq 'article'}
-<div class="content ur-here">
-{$LANG.urHere}:
-{foreach from=$urHere item=tag}
-{if $tag.link eq ''}
-{$tag.title}
-{else}
-<a href="{$tag.link}" title="{$tag.title}">{$tag.title}></a>
-{/if}
-{/foreach}
+<div class="g-menu">
+    <div class="m-menu">
+        <p>
+            {$LANG.urHere}:
+            {foreach from=$urHere item=tag}
+            {if $tag.link eq ''}
+            {$tag.title}
+            {else}
+            <a target="_blank" href="{$tag.link}">{$tag.title}</a><span>&gt;</span>
+            {/if}
+            {/foreach}
+        </p>
+    </div>
 </div>
-<div class="content clearfix mt">
-	<div class="article-left">
-		<h2 class="article-cat-title">{$LANG.articleCat}</h2>
-		<ul class="article-cat">
-		{foreach from=$articleCatList item=cat}
-		<li><a href="{'articleCat'|build_url:$cat}" title="{$cat.name}" {if $cat.id eq $article.articleCatId}class="cur"{/if}>{$cat.name}</a></li>
-		{/foreach}
-		</ul>
-	</div>
-	<div class="article-right">
-		<h2 class="article-title">{$article.title}</h2>
-		<p class="article-notice">
-			<span class="article-author">{$LANG.author}:&nbsp;{$article.author}</span>
-			<span class="article-date">{$LANG.publishTime}:&nbsp;{$article.publishTime}</span>
-			<span class="article-size">
-				{$LANG.fontSize}:
-				<a href="javascript:mini();" id="mini">小</a>
-				<a href="javascript:normal();" id="normal">中</a>
-				<a href="javascript:big();" id="big">大</a>
-			</span>
-		</p>
-		<div class="article-content" id="article-content">
-		{$article.content}
-		</div>
-		<p class="article-toolbar">
-			{if $pre}
-			<a href="{'article'|build_url:$pre.id}" title="{$pre.title}" class="article-prev">{$LANG.prevArticle}:&nbsp;{$pre.title}</a>
-			{else}
-			<span class="article-prev">{$LANG.prevArticle}:&nbsp;{$LANG.notFoundArticle}</span>
-			{/if}
-			
-			{if $next}
-			<a href="{'article'|build_url:$next.id}" title="{$next.title}" class="article-next">{$LANG.nextArticle}:&nbsp;{$next.title}</a>
-			{else}
-			<span class="article-next">{$LANG.nextArticle}:&nbsp;{$LANG.notFoundArticle}</span>
-			{/if}
-		</p>
-	</div>
+<div class="main">
+    <div class="nav_side">
+        <h3><span>{$cat.name}</span></h3>
+        <ul>
+            {foreach from=$articleCatList item=category}
+            <li><a href="{'articleCat'|buildUrl:$category}">{$category.name}</a></li>
+            {/foreach}
+        </ul>
+    </div>
+    <div class="container_r">
+        <h1 class="article_title">{$article.title}</h1>
+        <div class="article_info">
+            <div class="name">作者：{$article.author}</div>
+            <div class="time">发布时间：{$article.publishTime}</div>
+            <dl class="textShare">
+                <dt>分享到:</dt>
+                <dd>
+                    <!-- 分享代码开始 -->
+                    <div class="bshare-custom icon-medium"><div class="bsPromo bsPromo2"></div>
+                        <div class="bsPromo bsPromo2"></div>
+                        <a href="javascript:void(0);" class="bshare-weixin" title="分享到微信"></a>
+                        <a class="bshare-sinaminiblog" title="分享到新浪微博"></a>
+                        <a href="javascript:void(0);" class="bshare-qzone" title="分享到QQ空间"></a>
+                    </div>
+                    <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script>
+                    <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+                    <script type="text/javascript" charset="utf-8">
+                        bShare.addEntry({
+                            title: '{$article.title}',
+                            url: 'http://weibo.com/208139345',
+                            summary: '{$article.description}',
+                            pic: 'http://ww3.sinaimg.cn/bmiddle/b5003f58jw1erolckzw37j20qo0f2wg7.jpg'
+                        });
+                    </script>
+                    <!-- 分享代码结束 -->
+                </dd>
+            </dl>
+            <div class="clear"></div>
+        </div>
+        <div class="article_con">
+            {$article.content}
+        </div>
+        <div class="loop_nav">
+            <div class="prev">
+                {if $pre}
+                上一篇：<a href="{'article'|buildUrl:$pre.id}" target="_blank">{$pre.title}</a>
+                {else}
+                上一篇：没有了
+                {/if}
+            </div>
+            <div class="next">
+                {if $next}
+                下一篇：<a href="{'article'|buildUrl:$next.id}" target="_blank">{$next.title}</a>
+                {else}
+                下一篇：没有了
+                {/if}
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="clear"></div>
 </div>
-{/if}
-
-{if $display eq 'notFound'}
-<div class="content clearfix">
-你所查看的文章不存在，以下是最近更新的5篇文章
-</div>
-{/if}
 {include file="library/footer.lbi"}
 </body>
 </html>
