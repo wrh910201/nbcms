@@ -51,20 +51,7 @@
             </div>
         </div>
         {/foreach}
-        <div class="assign_pager">
-            <div class="green-black">
-						<span class="pageinfo">
-							共 <strong>15</strong>
-							条记录
-						</span>
-                <span class="disabled">首页</span>
-                <span class="current">1</span>
-                <a href="category_list_page2.html" class="bg_no">2</a>
-                <a href="category_list_page3.html" class="bg_no">3</a>
-                <a href="category_list_page2.html" class="bg_next">&nbsp;</a>
-                <a href="category_list_page3.html" class="a_i">末页</a>
-            </div>
-        </div>
+        {include file="library/pager.lbi"}
     </div>
 </div>
 {include file="library/footer.lbi"}

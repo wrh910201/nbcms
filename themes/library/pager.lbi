@@ -1,0 +1,48 @@
+<div class="assign_pager">
+    <div class="green-black">
+                <span class="pageinfo">
+                    共 <strong>{$total}</strong>
+                    条记录
+                </span>
+        {if $go_first eq true}
+            <a href="articleCat.php?id={$cat.id}&page=1" class="bg_no">首页</a>
+        {else}
+            <span class="disabled">首页</span>
+        {/if}
+        {if $has_prev eq true}
+            <a href="articleCat.php?id={$cat.id}&page={$page - 1}" class="bg_no">上一页</a>
+        {else}
+            <span class="disabled">上一页</span>
+        {/if}
+        {if $has_many_prev eq true}
+            <span class="disabled">...</span>
+        {/if}
+        {foreach from=$show_page item=p}
+            {if $p eq $page}
+                <span class="current">{$p}</span>
+            {else}
+                <a href="articleCat.php?id={$cat.id}&page={$p}" class="bg_no">{$p}</a>
+            {/if}
+        {/foreach}
+        {if $has_many_next eq true}
+            <span class="disabled">...</span>
+        {/if}
+        {if $has_next eq true}
+            <a href="articleCat.php?id={$cat.id}&page={$page + 1}" class="bg_no">下一页</a>
+        {else}
+            <span class="disabled">下一页</span>
+        {/if}
+        {if $go_last eq true}
+            <a href="articleCat.php?id={$cat.id}&page={$totalPage}" class="bg_no">末页</a>
+        {else}
+            <span class="disabled">末页</span>
+        {/if}
+
+        <!--span class="disabled">首页</span>
+        <span class="current">1</span>
+        <a href="category_list_page2.html" class="bg_no">2</a>
+        <a href="category_list_page3.html" class="bg_no">3</a>
+        <a href="category_list_page2.html" class="bg_next">&nbsp;</a>
+        <a href="category_list_page3.html" class="a_i">末页</a-->
+    </div>
+</div>

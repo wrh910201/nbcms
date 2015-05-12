@@ -1,5 +1,5 @@
 $(function(){
-    $('.slider').DB_tabMotionSlider({key:'b28551',autoRollingTime:3000,bgSpeed:2000});
+
 
 
     //百度地图API功能

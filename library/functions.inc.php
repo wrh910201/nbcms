@@ -202,13 +202,127 @@ function showSystemMessage($msg, $links, $time = 3)
 function upload_with_choice($file, $type = '', $required = false) {
     $response = upload($file, $type);
     if( $response['error'] ) {
-        if( !$required && $response['msg'] == '没有文件上传' ) {
-            return array('error' => 0, 'msg' => '');
+        if( !$required && ( $response['msg'] == '没有文件上传'|| $response['msg'] == '请选择图片。') ) {
+            //获得文件扩展名
+            $file_name = $file['name'];
+            $temp_arr = explode(".", $file_name);
+            $file_ext = array_pop($temp_arr);
+            $file_ext = trim($file_ext);
+            $file_ext = strtolower($file_ext);
+            return array('error' => 0, 'msg' => '', 'type' => $file_ext);
         } else {
             return $response;
         }
     }
     return $response;
+}
+
+/**
+ * 图片缩放
+ * @param $filename
+ * @param int $max_width
+ * @param int $max_height
+ * @param $type
+ */
+function resize_image($filename, $type, $max_width = 55, $max_height = 55) {
+    //文件保存目录路径
+    $save_path = ROOT_PATH.'upload/';
+    //文件保存目录URL
+    $save_url = '/upload/';
+    //upload下保存图片的目录
+    $dir_name = 'image';
+
+    $im = null;
+    switch($type) {
+        case 'jpg': $im = imagecreatefromjpeg(ROOT_PATH.$filename);break;
+        case 'jpeg': $im = imagecreatefromjpeg(ROOT_PATH.$filename);break;
+        case 'png': $im = imagecreatefrompng(ROOT_PATH.$filename);break;
+        case 'gif': $im = imagecreatefromgif(ROOT_PATH.$filename);break;
+        default: $im = imagecreatefromjpeg(ROOT_PATH.$filename);break;
+    }
+    $pic_width = imagesx($im);
+    $pic_height = imagesy($im);
+
+    if(($max_width && $pic_width > $max_width) || ($max_height && $pic_height > $max_height))
+    {
+        if($max_width && $pic_width>$max_width)
+        {
+            $widthratio = $max_width/$pic_width;
+            $resizewidth_tag = true;
+        }
+
+        if($max_height && $pic_height>$max_height)
+        {
+            $heightratio = $max_height/$pic_height;
+            $resizeheight_tag = true;
+        }
+
+        if($resizewidth_tag && $resizeheight_tag)
+        {
+            if($widthratio<$heightratio)
+                $ratio = $widthratio;
+            else
+                $ratio = $heightratio;
+        }
+
+        if($resizewidth_tag && !$resizeheight_tag)
+            $ratio = $widthratio;
+        if($resizeheight_tag && !$resizewidth_tag)
+            $ratio = $heightratio;
+
+        $new_width = $pic_width * $ratio;
+        $new_height = $pic_height * $ratio;
+
+        if(function_exists("imagecopyresampled"))
+        {
+            $new_im = imagecreatetruecolor($new_width,$new_height);
+            imagecopyresampled($new_im,$im,0,0,0,0,$new_width,$new_height,$pic_width,$pic_height);
+        }
+        else
+        {
+            $new_im = imagecreate($new_width,$new_height);
+            imagecopyresized($new_im,$im,0,0,0,0,$new_width,$new_height,$pic_width,$pic_height);
+        }
+        //新文件名
+        $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $type;
+    }
+    else
+    {
+        //新文件名
+        $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $type;
+        $new_im = $im;
+    }
+
+
+    //创建文件夹
+    if ($dir_name !== '')
+    {
+        $save_path .= $dir_name . "/";
+        $save_url .= $dir_name . "/";
+        if (!file_exists($save_path))
+        {
+            mkdir($save_path);
+        }
+    }
+    $ymd = date("Ymd");
+    $save_path .= $ymd . "/";
+    $save_url .= $ymd . "/";
+    if (!file_exists($save_path))
+    {
+        mkdir($save_path);
+    }
+
+    $file_path = $save_path . $new_file_name;
+
+    switch($type) {
+        case 'jpg': imagejpeg($new_im, $file_path);break;
+        case 'jpeg': imagejpeg($new_im, $file_path);break;
+        case 'png': imagepng($new_im, $file_path);break;
+        case 'gif': imagegif($new_im, $file_path);break;
+        default: imagejpeg($new_im, $file_path);break;
+    }
+    return $save_url . $new_file_name;
+
 }
 
 
@@ -342,7 +456,7 @@ function upload($file, $type = '')
 	    @chmod($file_path, 0644);
     	$file_url = $save_url . $new_file_name;
         
-        return array('error' => 0, 'msg' => str_replace('..', '', $file_url));
+        return array('error' => 0, 'msg' => str_replace('..', '', $file_url), 'type' => $file_ext);
     }
 
     return array('error'=>1, 'msg'=>'没有文件上传');
@@ -420,9 +534,9 @@ function buildUrl($script, $params)
 		case 'articleCat':
 			if($sysconf['isStatic'])
 			{
-				return 'articleCat-'.intval($params['id']).'.html';
+				return 'articleCat-'.intval($params['id']).'-page-'.intval($params['page']).'html';
 			} else {
-				return 'articleCat.php?id='.intval($params['id']);
+				return 'articleCat.php?id='.intval($params['id']).'&page='.intval($params['page']);
 			}
 			break;
 	}
@@ -690,4 +804,60 @@ function check_cross_domain() {
     } else {
         return true;
     }
+}
+
+
+function remove_file($filename) {
+    if( file_exists($filename) ) {
+        return unlink($filename);
+    } else {
+        return false;
+    }
+}
+
+function create_pager($page, $totalPage, $total) {
+    $show_page = array();
+    if( $page == 1 ) {
+        for($i = 1; $i <= $totalPage && $i <= 3; $i++) {
+            $show_page[] = $i;
+        }
+        $go_first = false;  //首页
+        $has_prev = false;  //上一页
+        $has_many_prev = false; //前页省略号
+        $has_next = ($totalPage > 1) ? true : false;    //下一页
+        $has_many_next = ($totalPage > 3) ? true : false;   //后页省略号
+        $go_last = ($total > 1) ? true : false; //末页
+    } elseif( $page == $totalPage ) {   //必然不是第一页
+        $i = ($totalPage < 3) ? $page - 1 : $page - 2;
+        for( ; $i <= $totalPage; $i++ ) {
+            $show_page[] = $i;
+        }
+        $go_first = true;
+        $has_prev = true;
+        $has_many_prev = ($totalPage > 3) ? true : false;
+        $has_next = false;
+        $has_many_next = false;
+        $go_last = false;
+    } else {
+        for($i = $page - 1; $i <= $totalPage && $i <= $page + 1; $i++ ) {
+            $show_page[] = $i;
+        }
+        $go_first = true;
+        $has_prev = true;
+        $has_many_prev = ($page > 3) ? true : false;
+        $has_many_next = ( ($totalPage - $page) > 2 ) ? true : false;
+        $has_next = true;
+        $go_last = true;
+    }
+    assign('show_page', $show_page);
+    assign('go_first', $go_first);
+    assign('has_prev', $has_prev);
+    assign('has_many_prev', $has_many_prev);
+    assign('has_many_next', $has_many_next);
+    assign('has_next', $has_next);
+    assign('go_last', $go_last);
+
+    assign('page', $page);
+    assign('total', $total);
+    assign('totalPage', $totalPage );
 }

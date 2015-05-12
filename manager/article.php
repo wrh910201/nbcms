@@ -34,6 +34,7 @@ if('add' == $opera)
     $addTime = time();
 
     $img = '';
+    $img_shortcut = '';
     $response = upload_with_choice($_FILES['img'], 'image');
 
     if($response['error']) {
@@ -41,6 +42,8 @@ if('add' == $opera)
         exit;
     } else {
         $img = $response['msg'];
+        $type = $response['type'];
+        $img_shortcut = resize_image($img, $type);
     }
 
     if('' == $title)
@@ -103,9 +106,9 @@ if('add' == $opera)
     }
 
     $addArticle  = 'insert into `'.DB_PREFIX.'article` (`author`,`title`,`articleCatId`,`keywords`,`description`,';
-    $addArticle .= '`isDelete`,`content`,`addTime`,`publishTime`,`isAutoPublish`, `img`) values (\''.$author.'\',';
+    $addArticle .= '`isDelete`,`content`,`addTime`,`publishTime`,`isAutoPublish`, `img`, `img_shortcut`) values (\''.$author.'\',';
     $addArticle .= '\''.$title.'\','.$articleCatId.',\''.$keywords.'\',\''.$description.'\',0,\''.$content.'\',';
-    $addArticle .= $addTime.','.$publishTime.','.$isAutoPublish.', \''.$img.'\')';
+    $addArticle .= $addTime.','.$publishTime.','.$isAutoPublish.', \''.$img.'\', \''.$img_shortcut.'\')';
 
     if($db->insert($addArticle))
     {
@@ -125,7 +128,6 @@ if('edit' == $opera)
         showSystemMessage('权限不足', array());
         exit;
     }
-
     $title = getPOST('title');
     $author = getPOST('author');
     $articleCatId = getPOST('articleCatId');
@@ -138,11 +140,19 @@ if('edit' == $opera)
     $id = intval($id);
 
     $img = '';
+    $img_shortcut = '';
+
+    $response = upload_with_choice($_FILES['img'], 'image');
     if($response['error']) {
         showSystemMessage($response['msg'], array());
         exit;
     } else {
         $img = $response['msg'];
+        if( $img != '' ) {
+            $type = $response['type'];
+            $img_shortcut = resize_image($img, $type);
+        }
+
     }
 
     if('' == $id || 0 >= $id)
@@ -212,9 +222,11 @@ if('edit' == $opera)
 
     $updateArticle  = 'update `'.DB_PREFIX.'article` set `title`=\''.$title.'\', `author`=\''.$author.'\',';
     $updateArticle .= '`keywords`=\''.$keywords.'\', `description`=\''.$description.'\', ';
-    $updateArticle .= ($img != '') ? (',`img`=\''.$img.'\'') : '';
     $updateArticle .= '`articleCatId`='.$articleCatId.', `content`=\''.$content.'\', `publishTime`='.$publishTime.',';
-    $updateArticle .= '`isAutoPublish`='.$isAutoPublish.' where `id`='.$id.' limit 1';
+    $updateArticle .= '`isAutoPublish`='.$isAutoPublish;
+    $updateArticle .= ($img != '') ? (',`img`=\''.$img.'\'') : '';
+    $updateArticle .= ($img_shortcut != '') ? (',`img_shortcut`=\''.$img_shortcut.'\'') : '';
+    $updateArticle .= ' where `id`='.$id.' limit 1';
 
     if($db->update($updateArticle))
     {

@@ -1,6 +1,6 @@
 <div class="header">
     <div class="nav">
-        <h1>
+        <h1 style="">
             <img alt="佳百莉logo" src="{$logo}">
         </h1>
         <ul class="ul_nav">

@@ -16,7 +16,6 @@
     <script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
     <script src="js/jquery.slide.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qySui8MiIZKshBmwwQLmX1HU"></script>
-    <script type="text/javascript" src="js/index.js"></script>
 </head>
 <body>
 {include file="library/header.lbi"}
@@ -38,11 +37,11 @@
             {$first = true}
             {foreach from=$brandStory item=article}
                 {if $first eq true}
-                    <a class="a_dt" target="_blank" href="#"><img src="images/img1.jpg" alt="{$article.title}"><span>{$article.title}</span></a>
+                    <a class="a_dt" target="_blank" href="#"><img src="{$article.img}" alt="{$article.title}"><span>{$article.title}</span></a>
                     {$first = false}
                 {else}
                     <dl class="col_dl">
-                        <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                        <dt><a target="_blank" href="#"><img width="50px" height="50px" src="{$article.img_shortcut}"></a></dt>
                         <dd>
                             <b><a class="link_black" target="_blank" href="#">{$article.title}</a></b>
                             <p>作者：{$article.author}<i>{$article.publishTime}</i></p>
@@ -59,11 +58,11 @@
             {$first = true}
             {foreach from=$enterpriseNews item=article}
             {if $first eq true}
-            <a class="a_dt" target="_blank" href="#"><img src="images/img2.jpg" alt="{$article.title}"><span>{$article.title}</span></a>
+            <a class="a_dt" target="_blank" href="#"><img src="{$article.img}" alt="{$article.title}"><span>{$article.title}</span></a>
             {$first = false}
             {else}
             <dl class="col_dl">
-                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="{$article.img_shortcut}"></a></dt>
                 <dd>
                     <b><a class="link_black" target="_blank" href="#">{$article.title}</a></b>
                     <p>作者：{$article.author}<i>{$article.publishTime}</i></p>
@@ -80,11 +79,11 @@
             {$first = true}
             {foreach from=$colleges item=article}
             {if $first eq true}
-            <a class="a_dt" target="_blank" href="#"><img src="images/img3.jpg" alt="{$article.title}"><span>{$article.title}</span></a>
+            <a class="a_dt" target="_blank" href="#"><img src="{$article.img}" alt="{$article.title}"><span>{$article.title}</span></a>
             {$first = false}
             {else}
             <dl class="col_dl">
-                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="images/list-img.jpg"></a></dt>
+                <dt><a target="_blank" href="#"><img width="50px" height="50px" src="{$article.img_shortcut}"></a></dt>
                 <dd>
                     <b><a class="link_black" target="_blank" href="#">{$article.title}</a></b>
                     <p>作者：{$article.author}<i>{$article.publishTime}</i></p>
@@ -102,35 +101,7 @@
         <img src="images/banner.jpg" alt="banner">
     </div-->
     {include file="library/ads.lbi"}
-    <div class="map">
-        <h3 class="map_title"><span>经销商<i>地图</i></span></h3>
-        <div class="map_con">
-            <div id="map_l"></div>
-            <div class="map_r">
-                <div class="sel_adress">
-
-                    <select class="sele" id="provinceDiv">
-                        <option value="0">请选择</option>
-                        {foreach from=$provinces item=province}
-                        <option value="{$province.ProvinceID}">{$province.ProvinceName}</option>
-                        {/foreach}
-                    </select>
-                    <select class="sele" id="cityDiv"><option value="0">请选择</option></select>
-                    <select class="sele" id="countyDiv"><option value="0">请选择</option></select>
-                </div>
-                <div class="address_info" id="address_info">
-                    <select size="2" id="address_info_input">
-<!--                        <option value="广东省广州市白云区旗舰店">广东省广州市白云区旗舰店</option>-->
-<!--                        <option value="广东省广州市天河区总经销">广东省广州市天河区总经销</option>-->
-<!--                        <option value="广东省广州市天河区五山分销点">广东省广州市天河区五山分销点</option>-->
-                    </select>
-                </div>
-                <div class="zs_btn">
-                    <a target="_blank" href="#">招商政策→</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    {include file="library/map.lbi"}
     <div class="clear"></div>
 </div>
 {include file="library/footer.lbi"}

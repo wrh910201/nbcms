@@ -1,7 +1,8 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
-<a href="article.php?act=add">新增资讯</a>
+<a href="article.php?act=add">新增资讯</a>&nbsp;&nbsp;
+<a href="article.php?act=cycle">回收站</a>
 <table>
 {foreach from=$articles item=article name=articles}
 <tr>
@@ -55,14 +56,15 @@
 <input type="submit" name="submit" value="提交"/>
 <input type="hidden" name="opera" value="add"/>
 </form>
+<script type="text/javascript" src="js/plugins/kindeditor/kindeditor-all-min.js"></script>
 <script type="text/javascript">
 {literal}
 KindEditor.ready(function(K)
 {
     var editor1 = K.create("textarea[name='content']", {
     	cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
-		uploadJson : '../plugins/kindeditor/upload_json.php',
-		fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
+		uploadJson : '../plugins/kindeditor/php/upload_json.php',
+		fileManagerJson : '../plugins/kindeditor/php/file_manager_json.php',
 		allowFileManager : true,
 		afterCreate : function() {
 			var self = this;
@@ -105,30 +107,32 @@ KindEditor.ready(function(K)
 <input type="hidden" name="opera" value="edit"/>
 <input type="hidden" name="id" value="{$article.id}"/>
 </form>
-<script>
-{literal}
-	KindEditor.ready(function(K) {
-		var editor1 = K.create('textarea[name="content"]', {
-			cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
-			uploadJson : '../plugins/kindeditor/upload_json.php',
-			fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
-			allowFileManager : true,
-			afterCreate : function() {
-				var self = this;
-                K.ctrl(document, 13, function() {
-					self.sync();
-					K('form[name=articleAddForm]')[0].submit();
-				});
-				K.ctrl(self.edit.doc, 13, function() {
-					self.sync();
-					K('form[name=articleAddForm]')[0].submit();
-				});
-			}
-		});
-		prettyPrint();		
-    });
-{/literal}
-</script>
+    <script type="text/javascript" src="js/plugins/kindeditor/kindeditor-all-min.js"></script>
+    <script type="text/javascript">
+        {literal}
+        KindEditor.ready(function(K)
+        {
+            var editor1 = K.create("textarea[name='content']", {
+                cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+                uploadJson : '../plugins/kindeditor/php/upload_json.php',
+                fileManagerJson : '../plugins/kindeditor/php/file_manager_json.php',
+                allowFileManager : true,
+                afterCreate : function() {
+                    var self = this;
+                    K.ctrl(document, 13, function() {
+                        self.sync();
+                        K('form[name=articleeditForm]')[0].submit();
+                    });
+                    K.ctrl(self.edit.doc, 13, function() {
+                        self.sync();
+                        K('form[name=articleeditForm]')[0].submit();
+                    });
+                }
+            });
+            prettyPrint();
+        });
+        {/literal}
+    </script>
 
 {/if}
 </div><!-- contentpanel -->

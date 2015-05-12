@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content=" " name="keywords">
+    <meta content=" " name="description">
+    <title>【佳百莉官网】佳百莉唯一官方网站</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript">
+        //var data_provinces = {$json_provinces};
+        var data_cities = {$json_cities};
+        var data_districts = {$json_districts};
+    </script>
+    <script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery.slide.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qySui8MiIZKshBmwwQLmX1HU"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/query.js"></script>
+    <style>
+        .nav h1 {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+<body>
+{include file="library/header.lbi"}
+<div class="banner_bg"></div>
+<div class="g-menu">
+    <div class="m-menu">
+        <p>
+            <a target="_blank" href="#">首页</a><span>&gt;</span><a target="_blank" href="#">授权查询</a>
+        </p>
+    </div>
+</div>
+<div class="main">
+    <div class="check_title"><h3></h3></div>
+    <div class="check_con">
+        <div class="check_l">
+            <h3>请输入授权编码或者手机号码：</h3>
+            <form action="#" id="search-formhybrid-search" class="search-form" method="get">
+                <div class="search-input">
+                    <input type="button" class="search-button" value="&#12288;">
+                    <input type="text" value="" id="search-texthybrid-search" name="s" placeholder="请输入授权编码或者手机号码" class="search-text">
+                </div>
+            </form>
+            <div class="check_warning">
+                <p>本公司正规授权的经销商必须严格按照公司规定的价格体系进行销售，凡是发现以低于公司规定价格出售产品、销售假货、串货任何一种情况的经销商，一经查实，将会立刻取消授权资格，并拉入黑名单。</p>
+            </div>
+        </div>
+        <div class="check_r">
+            <div class="check_yl">
+                <img src="images/yangli.jpg" alt="授权证书样例">
+                <p>授权书样例</p>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    {include file="library/map.lbi"}
+</div>
+{include file="library/footer.lbi"}
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Small Modal</h4>
+            </div>
+            <div class="modal-body">...</div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-static" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Static Background</h4>
+            </div>
+            <div class="modal-body">
+                Specify static for a backdrop which doesn't close the modal on click.
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
