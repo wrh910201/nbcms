@@ -58,7 +58,7 @@ if('add' == $opera)
     $data = check_distributor_input();
     $addDistributor = "insert into ".DB_PREFIX."distributor
         (id, name, contact, phone, DistrictID, address, lat, lng, add_time, status, authCode) values
-        ('', '".$data['name']."', '".$data['contact']."', '".$data['phone']."', '".$data['district']."', '".$data['address']."', ".$data['lat'].", ".$data['lng'].", ".time().", 1, '".$data['authCode']."')";
+        (null, '".$data['name']."', '".$data['contact']."', '".$data['phone']."', '".$data['district']."', '".$data['address']."', ".$data['lat'].", ".$data['lng'].", ".time().", 1, '".$data['authCode']."')";
 
 //    echo $addDistributor;exit;
 

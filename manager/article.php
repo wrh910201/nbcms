@@ -4,7 +4,7 @@ include 'library/init.inc.php';
 back_base_init();
 
 $operation = 'add|edit';
-$action = 'add|list|delete|edit|cycle|remove';
+$action = 'add|list|delete|edit|cycle|remove|revoke';
 
 $act = checkAction($action, getGET('act'));
 $opera = checkAction($operation, getPOST('opera'));
@@ -13,6 +13,43 @@ if('' == $act)
 {
     $act = 'list';
 }
+
+if( 'revoke' == $act ) {
+    if(!checkPurview('pur_article_delete', $_SESSION['purview']))
+    {
+        showSystemMessage('权限不足', array());
+        exit;
+    }
+    $id = getGET('id');
+    if('' == $id)
+    {
+        showSystemMessage('参数错误', array());
+        exit;
+    }
+
+    $id = intval($id);
+    $getArticle = 'select `id`,`author`,`title`,`articleCatId`,`keywords`,`description`,`content`,`publishTime`,`isAutoPublish`, `img` from `'.DB_PREFIX.'article` where `id`='.$id.' limit 1';
+    $article = $db->fetchRow($getArticle);
+
+    if($article)
+    {
+        assign('article', $article);
+    } else {
+        showSystemMessage('参数错误', array());
+        exit;
+    }
+    $revokeArticle = 'update `'.DB_PREFIX.'article` set `isDelete`=0 where `id`='.$id.' limit 1';
+
+    if($db->update($revokeArticle))
+    {
+        showSystemMessage('已从回收站撤销该资讯', array(array('alt'=>'查看资讯列表', 'link'=>'article.php')));
+        exit;
+    } else {
+        showSystemMessage('系统繁忙，请稍后再试', array());
+        exit;
+    }
+}
+
 
 //新增资讯
 if('add' == $opera)
@@ -42,8 +79,10 @@ if('add' == $opera)
         exit;
     } else {
         $img = $response['msg'];
-        $type = $response['type'];
-        $img_shortcut = resize_image($img, $type);
+        if( $img != '' ) {
+            $type = $response['type'];
+            $img_shortcut = resize_image($img, $type);
+        }
     }
 
     if('' == $title)
@@ -272,12 +311,19 @@ if('cycle' == $act)
         exit;
     }
 
-    $getArticles  = 'select a.`id`,a.`title`,a.`publishTime`,ac.`name` as articleCat from ';
+    $getArticles  = 'select a.`id`,a.`title`,a.`publishTime`,a.`author`, a.`img`, a.`img_shortcut`,ac.`name` as articleCat from ';
     $getArticles .= '`'.DB_PREFIX.'article` as a left join ';
     $getArticles .= '`'.DB_PREFIX.'articleCat` as ac on a.`articleCatId`=ac.`id`';
     $getArticles .= ' where a.`isDelete`=1 order by a.`publishTime` DESC';
 
-    assign('articles', $db->fetchAll($getArticles));
+    $articles = $db->fetchAll($getArticles);
+
+    foreach($articles as $key => $article) {
+        $temp = date('Y-m-d H:i:s', $article['publishTime']);
+        $articles[$key]['publishTime'] = $temp;
+    }
+
+    assign('articles', $articles);
 }
 
 if('add' == $act)
@@ -309,6 +355,7 @@ if('add' == $act)
         $articleCat[$key] = $cat;
     }
 
+    assign('defaultAuthor', $_SESSION['account']);
     assign('articleCat', $articleCat);
 }
 
@@ -329,8 +376,9 @@ if('edit' == $act)
 
     $id = intval($id);
 
-    $getArticle = 'select `id`,`author`,`title`,`articleCatId`,`keywords`,`description`,`content`,`publishTime`,`isAutoPublish`, `img` from `'.DB_PREFIX.'article` where `id`='.$id.' limit 1';
+    $getArticle = 'select `id`,`author`,`title`,`articleCatId`,`keywords`,`description`,`content`,`publishTime`,`isAutoPublish`, `img`, `img_shortcut` from `'.DB_PREFIX.'article` where `id`='.$id.' limit 1';
     $article = $db->fetchRow($getArticle);
+    $article['publishTime'] = date('Y-m-d H:i:s', $article['publishTime']);
 
     if($article)
     {

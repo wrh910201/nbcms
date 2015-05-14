@@ -86,7 +86,7 @@ $(function(){
         var district = $(this).children(':selected').text();
         locate_city(district);
 
-        var url = '/ajax.php';
+        var url = 'ajax.php';
         var data = {'DistrictID':did,'opera':'get_distributors'};
 
         $.post(url, data, function(response){

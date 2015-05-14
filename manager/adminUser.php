@@ -216,6 +216,9 @@ if('edit' == $opera)
         }
     }
 
+    $getPhoto = 'select photo from '.DB_PREFIX.'admin where account = \''.$account.'\' limit 1';
+    $old_photo = $db->fetchOne($getPhoto);
+
     if(isset($_FILES['photo']))
     {
         $photo = upload($_FILES['photo']);
@@ -243,6 +246,9 @@ if('edit' == $opera)
 
     if($db->update($updateAdmin))
     {
+        if( '' != $photo ) {
+            remove_file($old_photo);
+        }
         showSystemMessage('修改管理员成功', array(array('alt'=>'查看管理员列表', 'link'=>'adminUser.php')));
         exit;
     } else {
@@ -259,7 +265,8 @@ if('list' == $act)
         exit;
     }
 
-    $getAdmins = 'select `account`,`name`,`mobile`,`email`,`roleId` from `'.DB_PREFIX.'admin`';
+    $getAdmins = 'select `id`, u.`account`,u.`name`,u.`mobile`,u.`email`,u.`roleId`, r.`name` as roleName from `'.DB_PREFIX.'admin` as u';
+    $getAdmins .= ' left join `'.DB_PREFIX.'adminRole` as r on u.roleId = r.id';
     $admins = $db->fetchAll($getAdmins);
 
     assign('admins', $admins);

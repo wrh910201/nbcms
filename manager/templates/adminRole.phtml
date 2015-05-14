@@ -1,61 +1,174 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
-<a href="adminRole.php?act=add">添加管理员角色</a>
-<table>
-{foreach from=$adminRoles item=role}
-<tr><td>{$role.name}</td>
-    <td>
-        <a href="adminRole.php?act=edit&id={$role.id}">编辑</a>|
-        <a href="adminRole.php?act=delete&id={$role.id}">删除</a>
-    </td>
-</tr>
-{/foreach}
-</table>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <!--            <h4 class="panel-title">添加导航条</h4>-->
+            <a class="btn btn-primary" href="adminRole.php?act=add">新增管理员角色</a>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <table class="table mb30" style="width: 98%; margin: 0 auto">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>管理员角色</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach from=$adminRoles item=role name=roles}
+                <tr>
+                    <td>{$smarty.foreach.roles.iteration}</td>
+                    <td>{$role.name}</td>
+                    <td>
+                        <a href="adminRole.php?act=edit&id={$role.id}" title="编辑"><i class="fa fa-pencil"></i></a>&nbsp;|
+                        <a class="delete-row" href="adminRole.php?act=delete&id={$role.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
 {/if}
 
 {if $act eq 'add'}
-<form name="adminRoleAddForm" method="POST">
-角色名：<input type="text" name="name" /><br/>
-权限：<br />
-{foreach from=$purview item=sub_purview key=name}
-<input type="checkbox" name="purviews[{$name}]" value="{$name}" class="purview"/><br />
-    {foreach from=$sub_purview item=pur}
-<input type="checkbox" name="purviews[{$name}][]" value="{$pur}" class="sub-purview"/>{$purviewL.$pur}&nbsp;&nbsp;
-    {/foreach}
-<br />
-{/foreach}
-<br/>
-<input type="submit" name="submit" value="添加角色"/>
-<input type="hidden" name="opera" value="add"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-管理员角色</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="adminAddForm" method="POST"  enctype="multipart/form-data" class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">角色名</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="checkbox" class="col-sm-3 control-label">权限</label>
+                    <div class="col-sm-6">
+                        <div class="checkbox block"><label><input type="checkbox" id="all">全选</label></div>
+                    </div>
+                </div>
+            {foreach from=$purview item=sub_purview key=name}
+                <div class="form-group">
+                    <label for="checkbox" class="col-sm-3 control-label""></label>
+                    <div class="col-sm-6">
+                        <div class="checkbox block"><label><input type="checkbox" name="purviews[{$name}]" value="{$name}" class="purview" id="{$name}"/>{$menus.$name.title}</label></div>
+                        <div class="col-sm-12">
+                            <div class="checkbox block">
+                {foreach from=$sub_purview item=pur}
+                                <label><input type="checkbox" name="purviews[{$name}][]" value="{$pur}" class="sub-purview {$name}" data-parent="{$name}"/>{$purviewL.$pur}</label>
+                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/foreach}
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">添加</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="add"/>
+
+            </form>
+        </div>
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
 <script type="text/javascript" src="js/adminRole.js"></script>
 {/if}
 
 {if $act eq 'edit'}
-<form name="adminRoleEditForm" method="POST">
-角色名：<input type="text" name="name" value="{$adminRole.name}"/><br/>
-权限：<br />
-{foreach from=$sub_purviewC item=sub_purview key=name}
-    {if $purviewC.$name eq true}
-        <input type="checkbox" name="purviews[{$name}]" value="{$name}" class="purview" checked="checked"/><br />
-    {else}
-        <input type="checkbox" name="purviews[{$name}]" value="{$name}" class="purview"/><br />
-    {/if}
-    {foreach from=$sub_purview item=check key=pur}
-        {if $check eq true}
-            <input type="checkbox" name="purviews[{$name}][]" value="{$pur}" class="sub-purview" checked="checked"/>{$purviewL.$pur}&nbsp;&nbsp;
-        {else}
-            <input type="checkbox" name="purviews[{$name}][]" value="{$pur}" class="sub-purview"/>{$purviewL.$pur}&nbsp;&nbsp;
-        {/if}
-    {/foreach}
-<br />
-{/foreach}
-<br/>
-<input type="submit" name="submit" value="更新角色"/>
-<input type="hidden" name="opera" value="edit"/>
-<input type="hidden" name="id" value="{$adminRole.id}"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">编辑-{$adminRole.name}</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="adminAddForm" method="POST"  enctype="multipart/form-data" class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">角色名</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="name" value="{$adminRole.name}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="checkbox" class="col-sm-3 control-label">权限</label>
+                    <div class="col-sm-6">
+                        <div class="checkbox block"><label><input type="checkbox" id="all">全选</label></div>
+                    </div>
+                </div>
+                {foreach from=$sub_purviewC item=sub_purview key=name}
+                <div class="form-group">
+                    <label for="checkbox" class="col-sm-3 control-label""></label>
+                    <div class="col-sm-6">
+                        {if $purviewC.$name eq true}
+                        <div class="checkbox block"><label><input type="checkbox" name="purviews[{$name}]" value="{$name}" class="purview" id="{$name}" checked="checked"/>{$menus.$name.title}</label></div>
+                        {else}
+                        <div class="checkbox block"><label><input type="checkbox" name="purviews[{$name}]" value="{$name}" class="purview" id="{$name}"/>{$menus.$name.title}</label></div>
+                        {/if}
+                        <div class="col-sm-12">
+                            <div class="checkbox block">
+                                {foreach from=$sub_purview item=check key=pur}
+                                {if $check eq true}
+                                <label><input type="checkbox" name="purviews[{$name}][]" value="{$pur}" class="sub-purview {$name}" data-parent="{$name}" checked="checked"/>{$purviewL.$pur}</label>
+                                {else}
+                                <label><input type="checkbox" name="purviews[{$name}][]" value="{$pur}" class="sub-purview {$name}" data-parent="{$name}"/>{$purviewL.$pur}</label>
+                                {/if}
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">更新</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="edit"/>
+                <input type="hidden" name="id" value="{$adminRole.id}"/>
+
+            </form>
+        </div>
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
+<!--<form name="adminRoleEditForm" method="POST">-->
+<!--角色名：<input type="text" name="name" value="{$adminRole.name}"/><br/>-->
+<!--权限：<br />-->
+<!--{foreach from=$sub_purviewC item=sub_purview key=name}-->
+<!--    {if $purviewC.$name eq true}-->
+<!--        <input type="checkbox" name="purviews[{$name}]" value="{$name}" class="purview" checked="checked"/><br />-->
+<!--    {else}-->
+<!--        <input type="checkbox" name="purviews[{$name}]" value="{$name}" class="purview"/><br />-->
+<!--    {/if}-->
+<!--    {foreach from=$sub_purview item=check key=pur}-->
+<!--        {if $check eq true}-->
+<!--            <input type="checkbox" name="purviews[{$name}][]" value="{$pur}" class="sub-purview" checked="checked"/>{$purviewL.$pur}&nbsp;&nbsp;-->
+<!--        {else}-->
+<!--            <input type="checkbox" name="purviews[{$name}][]" value="{$pur}" class="sub-purview"/>{$purviewL.$pur}&nbsp;&nbsp;-->
+<!--        {/if}-->
+<!--    {/foreach}-->
+<!--<br />-->
+<!--{/foreach}-->
+<!--<br/>-->
+<!--<input type="submit" name="submit" value="更新角色"/>-->
+<!--<input type="hidden" name="opera" value="edit"/>-->
+<!--<input type="hidden" name="id" value="{$adminRole.id}"/>-->
+<!--</form>-->
 <script type="text/javascript" src="js/adminRole.js"></script>
 {/if}
 </div><!-- contentpanel -->

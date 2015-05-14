@@ -806,7 +806,10 @@ function check_cross_domain() {
     }
 }
 
-
+/**删除文件
+ * @param $filename
+ * @return bool
+ */
 function remove_file($filename) {
     if( file_exists($filename) ) {
         return unlink($filename);
@@ -815,6 +818,12 @@ function remove_file($filename) {
     }
 }
 
+/**
+ * 分页
+ * @param $page
+ * @param $totalPage
+ * @param $total
+ */
 function create_pager($page, $totalPage, $total) {
     $show_page = array();
     if( $page == 1 ) {

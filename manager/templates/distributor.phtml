@@ -1,21 +1,49 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
-    <a href="distributor.php?act=add">添加经销商</a>
-    <table>
-        {foreach from=$distributors item=distributor}
-        <tr>
-            <td>{$distributor.name}&nbsp;&nbsp;|</td>
-            <td>{$distributor.area}&nbsp;&nbsp;{$distributor.address}&nbsp;&nbsp;|</td>
-            <td>{$distributor.phone}&nbsp;&nbsp;|</td>
-            <td>{$distributor.contact}&nbsp;&nbsp;|</td>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <!--            <h4 class="panel-title">添加导航条</h4>-->
+            <a class="btn btn-primary" href="distributor.php?act=add">新增经销商</a>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <table class="table mb30" style="width: 98%; margin: 0 auto">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>经销商</th>
+                    <th>联系人</th>
+                    <th>手机</th>
+                    <th>地址</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {foreach from=$distributors item=distributor name=distributors}
+                    <tr>
+                        <td>{$smarty.foreach.distributors.iteration}</td>
+                        <td>{$distributor.name}</td>
+                        <td>{$distributor.contact}</td>
+                        <td>{$distributor.phone}</td>
+                        <td>{$distributor.area}&nbsp;&nbsp;{$distributor.address}</td>
+                        <td>
+                            <a href="distributor.php?act=edit&id={$distributor.id}" title="编辑"><i class="fa fa-pencil"></i></a>&nbsp;|
+                            <a class="delete-row" href="distributor.php?act=delete&id={$distributor.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
 
-            <td>
-                <a href="distributor.php?act=edit&id={$distributor.id}">编辑</a>|
-                <a href="distributor.php?act=delete&id={$distributor.id}">删除</a>
-            </td>
-        </tr>
-    {/foreach}
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
 {/if}
 {if $act eq 'add'}
     <form name="distributorAddForm" method="POST">

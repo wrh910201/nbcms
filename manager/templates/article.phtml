@@ -52,47 +52,193 @@
 {/if}
 
 {if $act eq 'cycle'}
-<table>
-{foreach from=$articles item=article name=articles}
-<tr>
-    <td>{$smarty.foreach.articles.iteration}</td>
-    <td>{$article.title}</td>
-    <td>{$article.articleCat}</td>
-    <td>{$article.publishTime}</td>
-    <td>
-        <a href="../article.php?id={$article.id}">查看</a>|
-        <a href="article.php?act=remove&id={$article.id}">彻底删除</a>
-    </td>
-</tr>
-{/foreach}
-</table>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">回收站</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <table class="table mb30" style="width: 98%; margin: 0 auto">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>标题</th>
+                    <th>封面</th>
+                    <th>分类</th>
+                    <th>作者</th>
+                    <th>发布时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach from=$articles item=article name=articles}
+                <tr>
+                    <td>{$smarty.foreach.articles.iteration}</td>
+                    <td>{$article.title}</td>
+                    <td>{if $article.img_shortcut}<a href="#" data-trigger="manual" class="bootstrap-popover" data-original-title="" title=""><img alt="{$article.img}" src="{$article.img_shortcut}"/></a>{/if}</td>
+                    <td>{$article.articleCat}</td>
+                    <td>{$article.author}</td>
+                    <td>{$article.publishTime}</td>
+                    <td>
+                        <a href="article.php?act=revoke&id={$article.id}" title="还原"><i class="fa fa-share"></i></a>&nbsp;|
+                        <a class="delete-row" href="article.php?act=remove&id={$article.id}" title="彻底删除"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
 {/if}
 
 {if $act eq 'add'}
-<form method="POST" name="articleAddForm"  enctype="multipart/form-data">
-标题：<input type="text" name="title"/>
-作者：<input type="text" name="author"/>
-关键词：<input type="text" name="keywords"/>
-简要描述：<textarea name="description"></textarea>
-资讯分类：<select name="articleCatId">
-          {foreach from=$articleCat item=cat}
-            <option value="{$cat.id}">{$cat.name}</option>
-          {/foreach}
-          </select>
-详细内容：<textarea name="content"></textarea>
-自动发布：<input type="radio" name="isAutoPublish" value="0" checked="checked"/>否
-          <input type="radio" name="isAutoPublish" value="1"/>是
-发布时间：<input type="text" name="publishTime"/>
-文章封面：<input type="file" name="img" />
-<input type="submit" name="submit" value="提交"/>
-<input type="hidden" name="opera" value="add"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-资讯</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form method="POST" name="articleAddForm"  enctype="multipart/form-data" class="form-horizontal form-bordered">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label"></label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="请输入资讯标题" name="title" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label"></label>
+                                    <div class="col-sm-12">
+                                        <textarea name="content" placeholder="请输入资讯内容"></textarea>
+                                    </div>
+                                </div>
+                            </div><!-- panel-body -->
+                            <div class="panel-footer">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button type="submit" class="btn btn-primary">提交</button>&nbsp;
+                                </div>
+                                <input type="hidden" name="opera" value="add"/>
+                            </div><!-- panel-footer -->
+                        </div>
+
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize maximize" href="">+</a>
+                                    <h4 class="panel-title">默认</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body" style="display: none">
+                                <div class="form-group">
+                                    <label class="control-label">作者:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="author" value="{$defaultAuthor}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-6">自动发布:</label>
+                                    <div class="col-sm-6">
+                                        <div class="radio"><label><input type="radio" name="isAutoPublish" value="0" checked="checked"/> 否</label></div>
+                                        <div class="radio"><label><input type="radio"  name="isAutoPublish" value="1" > 是</label></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">发布时间:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="publishTime" value="">
+                                    </div>
+                                </div>
+
+                            </div><!-- panel-body -->
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">−</a>
+                                    <h4 class="panel-title">资讯分类</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label"></label>
+                                    <select name="articleCatId" class="form-control">
+                                        {foreach from=$articleCat item=cat}
+                                        <option value="{$cat.id}">{$cat.name}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">-</a>
+                                    <h4 class="panel-title">SEO</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label">关键词:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="keywords" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">描述</label>
+                                    <div class="col-sm-12">
+                                        <textarea rows="5" name="description" placeholder=""></textarea>
+                                    </div>
+                                </div>
+
+                            </div><!-- panel-body -->
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">-</a>
+                                    <h4 class="panel-title">设置文章封面</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label"></label>
+                                    <div class="col-sm-12">
+                                        <input type="file" class="form-control" placeholder="" name="img" value="">
+                                    </div>
+                                </div>
+                            </div><!-- panel-body -->
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
 <script type="text/javascript" src="js/plugins/kindeditor/kindeditor-all-min.js"></script>
 <script type="text/javascript">
 {literal}
 KindEditor.ready(function(K)
 {
     var editor1 = K.create("textarea[name='content']", {
+        height: '400px',
+        width: '100%',
     	cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
 		uploadJson : '../plugins/kindeditor/php/upload_json.php',
 		fileManagerJson : '../plugins/kindeditor/php/file_manager_json.php',
@@ -116,34 +262,152 @@ KindEditor.ready(function(K)
 {/if}
 
 {if $act eq 'edit'}
-<form method="POST" name="articleEditForm"  enctype="multipart/form-data">
-标题：<input type="text" name="title" value="{$article.title}"/>
-作者：<input type="text" name="author" value="{$article.author}"/>
-关键词：<input type="text" name="keywords" value="{$article.keywords}"/>
-简要描述：<textarea name="description">{$article.description}</textarea>
-资讯分类：<select name="articleCatId">
-          {foreach from=$articleCat item=cat}
-            <option value="{$cat.id}" {if $article.articleCatId eq $cat.id}selected="selected"{/if}>{$cat.name}</option>
-          {/foreach}
-          </select>
-详细内容：<textarea name="content">{$article.content}</textarea>
-自动发布：<input type="radio" name="isAutoPublish" value="0" {if $article.isAutoPublish eq 0}checked="checked"{/if}/>否
-          <input type="radio" name="isAutoPublish" value="1" {if $article.isAutoPublish eq 1}checked="checked"{/if}/>是
-发布时间：<input type="text" name="publishTime" value="{$article.publishTime}"/>
-封面：<input type="file" name="img" /><br />
-{if $article.img}
-<img src="{$article.img}" />
-{/if}
-<input type="submit" name="submit" value="提交修改"/>
-<input type="hidden" name="opera" value="edit"/>
-<input type="hidden" name="id" value="{$article.id}"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">编辑-{$article.title}</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form method="POST" name="articleEditForm"  enctype="multipart/form-data" class="form-horizontal form-bordered">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label"></label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="请输入资讯标题" name="title" value="{$article.title}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label"></label>
+                                    <div class="col-sm-12">
+                                        <textarea name="content" placeholder="请输入资讯内容">{$article.content}</textarea>
+                                    </div>
+                                </div>
+                            </div><!-- panel-body -->
+                            <div class="panel-footer">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button type="submit" class="btn btn-primary">提交</button>&nbsp;
+                                </div>
+                                <input type="hidden" name="opera" value="edit"/>
+                                <input type="hidden" name="id" value="{$article.id}" />
+                            </div><!-- panel-footer -->
+                        </div>
+
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize maximize" href="">+</a>
+                                    <h4 class="panel-title">默认</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body" style="display: none">
+                                <div class="form-group">
+                                    <label class="control-label">作者:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="author" value="{$article.author}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-6">自动发布:</label>
+                                    <div class="col-sm-6">
+                                        <div class="radio"><label><input type="radio" name="isAutoPublish" value="0" {if $article.isAutoPublish eq 0}checked="checked"{/if}/> 否</label></div>
+                                        <div class="radio"><label><input type="radio"  name="isAutoPublish" value="0" {if $article.isAutoPublish eq 1}checked="checked"{/if}/> 是</label></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">发布时间:</label>
+                                    <div class="col-sm-12">
+                                        <input disabled="" type="text" class="form-control" placeholder="" name="publishTime" value="{$article.publishTime}">
+                                    </div>
+                                </div>
+
+                            </div><!-- panel-body -->
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">−</a>
+                                    <h4 class="panel-title">资讯分类</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label"></label>
+                                    <select name="articleCatId" class="form-control">
+                                        {foreach from=$articleCat item=cat}
+                                        <option value="{$cat.id}" {if $article.articleCatId eq $cat.id}selected="selected"{/if}>{$cat.name}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">-</a>
+                                    <h4 class="panel-title">SEO</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label">关键词:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="keywords" value="{$article.keywords}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">描述</label>
+                                    <div class="col-sm-12">
+                                        <textarea rows="5" name="description" placeholder="">{$article.description}</textarea>
+                                    </div>
+                                </div>
+
+                            </div><!-- panel-body -->
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">-</a>
+                                    <h4 class="panel-title">设置文章封面</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    {if $article.img}
+                                    <div class="col-sm-12">
+                                        <img class="col-sm-12" src="{$article.img}" />
+                                    </div>
+                                    {/if}
+                                    <div class="col-sm-12">
+                                        <input type="file" class="form-control" placeholder="" name="img" value="">
+                                    </div>
+                                </div>
+                            </div><!-- panel-body -->
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
     <script type="text/javascript" src="js/plugins/kindeditor/kindeditor-all-min.js"></script>
     <script type="text/javascript">
         {literal}
         KindEditor.ready(function(K)
         {
             var editor1 = K.create("textarea[name='content']", {
+                height: '400px',
+                width: '100%',
                 cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
                 uploadJson : '../plugins/kindeditor/php/upload_json.php',
                 fileManagerJson : '../plugins/kindeditor/php/file_manager_json.php',

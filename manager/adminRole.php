@@ -146,6 +146,9 @@ if('add' == $act)
         exit;
     }
 
+    global $menus;
+    assign('menus', $menus);
+
 }
 
 if('edit' == $act)
@@ -192,6 +195,8 @@ if('edit' == $act)
         $purviewC[$key] = $checked;
     }
 
+    global $menus;
+    assign('menus', $menus);
 
     assign('purviewC', $purviewC);
     assign('sub_purviewC', $sub_purviewC);
