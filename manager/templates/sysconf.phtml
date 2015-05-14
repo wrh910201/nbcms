@@ -1,33 +1,50 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
-<table>
-{foreach from=$sysconf item=conf}
-<tr>
-    <td>{$conf.name}</td>
-    <td>
-    {if $conf.type eq 'text' or $conf.type eq 'textarea'}
-        {$conf.value}
-    {/if}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">系统信息列表</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <table>
+                {foreach from=$sysconf item=conf}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{$conf.name}</label>
+                    <div class="col-sm-6">
+            <span>
+            {if $conf.type eq 'text' or $conf.type eq 'textarea'}
+                {$conf.value}
+            {/if}
 
-    {if $conf.type eq 'file'}
-        <img src="{$conf.value}"/>
-    {/if}
-    
-    {if $conf.type eq 'radio'}
-        {if $conf.value}
-        是
-        {else}
-        否
-        {/if}
-    {/if}
-    </td>
-    <td>
-        <a href="sysconf.php?act=edit&key={$conf.key}">编辑</a>
-    </td>
-</tr>
-{/foreach}
-</table>
+            {if $conf.type eq 'file'}
+                <img src="{$conf.value}"/>
+            {/if}
+
+            {if $conf.type eq 'radio'}
+                {if $conf.value}
+                是
+                {else}
+                否
+                {/if}
+            {/if}
+            </span>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="sysconf.php?act=edit&key={$conf.key}">编辑</a>
+                    </div>
+                </div>
+                {/foreach}
+            </table>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
+
 {/if}
 
 {if $act eq 'add'}
@@ -44,29 +61,56 @@ key：<input type="text" name="key"/>
 </form>
 {/if}
 
-{if $act eq 'edit'}
-<form name="sysconfEditForm" method="POST" enctype="multipart/form-data">
-{$conf.name}：
-{if $conf.type eq 'file' || $conf.type eq 'text'}
-<input type="{$conf.type}" name="value" {if $conf.type eq "text"}value="{$conf.value}"{/if}/>
-{/if}
+{if $act eq 'edit'}<div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">编辑-{$conf.name}</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form class="form-horizontal form-bordered" name="sysconfEditForm" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{$conf.name}</label>
+                    <div class="col-sm-6">
+                        {if $conf.type eq 'text'}
 
-{if $conf.type eq 'radio'}
-<input type="radio" name="value" value="0" {if $conf.value eq 0}checked="checked"{/if}/>否
-<input type="radio" name="value" value="1" {if $conf.value}checked="checked"{/if}/>是
-{/if}
+                        <input class="form-control" type="{$conf.type}" name="value" {if $conf.type eq "text"}value="{$conf.value}"{/if}/>
+                        {/if}
+                        {if $conf.type eq 'file'}
+                        <input type="{$conf.type}" name="value" {if $conf.type eq "text"}value="{$conf.value}"{/if}/>
+                        {/if}
+                        {if $conf.type eq 'radio'}
+                        <div class="col-sm-6">
+                            <div class="radio"><label><input type="radio" name="value" value="0" {if $conf.value eq 0}checked="checked"{/if}/>否</label></div>
+                            <div class="radio"><label><input type="radio" name="value" value="1" {if $conf.value}checked="checked"{/if}/>是</label></div>
+                        </div>
+                        {/if}
 
-{if $conf.type eq 'textarea'}
-<textarea name="value">{$conf.value}</textarea>
-{/if}
-<input type="hidden" name="key" value="{$conf.key}"/>
-<input type="hidden" name="type" value="{$conf.type}"/>
-<input type="hidden" name="opera" value="edit"/>
-{if $conf.type eq "file"}
-<img src="{$conf.value}"/>
-{/if}
-<input type="submit" name="submit" value="修改"/>
-</form>
+                        {if $conf.type eq 'textarea'}
+                        <textarea name="value">{$conf.value}</textarea>
+                        {/if}
+                        <input class="form-control" type="hidden" name="key" value="{$conf.key}"/>
+                        <input class="form-control" type="hidden" name="type" value="{$conf.type}"/>
+                        <input class="form-control" type="hidden" name="opera" value="edit"/>
+                        {if $conf.type eq "file"}
+                        <img src="{$conf.value}"/>
+                        {/if}
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">修改</button>&nbsp;
+                </div>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
+
 {/if}
 </div><!-- contentpanel -->
 {include file="library/footer.lbi"}
+</body>
+</html>

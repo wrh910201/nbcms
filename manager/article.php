@@ -249,12 +249,19 @@ if('list' == $act)
         exit;
     }
 
-    $getArticles  = 'select a.`id`,a.`title`,a.`publishTime`,ac.`name` as articleCat from ';
+    $getArticles  = 'select a.`id`,a.`title`,a.`publishTime`,a.`author`, a.`img`, a.`img_shortcut`, ac.`name` as articleCat from ';
     $getArticles .= '`'.DB_PREFIX.'article` as a left join ';
     $getArticles .= '`'.DB_PREFIX.'articleCat` as ac on a.`articleCatId`=ac.`id`';
     $getArticles .= ' where a.`isDelete`=0 order by a.`publishTime` DESC';
 
-    assign('articles', $db->fetchAll($getArticles));
+    $articles = $db->fetchAll($getArticles);
+
+    foreach($articles as $key => $article) {
+        $temp = date('Y-m-d H:i:s', $article['publishTime']);
+        $articles[$key]['publishTime'] = $temp;
+    }
+
+    assign('articles', $articles);
 }
 
 if('cycle' == $act)

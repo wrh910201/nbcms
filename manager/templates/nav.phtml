@@ -1,68 +1,310 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq "list"}
-<a href="nav.php?act=add">新增导航条</a>
-<table>
-{foreach from=$navs item=n}
-<tr>
-    <td>{$n.name}</td><td>{$n.url}</td><td>{$n.orderView}</td><td>{$n.position}</td>
-    <td>
-        <a href="nav.php?act=edit&id={$n.id}">编辑</a>|
-        <a href="nav.php?act=delete&id={$n.id}">删除</a>
-    </td>
-</tr>
-{/foreach}
-</table>
+<a class="btn btn-primary" href="nav.php?act=add">新增导航条</a><br /><br />
+    <div id="accordion2" class="panel-group panel-group-dark">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#collapseOne2" data-parent="#accordion2" data-toggle="collapse" class="">
+                        顶部导航
+                    </a>
+                </h4>
+            </div>
+            <div class="panel-collapse collapse in" id="collapseOne2" style="">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table mb30">
+                            <thead>
+                            <tr>
+
+                                <th>名称</th>
+                                <th>url</th>
+                                <th>排序(降序排列)</th>
+                                <th>页面位置
+                                <th>是否显示</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {foreach from=$navs item=n}
+                            {if $n.position eq 'top'}
+                            <tr>
+                                <td>{$n.name}</td><td>{$n.url}</td><td>{$n.orderView}</td><td>{$n.position}</td>
+                                {if $n.isShow eq 1}
+                                <td>是</td>
+                                {else}
+                                <td>否</td>
+                                {/if}
+                                <td>
+                                    <a href="nav.php?act=edit&id={$n.id}" title="编辑"><i class="fa fa-pencil"></i></a>|
+                                    <a class="delete-row" href="nav.php?act=delete&id={$n.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                                </td>
+                            </tr>
+                            {/if}
+                            {/foreach}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#collapseTwo2" data-parent="#accordion2" class="collapsed" data-toggle="collapse">
+                        中部导航
+                    </a>
+                </h4>
+            </div>
+            <div class="panel-collapse collapse" id="collapseTwo2" style="height: 0px;">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table mb30">
+                            <thead>
+                            <tr>
+
+                                <th>名称</th>
+                                <th>url</th>
+                                <th>排序(升序排列)</th>
+                                <th>页面位置
+                                <th>是否显示</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {foreach from=$navs item=n}
+                            {if $n.position eq 'middle'}
+                            <tr>
+                                <td>{$n.name}</td><td>{$n.url}</td><td>{$n.orderView}</td><td>{$n.position}</td>
+                                {if $n.isShow eq 1}
+                                <td>是</td>
+                                {else}
+                                <td>否</td>
+                                {/if}
+                                <td>
+                                    <a href="nav.php?act=edit&id={$n.id}" title="编辑"><i class="fa fa-pencil"></i></a>|
+                                    <a class="delete-row" href="nav.php?act=delete&id={$n.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                                </td>
+                            </tr>
+                            {/if}
+                            {/foreach}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#collapseThree2" data-parent="#accordion2" class="collapsed" data-toggle="collapse">
+                        底部导航
+                    </a>
+                </h4>
+            </div>
+            <div class="panel-collapse collapse" id="collapseThree2" style="height: 0px;">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table mb30">
+                            <thead>
+                            <tr>
+
+                                <th>名称</th>
+                                <th>url</th>
+                                <th>排序(降序排列)</th>
+                                <th>页面位置
+                                <th>是否显示</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {foreach from=$navs item=n}
+                            {if $n.position eq 'bottom'}
+                            <tr>
+                                <td>{$n.name}</td><td>{$n.url}</td><td>{$n.orderView}</td><td>{$n.position}</td>
+                                {if $n.isShow eq 1}
+                                <td>是</td>
+                                {else}
+                                <td>否</td>
+                                {/if}
+                                <td>
+                                    <a href="nav.php?act=edit&id={$n.id}" title="编辑"><i class="fa fa-pencil"></i></a>|
+                                    <a class="delete-row" href="nav.php?act=delete&id={$n.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                                </td>
+                            </tr>
+                            {/if}
+                            {/foreach}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {/if}
 
 {if $act eq "add"}
-<form name="navAddForm" method="POST">
-名称：<input type="text" name="name"/>
-URL：<input type="text" name="url"/>
-排序：<input type="text" name="orderView" value="50"/>
-位置：<select name="position">
-        <option value="top">顶部</option>
-        <option value="middle" selected="selected">中间</option>
-        <option value="bottom">底部</option>
-      </select>
-新窗口打开：<input type="radio" name="isOpenNew" value="0" checked="checked"/>否
-            <input type="radio" name="isOpenNew" value="1"/>是
-是否显示：<input type="radio" name="isShow" value="0"/>否
-          <input type="radio" name="isShow" value="1" checked="checked"/>是
-父级导航栏：<select name="parentId">
-                <option value="0">顶级导航栏</option>
-                {foreach from=$navs item=n}
-                <option value="{$n.id}">{$n.name}</option>
-                {/foreach}
-            </select>
-<input type="submit" name="submit" value="添加"/>
-<input type="hidden" name="opera" value="add"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加导航条</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="navAddForm" method="POST" class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">URL</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="url">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="orderView" value="50">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">位置</label>
+                    <div class="col-sm-2">
+                        <select class="form-control " name="position">
+                            <option value="top">顶部</option>
+                            <option value="middle" selected="selected">中间</option>
+                            <option value="bottom">底部</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">新窗口打开</label>
+                    <div class="col-sm-6">
+                        <div class="radio"><label><input type="radio" name="isOpenNew" value="0" checked="checked"> 否</label></div>
+                        <div class="radio"><label><input type="radio"  name="isOpenNew" value="1"> 是</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">是否显示</label>
+                    <div class="col-sm-6">
+                        <div class="radio"><label><input type="radio" name="isShow" value="0"> 否</label></div>
+                        <div class="radio"><label><input type="radio"  name="isShow" value="1" checked="checked"> 是</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">父级导航栏</label>
+                    <div class="col-sm-2">
+                        <select class="form-control " name="parentId">
+                            <option value="0">顶级导航栏</option>
+                            {foreach from=$navs item=n}
+                            <option value="{$n.id}">{$n.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">添加</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="add"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
+
 {/if}
 
 {if $act eq "edit"}
-<form name="navEditForm" method="POST">
-名称：<input type="text" name="name" value="{$nav.name}"/>
-URL：<input type="text" name="url" value="{$nav.url}"/>
-排序：<input type="text" name="orderView" value="{$nav.orderView}"/>
-位置：<select name="position">
-        <option value="top" {if $nav.position eq "top"}selected="selected"{/if}>顶部</option>
-        <option value="middle" {if $nav.position eq "middle"}selected="selected"{/if}>中间</option>
-        <option value="bottom" {if $nav.position eq "bottom"}selected="selected"{/if}>底部</option>
-      </select>
-新窗口打开：<input type="radio" name="isOpenNew" value="0" {if $nav.isOpenNew eq false}checked="checked"{/if}/>否
-            <input type="radio" name="isOpenNew" value="1" {if $nav.isOpenNew}checked{/if}="checked"/>是
-是否显示：<input type="radio" name="isShow" value="0" {if $nav.isShow eq false}checked="checked"{/if}/>否
-          <input type="radio" name="isShow" value="1" {if $nav.isShow}checked="checked"{/if}/>是
-父级导航栏：<select name="parentId">
-                <option value="0">顶级导航栏</option>
-                {foreach from=$navs item=n}
-                <option value="{$n.id}" {if $nav.parentId eq $n.id}selected="selected"{/if}>{$n.name}</option>
-                {/foreach}
-            </select>
-<input type="submit" name="submit" value="修改"/>
-<input type="hidden" name="opera" value="edit"/>
-<input type="hidden" name="id" value="{$nav.id}"/>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">编辑导航条-{$nav.name}</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="navEditForm" method="POST" class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="name" value="{$nav.name}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">URL</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="url" value="{$nav.url}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="orderView" value="{$nav.orderView}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">位置</label>
+                    <div class="col-sm-2">
+                        <select class="form-control " name="position">
+                            <option value="top" {if $nav.position eq "top"}selected="selected"{/if}>顶部</option>
+                            <option value="middle" {if $nav.position eq "middle"}selected="selected"{/if}>中间</option>
+                            <option value="bottom" {if $nav.position eq "bottom"}selected="selected"{/if}>底部</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">新窗口打开</label>
+                    <div class="col-sm-6">
+                        <div class="radio"><label><input type="radio" name="isOpenNew" value="0"{if $nav.isOpenNew eq false}checked="checked"{/if}> 否</label></div>
+                        <div class="radio"><label><input type="radio"  name="isOpenNew" value="1"{if $nav.isOpenNew}checked="checked"{/if}> 是</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">是否显示</label>
+                    <div class="col-sm-6">
+                        <div class="radio"><label><input type="radio" name="isShow" value="0" {if $nav.isShow eq false}checked="checked"{/if}> 否</label></div>
+                        <div class="radio"><label><input type="radio"  name="isShow" value="1"  {if $nav.isShow}checked="checked"{/if}> 是</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">父级导航栏</label>
+                    <div class="col-sm-2">
+                        <select class="form-control " name="parentId">
+                            <option value="0">顶级导航栏</option>
+                            {foreach from=$navs item=n}
+                            <option value="{$n.id}" {if $nav.parentId eq $n.id}selected="selected"{/if}>{$n.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">修改</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="edit"/>
+                <input type="hidden" name="id" value="{$nav.id}"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
+
 {/if}
 </div><!-- contentpanel -->
 {include file="library/footer.lbi"}
+</body>
+</html>

@@ -1,56 +1,172 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
-<a href="articleCat.php?act=add">新增资讯分类</a>
-<table>
-    {foreach from=$articleCats item=cat}
-    <tr><td>{$cat.name}</td>
-        <td>
-            <a href="../articleCat.php?id={$cat.id}">查看</a>|
-            <a href="articleCat.php?act=edit&id={$cat.id}">编辑</a>|
-            <a href="articleCat.php?act=delete&id={$cat.id}">删除</a>
-        </td>
-    </tr>
-    {/foreach}
-</table>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+<!--            <h4 class="panel-title">添加导航条</h4>-->
+            <a class="btn btn-primary" href="articleCat.php?act=add">新增资讯分类</a>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <table class="table mb30" style="width: 98%; margin: 0 auto">
+                <thead>
+                <tr>
+
+                    <th>名称</th>
+<!--                    <th>keywords</th>-->
+<!--                    <th>description</th>-->
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {foreach from=$articleCats item=cat}
+                <tr>
+                    <td>{$cat.name}</td>
+<!--                    <td>{$cat.keywords}</td>-->
+<!--                    <td>{$cat.description}</td>-->
+                    <td>
+                        <a href="../articleCat.php?id={$cat.id}" title="查看"><i class="fa fa-eye"></i></a>&nbsp;|
+                        <a href="articleCat.php?act=edit&id={$cat.id}" title="编辑"><i class="fa fa-pencil"></i></a>&nbsp;|
+                        <a class="delete-row" href="articleCat.php?act=delete&id={$cat.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                {/foreach}
+
+                </tbody>
+            </table>
+        </div><!-- panel-body -->
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
+
 {/if}
 
 {if $act eq 'add'}
-<form name="articleCatAddForm" method="POST" enctype="multipart/form-data">
-分类名称：<input type="text" name="name"/><br/>
-父级分类：<select name="parentId">
-            <option value="0">顶级分类</option>
-            {foreach from=$articleCats item=cat}
-            <option value="{$cat.id}">{$cat.name}</option>
-            {/foreach}
-          </select><br/>
-分类关键词：<input type="text" name="keywords"/><br/>
-分类简介：<textarea name="description"></textarea><br/>
-封面：<input type="file" name="img" /><br />
-<input type="submit" name="submit" name="添加分类"/>
-<input type="hidden" name="opera" value="add"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-资讯分类</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="articleCatAddForm" method="POST" enctype="multipart/form-data"  class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">分类名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="name" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">父级分类</label>
+                    <div class="col-sm-2">
+                        <select class="form-control " name="parentId">
+                            <option value="0">顶级分类</option>
+                            {foreach from=$articleCats item=cat}
+                            <option value="{$cat.id}">{$cat.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">分类关键词</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="keywords" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">分类简介</label>
+                    <div class="col-sm-7">
+                        <textarea rows="5" class="form-control" name="description"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">封面</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="" name="img" value="">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">添加</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="add"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
 {/if}
 
 {if $act eq 'edit'}
-<form name="articleCatEditForm" method="POST"  enctype="multipart/form-data">
-分类名称：<input type="text" name="name" value="{$articleCat.name}"/><br/>
-父级分类：<select name="parentId">
-            <option value="0">顶级分类</option>
-            {foreach from=$articleCats item=cat}
-            <option value="{$cat.id}" {if $articleCat.parentId eq $cat.id}selected="selected"{/if}>{$cat.name}</option>
-            {/foreach}
-          </select><br/>
-分类关键词：<input type="text" name="keywords" value="{$articleCat.keywords}"/><br/>
-分类简介：<textarea name="description">{$articleCat.description}</textarea><br/>
-封面：<input type="file" name="img"/><br />
-{if $articleCat.img}
-<img src="{$articleCat.img}" /><br />
-{/if}
-<input type="submit" name="submit" name="提交修改"/>
-<input type="hidden" name="opera" value="edit"/>
-<input type="hidden" name="id" value="{$articleCat.id}"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">编辑-{$articleCat.name}</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="articleCatEditForm" method="POST"  enctype="multipart/form-data" class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">分类名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="name" value="{$articleCat.name}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">父级分类</label>
+                    <div class="col-sm-2">
+                        <select class="form-control " name="parentId">
+                            <option value="0">顶级分类</option>
+                            {foreach from=$articleCats item=cat}
+                            <option value="{$cat.id}" {if $articleCat.parentId eq $cat.id}selected="selected"{/if}>{$cat.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">分类关键词</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="keywords" value="{$articleCat.keywords}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">分类简介</label>
+                    <div class="col-sm-7">
+                        <textarea rows="5" class="form-control" name="description">{$articleCat.description}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">封面</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="" name="img" value="">
+                    </div>
+                </div>
+                {if $articleCat.img}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <div class="col-sm-4">
+                        <img src="{$articleCat.img}" />
+                    </div>
+                </div>
+                {/if}
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">修改</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="edit"/>
+                <input type="hidden" name="id" value="{$articleCat.id}"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
 {/if}
 </div><!-- contentpanel -->
 {include file="library/footer.lbi"}
+</body>
+</html>

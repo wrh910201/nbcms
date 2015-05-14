@@ -56,8 +56,8 @@
 
             <h5 class="sidebartitle"></h5>
             <ul class="nav nav-pills nav-stacked nav-bracket">
-            {if $is_main eq 1}
-                <li class="native"><a href="main.php"><i class="fa fa-home"></i><span>首页</span></a></li>
+            {if $is_main}
+                <li class="active"><a href="main.php"><i class="fa fa-home"></i><span>首页</span></a></li>
             {else}
                 <li><a href="main.php"><i class="fa fa-home"></i><span>首页</span></a></li>
             {/if}

@@ -217,7 +217,7 @@ if('list' == $act)
     }
 
     $getNavs  = 'select `url`,`path`,`id`,`name`,`isShow`,`orderView`,`position`,`isOpenNew` from `'.DB_PREFIX.'nav`';
-    $getNavs .= ' order by `position` DESC, `orderView` ASC, `path` ASC';
+    $getNavs .= ' order by `position` DESC, `path` ASC, `orderView` ASC' ;
     $navs = $db->fetchAll($getNavs);
 
     foreach($navs as $key=>$nav)

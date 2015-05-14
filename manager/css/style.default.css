@@ -761,7 +761,7 @@ strong {
 .mainpanel {
     margin-left: 240px;
     background: #e4e7ea;
-    min-height: 1000px;
+    min-height: 616px;
 }
 
 .pageheader {
@@ -4602,4 +4602,12 @@ div.error label.error:before {
         width: 310px;
     }
 
+}
+
+.popover-content {
+
+}
+
+.popover {
+    min-width: 328px;
 }

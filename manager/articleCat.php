@@ -200,7 +200,7 @@ if('list' == $act)
         exit;
     }
 
-    $getArticleCats = 'select `name`,`id`,`path` from `'.DB_PREFIX.'articleCat` order by `path` ASC';
+    $getArticleCats = 'select `name`,`id`,`path`, `keywords`, `description` from `'.DB_PREFIX.'articleCat` order by `path` ASC';
     $articleCats = $db->fetchAll($getArticleCats);
 
     foreach($articleCats as $key=>$cat)
