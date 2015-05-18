@@ -46,37 +46,130 @@
     </div>
 {/if}
 {if $act eq 'add'}
-    <form name="distributorAddForm" method="POST">
-        经销商名称：<input type="text" name="name" /><br/>
-        联系人：<input type="text" name="contact" /><br/>
-        联系电话：<input type="text" name="phone" /><br/>
-        授权码：<input type="text" name="auth_code" /><br />
-        地区：
-        <select id="province" name="province">
-            <option value="0">请选择</option>
-        {foreach from=$provinces item=province}
-            <option value="{$province.ProvinceID}">{$province.ProvinceName}</option>
-        {/foreach}
-        </select>&nbsp;&nbsp;
-        <select id="city" name="city">
-            <option value="0">请选择</option>
-        </select>&nbsp;&nbsp;
-        <select id="district" name="district">
-            <option value="0">请选择</option>
-        </select><br />
-        具体地址：<input type="text" name="address" />&nbsp;
-        <input type="checkbox" value="1" id="search-on"/>开启检索<br/>
-        经度：<input type="text" name="lng-show" disabled=true value="0.0"/>&nbsp;&nbsp;
-        纬度：<input type="text" name="lat-show" disabled=true value="0.0"/><br />
-        <input type="submit" name="submit" value="添加经销商"/>
-        <input type="hidden" name="opera" value="add"/>
-        <input type="hidden" name="lng" value="0.0"/>&nbsp;&nbsp;
-        <input type="hidden" name="lat" value="0.0"/><br />
-    </form>
-    <div id="baidu-map">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-经销商</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="distributorAddForm" method="POST"  class="form-horizontal form-bordered">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">-</a>
+                                    <h4 class="panel-title">地图信息</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">地区</label>
+                                    <div class="col-sm-3">
+                                        <select id="province" name="province" class="form-control">
+                                            <option value="0">请选择</option>
+                                        {foreach from=$provinces item=province}
+                                            <option value="{$province.ProvinceID}">{$province.ProvinceName}</option>
+                                        {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select id="city" name="city" class="form-control">
+                                            <option value="0">请选择</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select id="district" name="district" class="form-control">
+                                            <option value="0">请选择</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">具体地址:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" placeholder="" name="address" value="" />
+                                    </div>
+                                    <label for="checkbox" class="col-sm-2 control-label"></label>
+                                    <div class="col-sm-5">
+                                        <div class="checkbox block"><label><input type="checkbox" value="1" class="form-control" id="search-on"/>开启检索</label></div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">经度</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" name="lng-show" disabled=true value="0.0"/>
+                                    </div>
+                                    <label class="col-sm-2 control-label">纬度</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" name="lat-show" disabled=true value="0.0"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div id="baidu-map">
+
+                                        </div>
+                                        <p>点击地图获取当前经纬度</p>
+                                    </div>
+                                </div>
+                            </div><!-- panel-body -->
+                            <div class="panel-footer">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button type="submit" class="btn btn-primary">提交</button>&nbsp;
+                                </div>
+                                <input type="hidden" name="opera" value="add"/>
+                                <input type="hidden" name="lng" value="0.0"/>
+                                <input type="hidden" name="lat" value="0.0"/><br />
+                            </div><!-- panel-footer -->
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">-</a>
+                                    <h4 class="panel-title">基础信息</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body" style="">
+                                <div class="form-group">
+                                    <label class="control-label">经销商名称:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="name" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">联系人:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="contact" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">手机:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="phone" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">授权码:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="auth_code" value="" />
+                                    </div>
+                                </div>
+
+                            </div><!-- panel-body -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
 
     </div>
-    <p>点击地图获取当前经纬度</p>
     <script type="text/javascript">
         var data_cities = {$json_cities};
         var data_districts = {$json_districts};
@@ -87,55 +180,198 @@
     <script type="text/javascript" src="js/distributor.js"></script>
 {/if}
 {if $act eq 'edit'}
-    <form name="distributorEditForm" method="POST">
-        经销商名称：<input type="text" name="name" value="{$distributor.name}"/><br/>
-        联系人：<input type="text" name="contact" value="{$distributor.contact}" /><br/>
-        联系电话：<input type="text" name="phone" value="{$distributor.phone}" /><br/>
-        授权码：<input type="text" name="auth_code" value="{$distributor.authCode}" /><br />
-        地区：
-        <select id="province" name="province">
-            <option value="0">请选择</option>
-            {foreach from=$provinces item=province}
-                {if $province.ProvinceID eq $distributor.ProvinceID}
-            <option value="{$province.ProvinceID}" selected="selected">{$province.ProvinceName}</option>
-                {else}
-            <option value="{$province.ProvinceID}">{$province.ProvinceName}</option>
-                {/if}
-            {/foreach}
-        </select>&nbsp;&nbsp;
-        <select id="city" name="city">
-            <option value="0">请选择</option>
-            {foreach from=$cities[$distributor.ProvinceID] item=city}
-                {if $city.CityID eq $distributor.CityID}
-            <option value="{$city.CityID}" selected="selected">{$city.CityName}</option>
-                {else}
-            <option value="{$city.CityID}">{$city.CityName}</option>
-                {/if}
-            {/foreach}
-        </select>&nbsp;&nbsp;
-        <select id="district" name="district">
-            <option value="0">请选择</option>
-            {foreach from=$districts[$distributor.CityID] item=district}
-                {if $district.DistrictID eq $distributor.DistrictID}
-            <option value="{$district.DistrictID}" selected="selected">{$district.DistrictName}</option>
-                {else}
-            <option value="{$district.DistrictID}">{$district.DistrictName}</option>
-                {/if}
-            {/foreach}
-        </select><br />
-        具体地址：<input type="text" name="address" value="{$distributor.address}"/><br/>
-        经度：<input type="text" name="lng-show" disabled=true value="{$distributor.lng}"/>&nbsp;&nbsp;
-        纬度：<input type="text" name="lat-show" disabled=true value="{$distributor.lat}"/><br />
-        <input type="submit" name="submit" value="编辑经销商"/>
-        <input type="hidden" name="opera" value="edit"/>
-        <input type="hidden" name="lng" value="{$distributor.lng}"/>&nbsp;&nbsp;
-        <input type="hidden" name="lat" value="{$distributor.lat}"/><br />
-        <input type="hidden" name="id" value="{$distributor.id}" ><br />
-    </form>
-    <div id="baidu-map">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">编辑-{$distributor.name}</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="distributorEidtForm" method="POST"  class="form-horizontal form-bordered">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">-</a>
+                                    <h4 class="panel-title">地图信息</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">地区</label>
+                                    <div class="col-sm-3">
+                                        <select id="province" name="province" class="form-control">
+                                            <option value="0">请选择</option>
+                                            {foreach from=$provinces item=province}
+                                                {if $province.ProvinceID eq $distributor.ProvinceID}
+                                            <option value="{$province.ProvinceID}" selected="selected">{$province.ProvinceName}</option>
+                                                {else}
+                                            <option value="{$province.ProvinceID}">{$province.ProvinceName}</option>
+                                                {/if}
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select id="city" name="city" class="form-control">
+                                            <option value="0">请选择</option>
+                                            {foreach from=$cities[$distributor.ProvinceID] item=city}
+                                                {if $city.CityID eq $distributor.CityID}
+                                            <option value="{$city.CityID}" selected="selected">{$city.CityName}</option>
+                                                {else}
+                                            <option value="{$city.CityID}">{$city.CityName}</option>
+                                                {/if}
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select id="district" name="district" class="form-control">
+                                            <option value="0">请选择</option>
+                                            {foreach from=$districts[$distributor.CityID] item=district}
+                                                {if $district.DistrictID eq $distributor.DistrictID}
+                                            <option value="{$district.DistrictID}" selected="selected">{$district.DistrictName}</option>
+                                                {else}
+                                            <option value="{$district.DistrictID}">{$district.DistrictName}</option>
+                                                {/if}
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">具体地址:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" placeholder="" name="address" value="{$distributor.address}" />
+                                    </div>
+                                    <label for="checkbox" class="col-sm-2 control-label"></label>
+                                    <div class="col-sm-5">
+                                        <div class="checkbox block"><label><input type="checkbox" value="1" class="form-control" id="search-on"/>开启检索</label></div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">经度</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" name="lng-show" disabled=true value="{$distributor.lng}"/>
+                                    </div>
+                                    <label class="col-sm-2 control-label">纬度</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" name="lat-show" disabled=true value="{$distributor.lat}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div id="baidu-map">
+
+                                        </div>
+                                        <p>点击地图获取当前经纬度</p>
+                                    </div>
+                                </div>
+                            </div><!-- panel-body -->
+                            <div class="panel-footer">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button type="submit" class="btn btn-primary">提交</button>&nbsp;
+                                </div>
+                                <input type="hidden" name="opera" value="edit"/>
+                                <input type="hidden" name="lng" value="{$distributor.lng}"/>
+                                <input type="hidden" name="lat" value="{$distributor.lat}"/>
+                                <input type="hidden" name="id" value="{$distributor.id}" />
+                            </div><!-- panel-footer -->
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-btns">
+                                    <a class="minimize" href="">-</a>
+                                    <h4 class="panel-title">基础信息</h4>
+                                </div>
+                            </div>
+                            <div class="panel-body" style="">
+                                <div class="form-group">
+                                    <label class="control-label">经销商名称:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="name" value="{$distributor.name}" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">联系人:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="contact" value="{$distributor.contact}" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">手机:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="phone" value="{$distributor.phone}" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">授权码:</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="" name="auth_code" value="{$distributor.authCode}" />
+                                    </div>
+                                </div>
+
+                            </div><!-- panel-body -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
 
     </div>
-    <p>点击地图获取当前经纬度</p>
+<!--    <form name="distributorEditForm" method="POST">-->
+<!--        经销商名称：<input type="text" name="name" value="{$distributor.name}"/><br/>-->
+<!--        联系人：<input type="text" name="contact" value="{$distributor.contact}" /><br/>-->
+<!--        联系电话：<input type="text" name="phone" value="{$distributor.phone}" /><br/>-->
+<!--        授权码：<input type="text" name="auth_code" value="{$distributor.authCode}" /><br />-->
+<!--        地区：-->
+<!--        <select id="province" name="province">-->
+<!--            <option value="0">请选择</option>-->
+<!--            {foreach from=$provinces item=province}-->
+<!--                {if $province.ProvinceID eq $distributor.ProvinceID}-->
+<!--            <option value="{$province.ProvinceID}" selected="selected">{$province.ProvinceName}</option>-->
+<!--                {else}-->
+<!--            <option value="{$province.ProvinceID}">{$province.ProvinceName}</option>-->
+<!--                {/if}-->
+<!--            {/foreach}-->
+<!--        </select>&nbsp;&nbsp;-->
+<!--        <select id="city" name="city">-->
+<!--            <option value="0">请选择</option>-->
+<!--            {foreach from=$cities[$distributor.ProvinceID] item=city}-->
+<!--                {if $city.CityID eq $distributor.CityID}-->
+<!--            <option value="{$city.CityID}" selected="selected">{$city.CityName}</option>-->
+<!--                {else}-->
+<!--            <option value="{$city.CityID}">{$city.CityName}</option>-->
+<!--                {/if}-->
+<!--            {/foreach}-->
+<!--        </select>&nbsp;&nbsp;-->
+<!--        <select id="district" name="district">-->
+<!--            <option value="0">请选择</option>-->
+<!--            {foreach from=$districts[$distributor.CityID] item=district}-->
+<!--                {if $district.DistrictID eq $distributor.DistrictID}-->
+<!--            <option value="{$district.DistrictID}" selected="selected">{$district.DistrictName}</option>-->
+<!--                {else}-->
+<!--            <option value="{$district.DistrictID}">{$district.DistrictName}</option>-->
+<!--                {/if}-->
+<!--            {/foreach}-->
+<!--        </select><br />-->
+<!--        具体地址：<input type="text" name="address" value="{$distributor.address}"/><br/>-->
+<!--        经度：<input type="text" name="lng-show" disabled=true value="{$distributor.lng}"/>&nbsp;&nbsp;-->
+<!--        纬度：<input type="text" name="lat-show" disabled=true value="{$distributor.lat}"/><br />-->
+<!--        <input type="submit" name="submit" value="编辑经销商"/>-->
+<!--        <input type="hidden" name="opera" value="edit"/>-->
+<!--        <input type="hidden" name="lng" value="{$distributor.lng}"/>&nbsp;&nbsp;-->
+<!--        <input type="hidden" name="lat" value="{$distributor.lat}"/><br />-->
+<!--        <input type="hidden" name="id" value="{$distributor.id}" ><br />-->
+<!--    </form>-->
+<!--    <div id="baidu-map">-->
+<!---->
+<!--    </div>-->
+<!--    <p>点击地图获取当前经纬度</p>-->
     <script type="text/javascript">
         var data_cities = {$json_cities};
         var data_districts = {$json_districts};

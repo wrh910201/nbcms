@@ -1,40 +1,124 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
-    <a href="carousel.php?act=add">添加轮播图片</a>
-    <table>
-    {foreach from=$carousels item=carousel}
-        <tr>
-            <td><a href="{$carousel.img}" target="_blank"><img src="{$carousel.img_shortcut}" width="192" height="45" /></a></td>
-            <td>{$carousel.add_time}</td>
-            <td>
-                <a href="carousel.php?act=edit&id={$carousel.id}">编辑</a>|
-                <a href="carousel.php?act=delete&id={$carousel.id}">删除</a>
-            </td>
-        </tr>
-    {/foreach}
-    </table>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <a class="btn btn-primary" href="carousel.php?act=add">新增轮播图</a>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <table class="table mb30" style="width: 98%; margin: 0 auto">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>图片</th>
+                    <th>发布时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {$count = count($carousels)}
+                {$middle = $count / 2}
+                {foreach from=$carousels item=carousel name=carousels}
+                    <tr>
+                        <td>{$smarty.foreach.carousels.iteration}</td>
+                        {if $smarty.foreach.carousels.iteration gt $middle}
+                        <td><a href="#" data-trigger="manual" data-placement="top" class="bootstrap-popover" data-original-title="" title=""><img alt="./../{$carousel.img}" src="./../{$carousel.img_shortcut}" width="192" height="45" /></a></td>
+                        {else}
+                        <td><a href="#" data-trigger="manual" data-placement="bottom" class="bootstrap-popover" data-original-title="" title=""><img alt="./../{$carousel.img}" src="./../{$carousel.img_shortcut}" width="192" height="45" /></a></td>
+                        {/if}
+                        <td>{$carousel.add_time}</td>
+                        <td>
+                            <a href="carousel.php?act=edit&id={$carousel.id}" title="编辑"><i class="fa fa-pencil"></i></a>&nbsp;|
+                            <a class="delete-row" href="carousel.php?act=delete&id={$carousel.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
+
 {/if}
 {if $act eq 'add'}
-<form name="carouselAddForm" method="post" enctype="multipart/form-data">
-图片：<input type="file" name="img" /><br />
-顺序：<input type="text" name="orderView" value="50" /><br />
-    <input type="submit" name="submit" name="添加轮播图"/>
-    <input type="hidden" name="opera" value="add"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-轮播图</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="carouselAddForm" method="POST" enctype="multipart/form-data"  class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">图片</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="" name="img" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="orderView" value="50">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">添加</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="add"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
 {/if}
 {if $act eq 'edit'}
-<form name="carouselEditForm" method="post" enctype="multipart/form-data">
-    图片：<input type="file" name="img" /><br />
-    {if $carousel.img}
-    <img width="192" height="45" src="{$carousel.img_shortcut}" /><br />
-    {/if}
-    顺序：<input type="text" name="orderView" value="{$carousel.orderView}" /><br />
-    <input type="submit" name="submit" name="更新轮播图"/>
-    <input type="hidden" name="opera" value="edit"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-轮播图</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="carouselEditForm" method="POST" enctype="multipart/form-data"  class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">图片</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="" name="img" value="">
+                    </div>
+                    {if $carousel.img}
+                    <img width="192" height="45" src="{$carousel.img_shortcut}" /><br />
+                    {/if}
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="orderView" value="{$carousel.orderView}">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">更新</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="edit"/>
+                <input type="hidden" name="id" value="{$carousel.id}" />
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
 {/if}
 </div><!-- contentpanel -->
 {include file="library/footer.lbi"}
+<script type="text/javascript" src="js/carousel.js"></script>
 </body>
 </html>
