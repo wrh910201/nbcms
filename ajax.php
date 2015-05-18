@@ -60,15 +60,28 @@ if( $opera == 'get_distributor' ) {
     }
     $getDistributor = '';
 
-    $getDistributor .= 'select `name`,`address`,`phone`, `contact`, `DistrictName`, `CityName`, `ProvinceName`
+    $getDistributor .= 'select `authCode`,`name`,`address`,`phone`, `contact`, `DistrictName`, `CityName`, `ProvinceName`, `address`
     from `'.DB_PREFIX.'distributor` as distributor
     left join  `'.DB_PREFIX.'District` as district on distributor.DistrictID = district.DistrictID
     left join  `'.DB_PREFIX.'City` as city on district.CityID = city.CityID
     left join  `'.DB_PREFIX.'Province` as province on city.ProvinceID = province.ProvinceID';
 
+    $content =<<<HTML
+<div class="check_result">
+    <img src="images/gabrielle.png" alt="" class="check_result_logo"/>
+    <div class="check_result_content">
+        <p class="distributor_name">%s</p>
+        <p>联&nbsp;&nbsp;系&nbsp;&nbsp;人:&nbsp;%s</p>
+        <p>授&nbsp;&nbsp;权&nbsp;&nbsp;码:&nbsp;%s</p>
+        <p>联系电话:&nbsp;%s</p>
+        <p>详细地址:&nbsp;%s</p>
+    </div>
+</div>
+HTML;
 
     $distributor = $db->fetchRow($getDistributor.' where `phone` = \''.$data.'\' limit 1');
     if( $distributor ) {
+        $distributor = sprintf($content, $distributor['name'], $distributor['contact'], $distributor['authCode'], $distributor['phone'], $distributor['ProvinceName'].$distributor['CityName'].$distributor['DistrictName'].$distributor['address']);
         echo json_encode(array(
             'error' => 0,
             'message' => '成功',
@@ -79,6 +92,7 @@ if( $opera == 'get_distributor' ) {
 
     $distributor = $db->fetchRow($getDistributor.' where `authCode` = \''.$data.'\' limit 1');
     if( $distributor ) {
+        $distributor = sprintf($content, $distributor['name'], $distributor['contact'], $distributor['authCode'], $distributor['phone'], $distributor['ProvinceName'].$distributor['CityName'].$distributor['DistrictName'].$distributor['address']);
         echo json_encode(array(
             'error' => 0,
             'message' => '成功',

@@ -45,7 +45,7 @@ if( 'add' == $opera ) {
         showSystemMessage('新增轮播图片成功', array(array('alt'=>'查看轮播列表','link'=>'carousel.php'), array('alt' => '继续添加', 'link' => 'carousel.php?act=add')));
         exit;
     } else {
-        showSystemMessage('系统繁忙，请稍后再试', array());
+        showSystemMessage('系统繁忙，请稍后再试'.$db->errmsg(), array());
         exit;
     }
 }

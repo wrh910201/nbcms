@@ -50,7 +50,7 @@ assign('carousels', $carousels);
 //}
 
 //资讯 品牌故事
-$getBrandStory = 'select `title`,`id`,`publishTime`,`author`, `img`, `img_shortcut` from `'.DB_PREFIX.'article` where `articleCatId` = 1 order by `publishTime` DESC limit 4';
+$getBrandStory = 'select `title`,`id`,`publishTime`,`author`, `img`, `img_shortcut` from `'.DB_PREFIX.'article` where `isDelete`=0 and `articleCatId` = 1 order by `publishTime` DESC limit 4';
 $brandStory = $db->fetchAll($getBrandStory);
 $news = array();
 foreach($brandStory as $key=>$article)
@@ -61,7 +61,7 @@ foreach($brandStory as $key=>$article)
 assign('brandStory', $news);
 
 //资讯 企业新闻
-$getEnterpriseNews = 'select `title`,`id`,`publishTime`,`author`, `img`, `img_shortcut` from `'.DB_PREFIX.'article`  where `articleCatId` = 2 order by `publishTime` DESC limit 4';
+$getEnterpriseNews = 'select `title`,`id`,`publishTime`,`author`, `img`, `img_shortcut` from `'.DB_PREFIX.'article`  where `isDelete`=0 and `articleCatId` = 2 order by `publishTime` DESC limit 4';
 $enterpriseNews = $db->fetchAll($getEnterpriseNews);
 $news = array();
 foreach($enterpriseNews as $key=>$article)
@@ -72,7 +72,7 @@ foreach($enterpriseNews as $key=>$article)
 assign('enterpriseNews', $news);
 
 //资讯 美妆学院
-$getColleges = 'select `title`,`id`,`publishTime`,`author`, `img`, `img_shortcut` from `'.DB_PREFIX.'article`  where `articleCatId` = 3 order by `publishTime` DESC limit 4';
+$getColleges = 'select `title`,`id`,`publishTime`,`author`, `img`, `img_shortcut` from `'.DB_PREFIX.'article`  where `isDelete`=0 and `articleCatId` = 3 order by `publishTime` DESC limit 4';
 $colleges = $db->fetchAll($getColleges);
 $news = array();
 foreach($colleges as $key=>$article)

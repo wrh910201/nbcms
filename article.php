@@ -9,9 +9,6 @@ $id = $db->escape($id);
 $currentTime = time();
 $article = null;
 
-$activeNav = get_active_nav().'?id='.$id;
-assign('activeNav', $activeNav);
-
 if($id > 0)
 {
     $getArticle  = 'select a.`author`, a.`title`, a.`keywords`, a.`description`, a.`content`, a.`publishTime`, ';

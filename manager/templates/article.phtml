@@ -28,7 +28,7 @@
                     <tr>
                         <td>{$smarty.foreach.articles.iteration}</td>
                         <td>{$article.title}</td>
-                        <td>{if $article.img_shortcut}<a href="#" data-trigger="manual" class="bootstrap-popover" data-original-title="" title=""><img alt="{$article.img}" src="{$article.img_shortcut}"/></a>{/if}</td>
+                        <td>{if $article.img_shortcut}<a href="#" data-trigger="manual" class="bootstrap-popover" data-original-title="" title=""><img alt="{$article.img}" src="./../{$article.img_shortcut}"/></a>{/if}</td>
                         <td>{$article.articleCat}</td>
                         <td>{$article.author}</td>
                         <td>{$article.publishTime}</td>

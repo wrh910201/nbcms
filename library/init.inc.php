@@ -38,7 +38,7 @@ $script_list = array('configs','functions','lang');
 $loader->includeScript($script_list);
 //初始化数据库链接
 global $db;
-$db = new MySQL(DB_HOST.':'.DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DBNAME);
+$db = new MySQL(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DBNAME);
 //初始化smarty对象
 global $smarty;
 $smarty = new Smarty();

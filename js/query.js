@@ -19,11 +19,7 @@ $(function(){
             ajaxing = true;
             if( response.error == 0 ) {
                 str = '';
-                str+= '<p>' +  response.data.name + '</p>';
-                str+= '<p>' +  response.data.contact + '</p>';
-                str+= '<p>' +  response.data.phone + '</p>';
-                str+= '<p>' +  response.data.ProvinceName + ' ' +response.data.CityName + ' ' + response.data.DistrictName + '</p>';
-                str+= '<p>' +  response.data.address + '</p>';
+                str+= response.data;
                 $('.bs-example-modal-static .modal-title').text('经销商信息');
                 $('.bs-example-modal-static .modal-body').empty();
                 $('.bs-example-modal-static .modal-body').append(str);

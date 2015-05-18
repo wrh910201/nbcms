@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 //设置系统相关参数
 @ini_set('session.use_cookies', 1);
 //@ini_set('session.cookie_lifetime', 1440);
@@ -35,7 +35,7 @@ $script_list = array('configs','functions','purview');
 $loader->includeScript($script_list);
 //初始化数据库链接
 global $db;
-$db = new MySQL(DB_HOST.':'.DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DBNAME);
+$db = new MySQL(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DBNAME);
 //初始化smarty对象
 global $smarty;
 $smarty = new Smarty();

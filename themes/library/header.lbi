@@ -1,7 +1,7 @@
 <div class="header">
     <div class="nav">
         <h1 style="">
-            <img alt="佳百莉logo" src="{$logo}">
+            <img alt="佳百莉logo" src="./{$logo}">
         </h1>
         <ul class="ul_nav">
         {foreach from=$topNav item=nav}

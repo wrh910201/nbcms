@@ -902,3 +902,32 @@ span.current {
   display: inline-block;
   line-height: 30px;
 }
+
+/* 授权查询 */
+.check_result
+{
+    background: url(../images/v.png) no-repeat 430px 46px;
+    clear: both;
+    overflow: hidden;
+}
+
+.check_result_logo
+{
+    display: inline-block;
+    float: left;
+    border: 1px solid #cecece;
+    height: 148px;
+    margin-right: 10px;
+}
+
+.check_result_content
+{
+    display: inline-block;
+    float: left;
+}
+
+.distributor_name
+{
+    color: #db2c63;
+    font-size: 16px;
+}
