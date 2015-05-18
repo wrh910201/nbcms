@@ -9,6 +9,10 @@ $id = $db->escape($id);
 $currentTime = time();
 $article = null;
 
+$activeNav = get_active_nav();
+$activeNav .= '?id='.$id;
+assign('activeNav', $activeNav);
+
 if($id > 0)
 {
     $getArticle  = 'select a.`author`, a.`title`, a.`keywords`, a.`description`, a.`content`, a.`publishTime`, ';
@@ -65,7 +69,26 @@ if(!$article)
     assign('keywords', $article['keywords']);
     assign('description', $article['description']);
     assign('pageTitle', $article['title']);
-    assign('urHere', buildUrHere('article', array('id'=>$id)));
+
+    $urHere = buildUrHere('article', array('id'=>$id));
+    //文章页在某个导航页面下
+    $flag = false;
+    foreach( $urHere as $tag ) {
+        if( $tag['link'] == 'index.php' ) {
+            continue;
+        }
+        foreach( $topNav as $nav ) {
+            if( $tag['link'] == $nav['url'] ) {
+                assign('activeNav', $nav['url']);
+                $flag = true;
+                break;
+            }
+        }
+        if( $flag ) {
+            break;
+        }
+    }
+    assign('urHere', $urHere);
     
     $article['publishTime'] = date('Y-m-d H:i', $article['publishTime']);
     assign('article', $article);

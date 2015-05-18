@@ -19,7 +19,7 @@ $ads = array();
 
 foreach($adPositions as $adPosition)
 {
-    $getIndexAds  = 'select `id`,`img`,`alt` from `'.DB_PREFIX.'ad` where `startTime`<='.$currentTime;
+    $getIndexAds  = 'select `id`,`img`,`alt`, `url` from `'.DB_PREFIX.'ad` where `startTime`<='.$currentTime;
     $getIndexAds .= ' and `endTime`>='.$currentTime.' and `adPositionId`='.$adPosition['id'];
     $getIndexAds .= ' order by `endTime` limit '.$adPosition['number'];
     $ad = $db->fetchAll($getIndexAds);
@@ -37,7 +37,7 @@ foreach($adPositions as $adPosition)
     }
 }
 //轮播
-$getCarousels = 'select `img` from '.DB_PREFIX.'carousel where 1 order by orderView asc;';
+$getCarousels = 'select `img`, `alt` from '.DB_PREFIX.'carousel where 1 order by orderView asc;';
 $carousels = $db->fetchAll($getCarousels);
 //var_dump($carousels);exit;
 assign('carousels', $carousels);

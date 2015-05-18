@@ -30,6 +30,9 @@ if( 'add' == $opera ) {
     } else {
         $orderView = $db->escape(htmlspecialchars($orderView));
     }
+    $alt = getPOST('alt');
+    $alt = empty($alt) ? '' : $db->escape(htmlspecialchars($alt));
+
     $response = upload_with_choice($_FILES['img'], 'image', true);
     if($response['error']) {
         showSystemMessage($response['msg'], array());
@@ -39,8 +42,8 @@ if( 'add' == $opera ) {
         $type = $response['type'];
         $img_shortcut = resize_image($img, $type, 192, 45);
     }
-    $addCarousel = 'insert into '.DB_PREFIX.'carousel (`img`, `orderView`, `img_shortcut`, `addTime`) values
-    (\''.$img.'\', \''.$orderView.'\', \''.$img_shortcut.'\', '.$add_time.');';
+    $addCarousel = 'insert into '.DB_PREFIX.'carousel (`img`, `orderView`, `img_shortcut`, `addTime`, `alt`) values
+    (\''.$img.'\', \''.$orderView.'\', \''.$img_shortcut.'\', '.$add_time.', \''.$alt.'\');';
     if( $db->insert($addCarousel) ) {
         showSystemMessage('新增轮播图片成功', array(array('alt'=>'查看轮播列表','link'=>'carousel.php'), array('alt' => '继续添加', 'link' => 'carousel.php?act=add')));
         exit;
@@ -74,6 +77,10 @@ if( 'edit' == $opera ) {
     } else {
         $orderView = $db->escape(htmlspecialchars($orderView));
     }
+
+    $alt = getPOST('alt');
+    $alt = empty($alt) ? '' : $db->escape(htmlspecialchars($alt));
+
     $response = upload_with_choice($_FILES['img'], 'image');
     if($response['error']) {
         showSystemMessage($response['msg'], array());
@@ -90,6 +97,7 @@ if( 'edit' == $opera ) {
     $carousel = $db->fetchRow($getCarousel);
 
     $updateCarousel = 'update '.DB_PREFIX.'carousel set orderView = \''.$orderView.'\' ';
+    $updateCarousel .= ',`alt`=\''.$alt.'\' ';
     $updateCarousel .= ($img != '') ? (',`img`=\''.$img.'\'') : '';
     $updateCarousel .= ($img_shortcut != '') ? (',`img_shortcut`=\''.$img_shortcut.'\'') : '';
     $updateCarousel .= ' where `id`='.$id.' limit 1';

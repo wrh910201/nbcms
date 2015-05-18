@@ -24,6 +24,46 @@
             margin-top: 0px;
             margin-bottom: 0px;
         }
+        a:hover, a:focus {
+            text-decoration: none;
+            color: #fff;
+        }
+        .foo_links {
+            background: #101010;
+            color: #535353;
+            height: 42px;
+            padding: 14px 0 0;
+            text-align: center;
+            font-size: 12px;
+        }
+        .foo_links2 {
+            border-bottom: 1px solid #3f3f3f;
+            font-size: 16px;
+            height: 49px;
+            overflow: hidden;
+            padding: 14px 0 0;
+            text-align: center;
+        }
+        .foo_con {
+            height: 188px;
+            margin: 0 auto;
+            padding: 24px 0 0;
+            position: relative;
+            width: 940px;
+        }
+        .foo_con p {
+            border-right: 1px solid #404040;
+            float: left;
+            height: 117px;
+            line-height: 26px;
+            overflow: hidden;
+            padding: 6px 0 0 40px;
+            width: 332px;
+            font-size: 12px;
+        }
+        .m-menu {
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -32,7 +72,8 @@
 <div class="g-menu">
     <div class="m-menu">
         <p>
-            <a target="_blank" href="#">首页</a><span>&gt;</span><a target="_blank" href="#">授权查询</a>
+            {$LANG.urHere}:
+            <a href="#">首页</a><span>&gt;</span>授权查询
         </p>
     </div>
 </div>

@@ -30,6 +30,7 @@ if('add' == $opera)
     $adPositionId = intval($adPositionId);
     $img = '';
 
+
     if(isset($_FILES['img']))
     {
         $img = upload($_FILES['img']);
@@ -58,13 +59,15 @@ if('add' == $opera)
     {
         $startTime = time();
     } else {
-        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/', $startTime))
+//        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/', $startTime))
+        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}$/', $startTime))
         {
-            $dateTime = explode(' ', $startTime);
-            $date = explode('-', $dateTime[0]);
-            $time = explode(':', $dateTime[1]);
+//            $dateTime = explode(' ', $startTime);
+//            $date = explode('-', $dateTime[0]);
+//            $time = explode(':', $dateTime[1]);
+            $date = explode('-', $startTime);
 
-            $startTime = mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
+            $startTime = mktime(null, null, null, $date[1], $date[2], $date[0]);
         } else {
             showSystemMessage('开始时间格式不正确', array());
             exit;
@@ -75,13 +78,15 @@ if('add' == $opera)
     {
         $endTime = time()+3600*24*7;
     } else {
-        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/', $endTime))
+//        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/', $endTime))
+        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}$/', $endTime))
         {
-            $dateTime = explode(' ', $endTime);
-            $date = explode('-', $dateTime[0]);
-            $time = explode(':', $dateTime[1]);
+//            $dateTime = explode(' ', $endTime);
+//            $date = explode('-', $dateTime[0]);
+//            $time = explode(':', $dateTime[1]);
+            $date = explode('-', $endTime);
 
-            $endTime = mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
+            $endTime = mktime(null, null, null, $date[1], $date[2], $date[0]);
         } else {
             showSystemMessage('结束时间格式不正确', array());
             exit;
@@ -135,28 +140,23 @@ if('edit' == $opera)
     $id = getPOST('id');
     $id = intval($id);
 
+
     if(0 >= $id)
     {
         showSystemMessage('参数错误', array());
         exit;
     }
 
-    if(isset($_FILES['img']))
-    {
-        $img = upload($_FILES['img']);
-        if($img['error'] == 0)
-        {
-            $img = $img['msg'];
-        } else {
-            showSystemMessage($img['msg'], array());
-            exit;
-        }
-    }
-
-    if('' == $img)
-    {
-        showSystemMessage('请上传图片', array());
+    $response = upload_with_choice($_FILES['img'], 'image');
+    if($response['error']) {
+        showSystemMessage($response['msg'], array());
         exit;
+    } else {
+        $img = $response['msg'];
+        if( $img != '' ) {
+            $type = $response['type'];
+        }
+
     }
 
     if(0 >= $adPositionId)
@@ -169,30 +169,34 @@ if('edit' == $opera)
     {
         $startTime = time();
     } else {
-        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/', $startTime))
+//        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/', $startTime))
+        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}$/', $startTime))
         {
-            $dateTime = explode(' ', $startTime);
-            $date = explode('-', $dateTime[0]);
-            $time = explode(':', $dateTime[1]);
+//            $dateTime = explode(' ', $startTime);
+//            $date = explode('-', $dateTime[0]);
+//            $time = explode(':', $dateTime[1]);
+            $date = explode('-', $startTime);
 
-            $startTime = mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
+            $startTime = mktime(null, null, null, $date[1], $date[2], $date[0]);
         } else {
             showSystemMessage('开始时间格式不正确', array());
             exit;
         }
     }
 
-    if('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/' == $endTime)
+    if('' == $endTime)
     {
         $endTime = time()+3600*24*7;
     } else {
-        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/', $endTime))
+//        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}\ \d{1,2}:\d{1,2}:\d{1,2}$/', $endTime))
+        if(preg_match('/^\d{4}-\d{1,2}-\d{1,2}$/', $endTime))
         {
-            $dateTime = explode(' ', $endTime);
-            $date = explode('-', $dateTime[0]);
-            $time = explode(':', $dateTime[1]);
+//            $dateTime = explode(' ', $endTime);
+//            $date = explode('-', $dateTime[0]);
+//            $time = explode(':', $dateTime[1]);
+            $date = explode('-', $endTime);
 
-            $endTime = mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
+            $endTime = mktime(null, null, null, $date[1], $date[2], $date[0]);
         } else {
             showSystemMessage('结束时间格式不正确', array());
             exit;
@@ -219,8 +223,9 @@ if('edit' == $opera)
 
     if($ad)
     {
-        $updateAd  = 'update `'.DB_PREFIX.'ad` set `img`=\''.$img.'\',`alt`=\''.$alt.'\',`url`=\''.$url.'\',';
+        $updateAd  = 'update `'.DB_PREFIX.'ad` set `alt`=\''.$alt.'\',`url`=\''.$url.'\',';
         $updateAd .= '`startTime`='.$startTime.',`endTime`='.$endTime.',`adPositionId`='.$adPositionId;
+        $updateAd .= ( $img != '' ) ? ', `img`=\''.$img.'\'' : '';
         $updateAd .= ' where `id`='.$id.' limit 1';
 
         if($db->update($updateAd))
@@ -251,6 +256,10 @@ if('list' == $act)
     $getAds .= ' left join `'.DB_PREFIX.'adPosition` as b on a.`adPositionId`=b.`id` order by a.`adPositionId`';
 
     $ads = $db->fetchAll($getAds);
+    foreach($ads as $key => $ad) {
+        $ads[$key]['startTime'] = date('Y-m-d', $ad['startTime']);
+        $ads[$key]['endTime'] = date('Y-m-d', $ad['endTime']);
+    }
 
     assign('ads', $ads);
 }
@@ -292,8 +301,11 @@ if('edit' == $act)
     $getAd .= 'where `id`='.$id.' limit 1';
 
     $ad = $db->fetchRow($getAd);
+
     if($ad)
     {
+        $ad['startTime'] = date('Y-m-d', $ad['startTime']);
+        $ad['endTime'] = date('Y-m-d', $ad['endTime']);
         assign('ad', $ad);
     } else {
         showSystemMessage('该广告不存在或已被删除', array());

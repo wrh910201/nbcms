@@ -158,7 +158,7 @@
                                 <div class="form-group">
                                     <label class="control-label">发布时间:</label>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control" placeholder="" name="publishTime" value="">
+                                        <input disabled="disabled" type="text" class="form_datetime form-control" placeholder="" name="publishTime" value="" id="time-picker">
                                     </div>
                                 </div>
 
@@ -255,7 +255,7 @@ KindEditor.ready(function(K)
 			});
 		}
 	});		
-    prettyPrint();		
+//    prettyPrint();
 });
 {/literal}
 </script>
@@ -323,7 +323,7 @@ KindEditor.ready(function(K)
                                 <div class="form-group">
                                     <label class="control-label">发布时间:</label>
                                     <div class="col-sm-12">
-                                        <input disabled="" type="text" class="form-control" placeholder="" name="publishTime" value="{$article.publishTime}">
+                                        <input disabled="disabled" type="text" class="form-control" placeholder="" name="publishTime" value="{$article.publishTime}">
                                     </div>
                                 </div>
 
@@ -424,7 +424,7 @@ KindEditor.ready(function(K)
                     });
                 }
             });
-            prettyPrint();
+//            prettyPrint();
         });
         {/literal}
     </script>

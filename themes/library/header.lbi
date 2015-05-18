@@ -7,9 +7,9 @@
         {foreach from=$topNav item=nav}
             <li class="li_hover">
             {if $activeNav eq $nav.url}
-                <a class="clicked" href="{$nav.url}">{$nav.name}</a>
+                <a class="clicked" href="{$nav.url}" {if $nav.isOpenNew eq 1} target="_blank"{/if}>{$nav.name}</a>
             {else}
-                <a href="{$nav.url}">{$nav.name}</a>
+                <a href="{$nav.url}" {if $nav.isOpenNew eq 1} target="_blank"{/if}>{$nav.name}</a>
             {/if}
             </li>
         {/foreach}

@@ -171,7 +171,7 @@ if('list' == $act)
         exit;
     }
 
-    $getAdPositions = 'select `id`,`name`,`width`,`height`,`targetTemplate` from `'.DB_PREFIX.'adPosition`';
+    $getAdPositions = 'select `id`,`name`,`width`,`height`,`targetTemplate`, `type`, `number` from `'.DB_PREFIX.'adPosition`';
     $adPositions = $db->fetchAll($getAdPositions);
     assign('adPositions', $adPositions);
 }

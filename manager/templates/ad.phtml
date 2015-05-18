@@ -1,56 +1,206 @@
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
-<a href="ad.php?act=add">添加广告</a>
-<table>
-{foreach from=$ads item=ad}
-<tr><td><img src="../{$ad.img}" width="320px"/></td><td>{$ad.alt}</td><td>{$ad.url}</td><td>{$ad.clickTime}</td>
-    <td>
-        <a href="ad.php?act=edit&id={$ad.id}">编辑</a>|
-        <a href="ad.php?act=delete&id={$ad.id}">删除</a>
-    </td>
-</tr>
-{/foreach}
-</table>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <!--            <h4 class="panel-title">添加导航条</h4>-->
+            <a class="btn btn-primary" href="ad.php?act=add">新增广告</a>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <table class="table mb30" style="width: 98%; margin: 0 auto">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>广告图</th>
+                    <th>起始时间</th>
+                    <th>结束时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach from=$ads item=ad name=ads}
+                <tr>
+                    <td>{$smarty.foreach.ads.iteration}</td>
+                    <td><img src="../{$ad.img}" width="320px"/></td>
+                    <td>{$ad.startTime}</td>
+                    <td>{$ad.endTime}</td>
+                    <td>
+                        <a href="ad.php?act=edit&id={$ad.id}" title="编辑"><i class="fa fa-pencil"></i></a>&nbsp;|
+                        <a class="delete-row" href="ad.php?act=delete&id={$ad.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
 {/if}
 
 {if $act eq 'add'}
-<form name="adAddForm" method="POST" enctype="multipart/form-data">
-替换文字：<input type="text" name="alt"/><br/>
-链接：<input type="text" name="url"/><br/>
-广告图片：<input type="file" name="img"/><br/>
-广告位置：<select name="adPositionId">
-            {foreach from=$adPositions item=adPosition}
-            <option value="{$adPosition.id}">{$adPosition.name}</option>
-            {/foreach}
-          </select><br/>
-开始时间：<input type="text" name="startTime"/><br/>
-结束时间：<input type="text" name="endTime"/><br/>
-<input type="submit" name="submit" value="添加"/>
-<input type="hidden" name="opera" value="add"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-广告</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="adAddForm" method="POST" enctype="multipart/form-data"  class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">替换文字</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="alt" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">链接</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="url" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">广告图片</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="" name="img" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">广告位置</label>
+                    <div class="col-sm-2">
+                        <select class="form-control " name="adPositionId">
+                            {foreach from=$adPositions item=adPosition}
+                            <option value="{$adPosition.id}">{$adPosition.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">使用时间</label>
+                    <div class="col-md-4">
+                        <div data-date-format="yyyy-mm-dd" class="input-group input-large custom-date-range">
+                            <input type="text" name="startTime" readonly="" class="form-control dpd1">
+                            <span class="input-group-addon">To</span>
+                            <input type="text" name="endTime" readonly="" class="form-control dpd2">
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">添加</button>&nbsp;
+                </div>
+                <input type="hidden" name="code" value="code"/>
+                <input type="hidden" name="opera" value="add"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
 {/if}
 
 {if $act eq 'edit'}
-<form name="adEditForm" method="POST" enctype="multipart/form-data">
-替换文字：<input type="text" name="alt" value="{$ad.alt}"/><br/>
-链接：<input type="text" name="url" value="{$ad.url}"/><br/>
-广告图片：<input type="file" name="img"/>
-<img src="../{$ad.img}"/>
-<br/>
-广告位置：<select name="adPositionId">
-            {foreach from=$adPositions item=adPosition}
-            <option value="{$adPosition.id}" {if $adPosition.id eq $ad.adPositionId}selected="selected"{/if}>{$adPosition.name}</option>
-            {/foreach}
-          </select><br/>
-开始时间：<input type="text" name="startTime" value="{$ad.startTime}"/><br/>
-结束时间：<input type="text" name="endTime" value="{$ad.endTime}"/><br/>
-<input type="submit" name="submit" value="添加"/>
-<input type="hidden" name="opera" value="edit"/>
-<input type="hidden" name="id" value="{$ad.id}"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-广告</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="adEditForm" method="POST" enctype="multipart/form-data"  class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">替换文字</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="alt" value="{$ad.alt}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">链接</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="url" value="{$ad.url}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">广告图片</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="" name="img" value="">
+                    </div>
+                    {if $ad.img}
+                    <img src="./../{$ad.img}" />
+                    {/if}
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">广告位置</label>
+                    <div class="col-sm-2">
+                        <select class="form-control " name="adPositionId">
+                            {foreach from=$adPositions item=adPosition}
+                            <option value="{$adPosition.id}" {if $adPosition.id eq $ad.adPositionId}selected="selected"{/if}>{$adPosition.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">使用时间</label>
+                    <div class="col-md-4">
+                        <div data-date-format="yyyy-mm-dd" class="input-group input-large custom-date-range">
+                            <input type="text" name="startTime" readonly="" class="form-control dpd1" value="{$ad.startTime}">
+                            <span class="input-group-addon">To</span>
+                            <input type="text" name="endTime" readonly="" class="form-control dpd2" value="{$ad.endTime}">
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">更新</button>&nbsp;
+                </div>
+                <input type="hidden" name="code" value="code"/>
+                <input type="hidden" name="opera" value="edit"/>
+                <input type="hidden" name="id" value="{$ad.id}"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
+<!--<form name="adEditForm" method="POST" enctype="multipart/form-data">-->
+<!--替换文字：<input type="text" name="alt" value="{$ad.alt}"/><br/>-->
+<!--链接：<input type="text" name="url" value="{$ad.url}"/><br/>-->
+<!--广告图片：<input type="file" name="img"/>-->
+<!--<img src="../{$ad.img}"/>-->
+<!--<br/>-->
+<!--广告位置：<select name="adPositionId">-->
+<!--            {foreach from=$adPositions item=adPosition}-->
+<!--            <option value="{$adPosition.id}" {if $adPosition.id eq $ad.adPositionId}selected="selected"{/if}>{$adPosition.name}</option>-->
+<!--            {/foreach}-->
+<!--          </select><br/>-->
+<!--开始时间：<input type="text" name="startTime" value="{$ad.startTime}"/><br/>-->
+<!--结束时间：<input type="text" name="endTime" value="{$ad.endTime}"/><br/>-->
+<!--<input type="submit" name="submit" value="添加"/>-->
+<!--<input type="hidden" name="opera" value="edit"/>-->
+<!--<input type="hidden" name="id" value="{$ad.id}"/>-->
+<!--</form>-->
 {/if}
 </div><!-- contentpanel -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Small Modal</h4>
+            </div>
+            <div class="modal-body">...</div>
+        </div>
+    </div>
+</div>
 {include file="library/footer.lbi"}
+<script type="text/javascript" src="js/ad.js"></script>
 </body>
 </html>

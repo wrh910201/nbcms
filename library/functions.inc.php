@@ -449,7 +449,7 @@ function upload($file, $type = '')
     	$new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $file_ext;
 	    //移动文件
     	$file_path = $save_path . $new_file_name;
-        if (move_uploaded_file($tmp_name, $file_path) === false) 
+        if (move_uploaded_file($tmp_name, $file_path) === false)
         {
 		    return array('error'=>1, 'msg'=>"上传文件失败。");
     	}
@@ -534,9 +534,18 @@ function buildUrl($script, $params)
 		case 'articleCat':
 			if($sysconf['isStatic'])
 			{
-				return 'articleCat-'.intval($params['id']).'-page-'.intval($params['page']).'html';
-			} else {
-				return 'articleCat.php?id='.intval($params['id']).'&page='.intval($params['page']);
+                if( isset($params['page']) && intval($params['page']) > 0 ) {
+                    return 'articleCat-' . intval($params['id']) . '-page-' . intval($params['page']) . '.html';
+                } else {
+                    return 'articleCat-' . intval($params['id']) . '.html';
+                }
+            } else {
+                if( isset($params['page']) && intal($params['page']) > 0 ) {
+                    return 'articleCat.php?id='.intval($params['id']).'&page='.intval($params['page']);
+                } else {
+                    return 'articleCat.php?id='.intval($params['id']);
+                }
+
 			}
 			break;
 	}
@@ -647,10 +656,10 @@ function back_base_init() {
         $is_main = true;
         //assign('is_main', true);
     }
-    //var_dump($is_main);exit;
     assign('is_main', $is_main);
     assign('activeNav', $activeNav);
     assign('pageTitle', 'NB_CMS管理后台');
+    assign('currentAdmin', $_SESSION['account']);
 }
 
 /**

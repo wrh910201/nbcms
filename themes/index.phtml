@@ -7,7 +7,7 @@
     <meta content="{$siteKeywords}" name="keywords">
     <meta content="{$siteDescription}" name="description">
     <title>{$owner}</title>
-    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
+<!--    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">-->
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <script type="text/javascript">
         //var data_provinces = {$json_provinces};
@@ -38,11 +38,11 @@
             {$first = true}
             {foreach from=$brandStory item=article}
                 {if $first eq true}
-                    <a class="a_dt" target="_blank" href="article.php?id={$article.id}"><img src="./{$article.img}" alt="{$article.title}"><span>{$article.title}</span></a>
+                    <a class="a_dt" target="_blank" href="article.php?id={$article.id}"><img src="./{$article.img}" alt="{$article.title}"/><span>{$article.title}</span></a>
                     {$first = false}
                 {else}
                     <dl class="col_dl">
-                        <dt><a target="_blank" href="article.php?id={$article.id}"><img width="50px" height="50px" src="./{$article.img_shortcut}"></a></dt>
+                        <dt><a target="_blank" href="article.php?id={$article.id}"><img width="50px" height="50px" src="./{$article.img_shortcut}" alt="{$article.title}"/></a></dt>
                         <dd>
                             <b><a class="link_black" target="_blank" href="article.php?id={$article.id}">{$article.title}</a></b>
                             <p>作者：{$article.author}<i>{$article.publishTime}</i></p>
@@ -63,7 +63,7 @@
             {$first = false}
             {else}
             <dl class="col_dl">
-                <dt><a target="_blank" href="article.php?id={$article.id}"><img width="50px" height="50px" src="./{$article.img_shortcut}"></a></dt>
+                <dt><a target="_blank" href="article.php?id={$article.id}"><img width="50px" height="50px" src="./{$article.img_shortcut}" alt="{$article.title}"></a></dt>
                 <dd>
                     <b><a class="link_black" target="_blank" href="article.php?id={$article.id}">{$article.title}</a></b>
                     <p>作者：{$article.author}<i>{$article.publishTime}</i></p>
@@ -84,7 +84,7 @@
             {$first = false}
             {else}
             <dl class="col_dl">
-                <dt><a target="_blank" href="article.php?id={$article.id}"><img width="50px" height="50px" src="./{$article.img_shortcut}"></a></dt>
+                <dt><a target="_blank" href="article.php?id={$article.id}"><img width="50px" height="50px" src="./{$article.img_shortcut}" alt="{$article.title}"></a></dt>
                 <dd>
                     <b><a class="link_black" target="_blank" href="article.php?id={$article.id}">{$article.title}</a></b>
                     <p>作者：{$article.author}<i>{$article.publishTime}</i></p>

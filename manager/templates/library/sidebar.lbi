@@ -38,9 +38,9 @@
             <!-- This is only visible to small devices -->
             <div class="visible-xs hidden-sm hidden-md hidden-lg">
                 <div class="media userlogged">
-                    <img alt="" src="images/photos/loggeduser.png" class="media-object">
+                    <!--img alt="" src="images/photos/loggeduser.png" class="media-object"-->
                     <div class="media-body">
-                        <h4>John Doe</h4>
+                        <h4>{$currentAdmin}</h4>
                         <span>"Life is so..."</span>
                     </div>
                 </div>
@@ -86,8 +86,8 @@
                         <li>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <img src="images/photos/loggeduser.png" alt="" />
-                                    John Doe
+                                    <!--img src="images/photos/loggeduser.png" alt="{$currentAdmin}" /-->
+                                    {$currentAdmin}
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
