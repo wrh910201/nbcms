@@ -499,7 +499,7 @@ function createMenus() {
     $purview = json_decode($purview);
     $menu = array();
     foreach($purview as $key => $value) {
-        if( count($value) > 0 ) {
+        if( count($value) > 0 && isset($menus[$key])) {
             $menu[] = $menus[$key];
         }
     }
@@ -659,7 +659,8 @@ function back_base_init() {
     assign('is_main', $is_main);
     assign('activeNav', $activeNav);
     assign('pageTitle', 'NB_CMS管理后台');
-    assign('currentAdmin', $_SESSION['account']);
+    assign('currentAdmin', $_SESSION['name']);
+    assign('adminPhoto', $_SESSION['photo']);
 }
 
 /**
@@ -879,3 +880,5 @@ function create_pager($page, $totalPage, $total) {
     assign('total', $total);
     assign('totalPage', $totalPage );
 }
+
+

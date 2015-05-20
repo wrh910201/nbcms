@@ -1,3 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+
+    <title>{$pageTitle}</title>
+
+    <link href="css/style.default.css" rel="stylesheet">
+    <link href="css/jquery.datatables.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <script src="js/jquery-1.11.1.min.js"></script>
+</head>
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
@@ -10,7 +31,7 @@
             <a class="btn btn-primary" href="distributor.php?act=add">新增经销商</a>
         </div>
         <div class="panel-body panel-body-nopadding">
-            <table class="table mb30" style="width: 98%; margin: 0 auto">
+            <table id="distributor-list" class="table mb30" style="width: 98%; margin: 0 auto">
                 <thead>
                 <tr>
                     <th>#</th>
@@ -31,7 +52,7 @@
                         <td>{$distributor.area}&nbsp;&nbsp;{$distributor.address}</td>
                         <td>
                             <a href="distributor.php?act=edit&id={$distributor.id}" title="编辑"><i class="fa fa-pencil"></i></a>&nbsp;|
-                            <a class="delete-row" href="distributor.php?act=delete&id={$distributor.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                            <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" class="delete-row" href="distributor.php?act=delete&id={$distributor.id}" title="删除"><i class="fa fa-trash-o"></i></a>
                         </td>
                     </tr>
                     {/foreach}
@@ -44,6 +65,7 @@
         </div><!-- panel-footer -->
 
     </div>
+    <script src="js/jquery.datatables.min.js"></script>
 {/if}
 {if $act eq 'add'}
     <div class="panel panel-default">
@@ -51,7 +73,8 @@
             <div class="panel-btns">
                 <a class="minimize" href="">−</a>
             </div>
-            <h4 class="panel-title">添加-经销商</h4>
+<!--            <h4 class="panel-title">添加-经销商</h4>-->
+            <a class="btn btn-primary" href="distributor.php">返回</a>
         </div>
         <div class="panel-body panel-body-nopadding">
             <form name="distributorAddForm" method="POST"  class="form-horizontal form-bordered">
@@ -185,7 +208,9 @@
             <div class="panel-btns">
                 <a class="minimize" href="">−</a>
             </div>
-            <h4 class="panel-title">编辑-{$distributor.name}</h4>
+
+<!--            <h4 class="panel-title">编辑-{$distributor.name}</h4>-->
+            <a class="btn btn-primary" href="distributor.php">返回</a>
         </div>
         <div class="panel-body panel-body-nopadding">
             <form name="distributorEidtForm" method="POST"  class="form-horizontal form-bordered">
@@ -323,55 +348,6 @@
         </div><!-- panel-footer -->
 
     </div>
-<!--    <form name="distributorEditForm" method="POST">-->
-<!--        经销商名称：<input type="text" name="name" value="{$distributor.name}"/><br/>-->
-<!--        联系人：<input type="text" name="contact" value="{$distributor.contact}" /><br/>-->
-<!--        联系电话：<input type="text" name="phone" value="{$distributor.phone}" /><br/>-->
-<!--        授权码：<input type="text" name="auth_code" value="{$distributor.authCode}" /><br />-->
-<!--        地区：-->
-<!--        <select id="province" name="province">-->
-<!--            <option value="0">请选择</option>-->
-<!--            {foreach from=$provinces item=province}-->
-<!--                {if $province.ProvinceID eq $distributor.ProvinceID}-->
-<!--            <option value="{$province.ProvinceID}" selected="selected">{$province.ProvinceName}</option>-->
-<!--                {else}-->
-<!--            <option value="{$province.ProvinceID}">{$province.ProvinceName}</option>-->
-<!--                {/if}-->
-<!--            {/foreach}-->
-<!--        </select>&nbsp;&nbsp;-->
-<!--        <select id="city" name="city">-->
-<!--            <option value="0">请选择</option>-->
-<!--            {foreach from=$cities[$distributor.ProvinceID] item=city}-->
-<!--                {if $city.CityID eq $distributor.CityID}-->
-<!--            <option value="{$city.CityID}" selected="selected">{$city.CityName}</option>-->
-<!--                {else}-->
-<!--            <option value="{$city.CityID}">{$city.CityName}</option>-->
-<!--                {/if}-->
-<!--            {/foreach}-->
-<!--        </select>&nbsp;&nbsp;-->
-<!--        <select id="district" name="district">-->
-<!--            <option value="0">请选择</option>-->
-<!--            {foreach from=$districts[$distributor.CityID] item=district}-->
-<!--                {if $district.DistrictID eq $distributor.DistrictID}-->
-<!--            <option value="{$district.DistrictID}" selected="selected">{$district.DistrictName}</option>-->
-<!--                {else}-->
-<!--            <option value="{$district.DistrictID}">{$district.DistrictName}</option>-->
-<!--                {/if}-->
-<!--            {/foreach}-->
-<!--        </select><br />-->
-<!--        具体地址：<input type="text" name="address" value="{$distributor.address}"/><br/>-->
-<!--        经度：<input type="text" name="lng-show" disabled=true value="{$distributor.lng}"/>&nbsp;&nbsp;-->
-<!--        纬度：<input type="text" name="lat-show" disabled=true value="{$distributor.lat}"/><br />-->
-<!--        <input type="submit" name="submit" value="编辑经销商"/>-->
-<!--        <input type="hidden" name="opera" value="edit"/>-->
-<!--        <input type="hidden" name="lng" value="{$distributor.lng}"/>&nbsp;&nbsp;-->
-<!--        <input type="hidden" name="lat" value="{$distributor.lat}"/><br />-->
-<!--        <input type="hidden" name="id" value="{$distributor.id}" ><br />-->
-<!--    </form>-->
-<!--    <div id="baidu-map">-->
-<!---->
-<!--    </div>-->
-<!--    <p>点击地图获取当前经纬度</p>-->
     <script type="text/javascript">
         var data_cities = {$json_cities};
         var data_districts = {$json_districts};
@@ -384,5 +360,6 @@
 
 </div><!-- contentpanel -->
 {include file="library/footer.lbi"}
+<script type="text/javascript" src="js/distributor.js"></script>
 </body>
 </html>

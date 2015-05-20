@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+
+{* 尚未绑定公众号 *}
+{if $step eq 'init'}
+<div style="padding: 30px;">
+<h2>请先绑定一个公众号</h2>
+<form action="main.php" method="post" name="bindForm" onsubmit="return checkBind();">
+    <ul>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.publicAccount}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="name"/></span>
+                <p class="input-notice" id="name-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.originalId}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="account"/></span>
+                <p class="input-notice" id="account-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.token}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="token"/></span>
+                <p class="input-notice" id="token-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.appId}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="appID"/></span>
+                <p class="input-notice" id="appID-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.appsecret}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="appsecret"/></span>
+                <p class="input-notice" id="appsecret-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.accountType}</label>
+            <div class="info-item-value">
+                        <input type="radio" name="accountType" value="0" checked="checked"/>{$lang.booking}&nbsp;
+                        <input type="radio" name="accountType" value="1"/>{$lang.server}
+            </div>
+        </li>
+    </ul>
+    <div class="toolbar">
+        <input type="submit" class="button" name="submit" value="{$lang.bind}"/>
+        <input type="hidden" name="opera" value="bind"/>
+    </div>
+</form>
+</div>
+<script type="text/javascript">
+function checkBind() {
+    var form = document.forms.bindForm;
+    var flag = true;
+    var accountType = 0;
+
+    for(var i=0; i < form.accountType.length; i++) {
+        if(form.accountType[i].checked) {
+            accountType = form.accountType[i].value;
+        }
+    }
+
+    if(accountType == 1) {
+        if(form.appID.value.trim() == '') {
+            flag = false;
+            document.getElementById("appID-error").innerHTML = '{$lang.warning.appID_empty}';
+        } else {
+            document.getElementById("appID-error").innerHTML = '';
+        }
+
+        if(form.appsecret.value.trim() == '') {
+            flag = false;
+            document.getElementById("appsecret-error").innerHTML = '{$lang.warning.appsecret_empty}';
+        } else {
+            document.getElementById("appsecret-error").innerHTML = '';
+        }
+    } else {
+        document.getElementById("appID-error").innerHTML = '';
+        document.getElementById("appsecret-error").innerHTML = '';
+    }
+
+    if(form.token.value.trim() == '') {
+        flag = false;
+        document.getElementById("token-error").innerHTML = '{$lang.warning.token_empty}';
+    } else {
+        document.getElementById("token-error").innerHTML = '';
+    }
+
+    if(form.name.value.trim() == '') {
+        flag = false;
+        document.getElementById("name-error").innerHTML = '{$lang.warning.publicAccount_empty}';
+    } else {
+        document.getElementById("name-error").innerHTML = '';
+    }
+
+    if(form.account.value.trim() == '') {
+        flag = false;
+        document.getElementById("account-error").innerHTML = '{$lang.warning.originalId_empty}';
+    } else {
+        document.getElementById("account-error").innerHTML = '';
+    }
+
+    return flag;
+}
+</script>
+{/if}
+
+{* 显示已绑定公众号的信息 *}
+{if $step eq 'info'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <h2>公众号信息<a href="main.php?act=edit" class="header-edit">修改</a></h2>
+        <ul>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.publicAccount}</label>
+                <div class="info-item-value">{$account.name}</div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.originalId}</label>
+                <div class="info-item-value">{$account.account}</div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.token}</label>
+                <div class="info-item-value">{$account.token}</div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.appId}</label>
+                <div class="info-item-value">{$account.appID}</div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.appsecret}</label>
+                <div class="info-item-value">{$account.appsecret}</div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.accountType}</label>
+                <div class="info-item-value">{if $account.accountType eq 0}订阅号{else}服务号{/if}</div>
+            </li>
+        </ul>
+    </div>
+{/if}
+
+{if $step eq 'edit'}
+{include file="menu.phtml"}
+<div class="content">
+<h2>公众号信息</h2>
+<form action="main.php" method="post" name="editForm" onsubmit="return checkEdit();">
+    <ul>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.publicAccount}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="name" value="{$account.name}"/></span>
+                <p class="input-notice" id="name-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.originalId}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="account" value="{$account.account}"/></span>
+                <p class="input-notice" id="account-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.token}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="token" value="{$account.token}"/></span>
+                <p class="input-notice" id="token-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.appId}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="appID" value="{$account.appID}"/></span>
+                <p class="input-notice" id="appID-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.appsecret}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="appsecret" value="{$account.appsecret}"/></span>
+                <p class="input-notice" id="appsecret-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.accountType}</label>
+            <div class="info-item-value">
+                <input type="radio" name="accountType" value="0" {if $account.accountType eq 0}checked="checked"{/if}/>{$lang.booking}&nbsp;
+                <input type="radio" name="accountType" value="1" {if $account.accountType eq 1}checked="checked"{/if}/>{$lang.server}
+            </div>
+        </li>
+    </ul>
+    <div class="toolbar">
+        <input type="submit" name="submit" class="button" value="{$lang.submit}"/>
+        <a class="button button-gray" href="main.php">{$lang.cancel}</a>
+        <input type="hidden" name="opera" value="edit"/>
+        <input type="hidden" name="eid" value="{$account.id}"/>
+    </div>
+</form>
+<script type="text/javascript">
+function checkEdit() {
+    var form = document.forms.editForm;
+    var flag = true;
+    var accountType = 0;
+
+    for(var i=0; i < form.accountType.length; i++) {
+        if(form.accountType[i].checked) {
+            accountType = form.accountType[i].value;
+        }
+    }
+
+    if(accountType == 1) {
+        if(form.appID.value.trim() == '') {
+            flag = false;
+            document.getElementById("appID-error").innerHTML = '{$lang.warning.appID_empty}';
+        } else {
+            document.getElementById("appID-error").innerHTML = '';
+        }
+
+        if(form.appsecret.value.trim() == '') {
+            flag = false;
+            document.getElementById("appsecret-error").innerHTML = '{$lang.warning.appsecret_empty}';
+        } else {
+            document.getElementById("appsecret-error").innerHTML = '';
+        }
+    } else {
+        document.getElementById("appID-error").innerHTML = '';
+        document.getElementById("appsecret-error").innerHTML = '';
+    }
+
+    if(form.token.value.trim() == '') {
+        flag = false;
+        document.getElementById("token-error").innerHTML = '{$lang.warning.token_empty}';
+    } else {
+        document.getElementById("token-error").innerHTML = '';
+    }
+
+    if(form.name.value.trim() == '') {
+        flag = false;
+        document.getElementById("name-error").innerHTML = '{$lang.warning.publicAccount_empty}';
+    } else {
+        document.getElementById("name-error").innerHTML = '';
+    }
+
+    if(form.account.value.trim() == '') {
+        flag = false;
+        document.getElementById("account-error").innerHTML = '{$lang.warning.originalId_empty}';
+    } else {
+        document.getElementById("account-error").innerHTML = '';
+    }
+
+    return flag;
+}
+</script>
+</div>
+{/if}
+
+</div>
+{include file="foot.phtml"}
+</body>
+</html>

@@ -85,6 +85,10 @@ $purview = array(
         'pur_carousel_edit',
         'pur_carousel_delete',
     ),
+    'pur_wechat' => array(
+        'pur_wechat_bind',
+        'pur_wechat_manager',
+    ),
 );
 
 global $L_purview;
@@ -141,6 +145,8 @@ $L_purview = array(
     'pur_carousel_list'=>'查看轮播',
     'pur_carousel_edit'=>'编辑轮播',
     'pur_carousel_delete'=>'删除轮播',
+    'pur_wechat_bind' => '微信绑定',
+    'pur_wechat_manager' => '微信管理',
 );
 
 global $menus;
@@ -155,8 +161,9 @@ $menus = array(
     'pur_admin' => array('url'=>'adminUser.php', 'title'=>'管理员管理', 'icon' => 'fa fa-user'),
     'pur_adminRole' => array('url'=>'adminRole.php', 'title'=>'管理员角色管理', 'icon' => 'fa fa-bug'),
     'pur_friend' => array('url'=>'friend.php', 'title'=>'友情链接管理', 'icon' => 'fa fa-map-marker'),
-    'pur_category' => array('url'=>'category.php', 'title'=>'产品分类管理', 'icon' => 'fa fa-file-text'),
-    'pur_product' => array('url'=>'product.php', 'title'=>'产品管理', 'icon' => 'fa fa-power-off'),
+    //'pur_category' => array('url'=>'category.php', 'title'=>'产品分类管理', 'icon' => 'fa fa-file-text'),
+    //'pur_product' => array('url'=>'product.php', 'title'=>'产品管理', 'icon' => 'fa fa-power-off'),
     'pur_distributor' => array('url' => 'distributor.php', 'title' => '经销商管理', 'icon' => 'fa fa-th-list'),
     'pur_carousel' => array('url' => 'carousel.php', 'title' => '轮播管理', 'icon' => 'fa fa-edit'),
+    'pur_wechat' => array('url' => '../wechat/wechat/main.php', 'title' => '公众号', 'icon' => 'fa fa-power-off'),
 );

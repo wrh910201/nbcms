@@ -1,37 +1,146 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-<title>{$pageTitle}</title>
-<link rel="stylesheet" type="text/css" href="css/style.css"/>
-<script type="text/javascript" src="js/xajax.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+
+    <title>{$pageTitle}</title>
+
+    <link href="css/style.default.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <script src="js/index.js"></script>
+    <![endif]-->
 </head>
-<body>
+<body class="signin">
 {if $act eq 'login'}
-<form method="POST" name="loginForm">
-账号：<input type="text" name="account"/>
-{if isset($error.account)}<font color="red">{$error.account}</font>{/if}
-密码：<input type="password" name="password"/>
-{if isset($error.password)}<font color="red">{$error.password}</font>{/if}
-<input type="submit" name="submit" value="登录"/>
-<input type="hidden" name="opera" value="login"/>
-<a href="index.php?act=forgot">忘记密码</a>
-</form>
+<section>
+
+    <div class="signinpanel">
+
+        <div class="row">
+
+            <div class="col-md-7">
+
+                <div class="signin-info">
+                    <div class="logopanel">
+                        <h1><span>[</span> NBCMS <span>]</span></h1>
+                    </div><!-- logopanel -->
+
+                    <div class="mb20"></div>
+
+                    <h5><strong>欢迎使用NBCMS</strong></h5>
+                    <ul>
+                        <li><i class="fa fa-arrow-circle-o-right mr5"></i> ...</li>
+                        <li><i class="fa fa-arrow-circle-o-right mr5"></i> ...</li>
+                        <li><i class="fa fa-arrow-circle-o-right mr5"></i> ...</li>
+                        <li><i class="fa fa-arrow-circle-o-right mr5"></i> ...</li>
+                        <li><i class="fa fa-arrow-circle-o-right mr5"></i> ...</li>
+                    </ul>
+                    <div class="mb20"></div>
+                    <strong>返回<a href="../index.php">站点</a></strong>
+                </div><!-- signin0-info -->
+
+            </div><!-- col-sm-7 -->
+
+            <div class="col-md-5">
+
+                <form method="post"  name="loginForm">
+                    <h4 class="nomargin">管理员登陆</h4>
+                    <p class="mt5 mb20"></p>
+
+                    <input type="text" class="form-control uname" name="account" placeholder="帐号" />
+                    {if isset($error.account)}
+                    <p class="help-block"><small style="color:#ff0000;">{$error.account}</small></p>
+                    {/if}
+                    <input type="password" class="form-control pword" name="password" placeholder="密码" />
+                    {if isset($error.password)}
+                    <p class="help-block"><small style="color:#ff0000;">{$error.password}</small></p>
+                    {/if}
+                    <a href="index.php?act=forgot"><small>忘记密码？</small></a>
+                    <button class="btn btn-success btn-block">登陆</button>
+                    <input type="hidden" name="opera" value="login" />
+                </form>
+            </div><!-- col-sm-5 -->
+
+        </div><!-- row -->
+
+    </div><!-- signin -->
+
+</section>
 {/if}
 
-{if $act eq 'forgot'}
-<form method="POST" name="forgotForm">
-账号：<input type="text" name="account"/>
-{if isset($error.account)}<font color="red">{$error.account}</font>{/if}
-E-mail：<input type="text" name="email"/>
-{if isset($error.email)}<font color="red">{$error.email}</font>{/if}
-手机号码：<input type="text" name="mobile"/>
-{if isset($error.mobile)}<font color="red">{$error.mobile}</font>{/if}
-<input type="submit" name="submit" value="找回密码"/>
-<input type="hidden" name="opera" value="forgot"/>
-<a href="index.php">立即登录</a>
-</form>
-{/if}
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/jquery-migrate-1.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/modernizr.min.js"></script>
+<script src="js/jquery.sparkline.min.js"></script>
+<script src="js/jquery.cookies.js"></script>
+
+<script src="js/toggles.min.js"></script>
+<script src="js/retina.min.js"></script>
+
+<script src="js/custom.js"></script>
+<script>
+    jQuery(document).ready(function(){
+
+        // Please do not use the code below
+        // This is for demo purposes only
+        var c = jQuery.cookie('change-skin');
+        if (c && c == 'greyjoy') {
+            jQuery('.btn-success').addClass('btn-orange').removeClass('btn-success');
+        } else if(c && c == 'dodgerblue') {
+            jQuery('.btn-success').addClass('btn-primary').removeClass('btn-success');
+        } else if (c && c == 'katniss') {
+            jQuery('.btn-success').addClass('btn-primary').removeClass('btn-success');
+        }
+    });
+</script>
+
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>-->
+<!--<title>{$pageTitle}</title>-->
+<!--<link rel="stylesheet" type="text/css" href="css/style.css"/>-->
+<!--<script type="text/javascript" src="js/xajax.js"></script>-->
+<!--<script type="text/javascript" src="js/index.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--{if $act eq 'login'}-->
+<!--<form method="POST" name="loginForm">-->
+<!--账号：<input type="text" name="account"/>-->
+<!--{if isset($error.account)}<font color="red">{$error.account}</font>{/if}-->
+<!--密码：<input type="password" name="password"/>-->
+<!--{if isset($error.password)}<font color="red">{$error.password}</font>{/if}-->
+<!--<input type="submit" name="submit" value="登录"/>-->
+<!--<input type="hidden" name="opera" value="login"/>-->
+<!--<a href="index.php?act=forgot">忘记密码</a>-->
+<!--</form>-->
+<!--{/if}-->
+<!---->
+<!--{if $act eq 'forgot'}-->
+<!--<form method="POST" name="forgotForm">-->
+<!--账号：<input type="text" name="account"/>-->
+<!--{if isset($error.account)}<font color="red">{$error.account}</font>{/if}-->
+<!--E-mail：<input type="text" name="email"/>-->
+<!--{if isset($error.email)}<font color="red">{$error.email}</font>{/if}-->
+<!--手机号码：<input type="text" name="mobile"/>-->
+<!--{if isset($error.mobile)}<font color="red">{$error.mobile}</font>{/if}-->
+<!--<input type="submit" name="submit" value="找回密码"/>-->
+<!--<input type="hidden" name="opera" value="forgot"/>-->
+<!--<a href="index.php">立即登录</a>-->
+<!--</form>-->
+<!--{/if}-->
+<!--</body>-->
+<!--</html>-->

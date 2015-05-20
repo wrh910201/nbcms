@@ -8,6 +8,13 @@ $opera = checkAction($operaction, getPOST('opera'));
 $act = checkAction($action, getGET('act'));
 $error = array();
 
+//如果已登陆，跳转到管理后台主页
+if(isset($_SESSION['purview']) && isset($_SESSION['account'])) {
+    header("location: main.php");
+    exit;
+}
+
+
 if('' === $act)
 {
     $act = 'login';
@@ -33,7 +40,7 @@ if('login' == $opera)
         $password = md5($password.PASSWORD_END);
     }
 
-    $checkAccount = 'select `password`,`roleId`,`name` from `'.DB_PREFIX.'admin` where `account`=\''.$account.'\' limit 1';
+    $checkAccount = 'select `password`,`roleId`,`name`,`photo` from `'.DB_PREFIX.'admin` where `account`=\''.$account.'\' limit 1';
     $admin = $db->fetchRow($checkAccount);
 
     if($admin)
@@ -45,7 +52,19 @@ if('login' == $opera)
             {
                 $_SESSION['purview'] = $role['purview'];
                 $_SESSION['name'] = $admin['name'];
+                $_SESSION['photo'] = $admin['photo'];
                 $_SESSION['account'] = $account;
+                /**
+                 * 是否有微信管理权限
+                 */
+                if( checkPurview('pur_wechat_bind', $role['purview']) && checkPurview('pur_wechat_manager', $role['purview']) ) {
+                    $getPublicAccount = 'select `publicAccount` from `wx_publicAccount where 1 limit 1;`';
+                    $publicAccount = $db->fetchOne($getPublicAccount);
+                    if( $publicAccount ) {
+                        $_SESSION['public_account'] = $publicAccount;
+                    }
+                }
+
                 showSystemMessage('登录成功', array(array('alt'=>'进入管理后台', 'link'=>'main.php')));
                 exit;
             } else {

@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+
+{* 显示自定义菜单列表 *}
+{if $act eq 'list'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <h2>菜单列表</h2>
+        <div class="clearfix">
+        <div class="custom-menu-list">
+            <div class="custom-menu-toolbar">
+                <span class="fl">菜单管理</span>
+                <a href="javascript:void(0);" id="add-item"></a>
+            </div>
+            <div class="custom-menu-item" id="custom-menu-item">
+            </div>
+        </div>
+        <div class="custom-menu-content">
+            <div class="custom-menu-toolbar">菜单设置</div>
+            <div class="custom-menu-preview" id="custom-menu-preview">
+                菜单预览
+            </div>
+            <div class="custom-menu-add-form" id="custom-menu-add-form" style="display: none;">
+                <p class="menu-form-item" id="menu-notice" style="padding: 0px 20px 20px;"></p>
+                <p class="menu-form-item clearfix">
+                    <label class="menu-form-label">{$lang.menu_name}</label>
+                    <span class="menu-input-wrapper">
+                        <input type="text" class="input-text" name="name" id="name" onkeyup="checkLength(this.value);"/>
+                    </span>
+                    <span class="menu-input-error" id="name-error"></span>
+                </p>
+                <p class="menu-form-item clearfix">
+                    <label class="menu-form-label">{$lang.menu_type}</label>
+                    <span class="menu-input-wrapper">
+                        <select class="input-select" id="type" name="type">
+                            <option value="view">链接</option>
+                            <option value="click">事件</option>
+                        </select>
+                    </span>
+                    <span class="menu-input-error" id="type-error"></span>
+                </p>
+                <p class="menu-form-item clearfix">
+                    <label class="menu-form-label">{$lang.menu_key}</label>
+                    <span class="menu-input-wrapper">
+                        <input type="text" class="input-text" id="key" name="key"/>
+                    </span>
+                    <span class="menu-input-error" id="key-error"></span>
+                </p>
+                <div class="toolbar">
+                    <a href="javascript:void(0);" id="save-btn" class="button">{$lang.save}</a>
+                </div>
+                <input type="hidden" name="index" value="0" id="index"/>
+                <input type="hidden" name="eid" value="0" id="eid"/>
+                <input type="hidden" name="parentId" value="0" id="parentId"/>
+                <input type="hidden" name="opera" value="add" id="opera"/>
+            </div>
+        </div>
+        </div>
+        <div class="toolbar">
+            <a href="javascript:void(0);" id="post-btn" class="button">{$lang.report}</a>
+            <a href="menu.php" class="button button-gray">{$lang.perview}</a>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var temp = [{$menus}];
+
+    {literal}
+    window.onload = function() {
+        if(temp != "") {
+            temp = temp[0];
+        } else {
+            temp = new Array();
+        }
+        var save = $("#save-btn");
+        save.bind("click", function() {
+            var eid = $("#eid").val();
+            var index = $("#index").val();
+            var parentId = $("#parentId").val();
+            var opera = $("#opera").val();
+            if(validate()) {
+                var name = $("#name").val();
+                var type = $("#type").val();
+                var key = $("#key").val();
+
+                var o = {"name":name,"type":type,"key":key,"parentId":parentId,"id":eid, "opera":opera};
+                temp[index] = o;
+                $.ajax({
+                    "url" : "menu.php",
+                    "type": "post",
+                    "dataType" : "JSON",
+                    "data" : {"opera":"save", "data":o},
+                    "success": function(response) {
+                        if(response.error == 0) {
+                            data = response.data;
+                            console.info(data.id);
+                            temp[data.id] = data;
+                            console.info(temp[data.id]);
+                            $("#eid").val(data.id);
+                            $("#parentId").val(data.parentId);
+                            perform(data);
+
+                            $("#name").val("");
+                            $("#type").val("view");
+                            $("#key").val("");
+                            $("#eid").val(0);
+                            $("#opera").val("add");
+                        }
+                        alert(response.msg);
+                    }
+                });
+            }
+        });
+
+        $("#post-btn").bind("click", function() {
+            $.ajax({
+                "url" : "menu.php",
+                "type": "post",
+                "dataType": "json",
+                "data" : {"opera":"post"},
+                "success": function(response) {
+                    alert(response.msg);
+                }
+            });
+        });
+
+        for(var i in temp) {
+            perform(temp[i]);
+        }
+
+        $("#add-item").bind("click", function() {
+            if($(".menu-group").length >= 3) {
+            {/literal}
+                alert("{$lang.warning.primary_menu_has_only_three}");
+            {literal}
+                return;
+            }
+            showForm();
+            $("#name").val("");
+            $("#type").val("view");
+            $("#key").val("");
+            $("#parentId").val(0);
+            $("#eid").val(0);
+            $("#opera").val("add");
+        });
+    }
+
+    function showForm() {
+        $("#custom-menu-add-form").show();
+        $("#custom-menu-preview").hide();
+    }
+
+    function edit(id) {
+        showForm();
+        if(temp[id]) {
+            $("#name").val(temp[id].name);
+            $("#type").val(temp[id].type);
+            $("#key").val(temp[id].key);
+            $("#parentId").val(temp[id].parentId);
+            $("#eid").val(temp[id].id);
+            $("#opera").val("edit");
+
+            $(".menu-group-item-hover").removeClass("menu-group-item-hover");
+            $("#menu-"+id).addClass("menu-group-item-hover");
+
+            if(temp[id].parentId == 0 && $("#menu-"+id).siblings("dd").length) {
+    {/literal}
+                $("#menu-notice").text("{$lang.warning.menu_action_will_not_work}");
+    {literal}
+            } else {
+                $("#menu-notice").text("");
+            }
+        }
+    }
+
+    function addSub(id) {
+        if($("#menu-"+id).siblings("dd").length >= 5) {
+    {/literal}
+            alert("{$lang.warning.submenu_has_only_five}");
+            return false;
+    {literal}
+        }
+        $("#menu-notice").text("");
+        showForm();
+        if(temp[id]) {
+            $("#name").val("");
+            $("#type").val("view");
+            $("#key").val("");
+            $("#parentId").val(id);
+            $("#eid").val(0);
+            $("#opera").val("add");
+        }
+    }
+
+    function remove(id) {
+        if(temp[id]) {
+            if(temp[id].parentId == 0) {
+                if($("#menu-"+id).siblings("dd").length > 0) {
+    {/literal}
+                    alert("{$lang.warning.has_submenu}");
+    {literal}
+                    return false;
+                }
+            }
+    {/literal}
+            if(confirm("{$lang.sure_to_delete_menu}")) {
+    {literal}
+                $.ajax({
+                    "url" : "menu.php",
+                    "type": "post",
+                    "dataType": "json",
+                    "data" : {"opera":"remove","id":id},
+                    "success": function(response) {
+                        if(response.error == 0) {
+                            if(temp[id].parentId == 0) {
+                                $("#menu-"+id).parent().remove();
+                            } else {   
+                                $("#menu-"+id).remove();
+                            }
+                            $("#name").val("");
+                            $("#type").val("view");
+                            $("#key").val("");
+                            $("#parentId").val(0);
+                            $("#eid").val(0);
+                            $("#opera").val("add");
+                            delete(temp[id]);
+                        } else {
+                            alert(response.msg);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    function perform(json) {
+        var ele = null;
+        var parent = null;
+        var inner = '';
+        ele = $("#menu-"+json.id);
+
+        if(ele.length > 0) {
+            if(json.parentId > 0) {
+                inner = '<span class="fl">'+json.name+'</span><p class="menu-item-toolbar"><a href="javascript:remove('+json.id+');" class="menu-remove"></a></p>';
+                ele.html(inner);
+            } else {
+                inner = '<span class="fl">'+json.name+'</span><p class="menu-item-toolbar"><a class="menu-add" href="javascript:addSub('+json.id+');"></a>';
+                inner += '<a href="javascript:remove('+json.id+');" class="menu-remove"></a></p>';
+                ele.html(inner);
+            }
+
+            return true;
+        }
+
+        if(json.parentId > 0) {
+            inner = '<span class="fl">'+json.name+'</span><p class="menu-item-toolbar"><a href="javascript:remove('+json.id+');" class="menu-remove"></a></p>';
+            ele = $("<dd id='menu-"+json.id+"' onclick='edit("+json.id+");' class='menu-group-subitem clearfix'></dd>");
+            parent = "#menu-"+json.parentId;
+            ele.html(inner);
+            ele.insertAfter(parent);
+        } else {
+            ele = $("<dt id='menu-"+json.id+"' onclick='edit("+json.id+");' class='menu-group-item clearfix'></dt>");
+            parent = "#custom-menu-item";
+            inner = '<span class="fl">'+json.name+'</span><p class="menu-item-toolbar"><a class="menu-add" href="javascript:addSub('+json.id+');"></a>';
+            inner += '<a href="javascript:remove('+json.id+');" class="menu-remove"></a></p>';
+            ele.html(inner);
+            ele = $('<dl class="menu-group"></dl>').html(ele);
+            $(parent).append(ele);
+        }
+    }
+
+    function countLength(str) {
+        var length = 0;
+        for(var i = 0; i < str.length; i++) {
+            var c = str.charCodeAt(i);
+            if((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+                length += 0.5;
+            } else {
+                length += 1;
+            }
+        }
+        return length;
+    }
+    function validate() {
+        var name = $("#name").val();
+        var type = $("#type").val();
+        var key = $("#key").val();
+        var flag = true;
+        var parentId = $("#parentId").val();
+
+        if(type != "click" && type != "view") {
+            $("#type").val("view");
+            type = "view";
+        }
+        {/literal}
+        if(name == "") {
+            document.getElementById("name-error").innerHTML = "{$lang.warning.menu_name_empty}";
+            flag = false;
+        } else if(parentId == 0 && countLength(name) > 4) {
+            document.getElementById("name-error").innerHTML = "{$lang.warning.menu_name_gt_four}";
+            flag = false;
+        } else if(parentId > 0 && countLength(name) > 8) {
+            document.getElementById("name-error").innerHTML = "{$lang.warning.menu_name_gt_seven}";
+            flag = false;
+        } else {
+            document.getElementById("name-error").innerHTML = "";
+        }
+
+        if(key == "") {
+            document.getElementById("key-error").innerHTML = "{$lang.warning.menu_key_empty}";
+            flag = false;
+        } else {
+            document.getElementById("key-error").innerHTML = "";
+        }
+
+        return flag;
+    }
+    function checkLength(str) {
+        var type = document.getElementById("parentId").value;
+
+        if(type == 0 && countLength(str) > 4) {
+            document.getElementById("name-error").innerHTML = "{$lang.warning.menu_name_gt_four}";
+        } else if(type > 0 && countLength(str) > 8) {
+            document.getElementById("name-error").innerHTML = "{$lang.warning.menu_name_gt_seven}";
+        } else {
+            document.getElementById("name-error").innerHTML = "";
+        }
+    }
+    </script>
+{/if}
+
+</div>
+{include file="foot.phtml"}
+</body>
+</html>

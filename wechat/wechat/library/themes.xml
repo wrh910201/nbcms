@@ -1,0 +1,22 @@
+<xml>
+    <item>
+        <name>获取推广二维码</name>
+        <content>Qrcode</content>
+        <description>获取带有用户信息的公众号推广二维码</description>
+    </item>
+    <item>
+        <name>天气查询</name>
+        <content>Weather</content>
+        <description>天气查询插件</description>
+    </item>
+    <item>
+        <name>查询用户积分</name>
+        <content>Getintegral</content>
+        <description>用户积分查询插件</description>
+    </item>
+    <item>
+        <name>获取推广链接</name>
+        <content>Geturl</content>
+        <description>获取用户推广链接</description>
+    </item>
+</xml>

@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+{if $act eq 'list'}
+    {include file="menu.phtml"}
+    <div class="content">
+        {if count($rules) eq 0}
+        <p>未添加回复规则</p>
+        {else}
+        <table>
+        {foreach $rules as $rule}
+            <tr>
+                <td>{$rule.id}</td>
+                <td>{$rule.name}</td>
+                <td>{$rule.rule}</td>
+                <td>{$rule.matchMode}</td>
+                <td>{$rule.orderView}</td>
+                <td>{$rule.isDefault}</td>
+                <td>{$rule.transfer_customer_service}</td>
+                <td>
+                    <a href="rule.php?act=edit&id={$rule.id}">编辑</a>
+                    <a href="rule.php?act=delete&id={$rule.id}">删除</a>
+                </td>
+
+            </tr>
+        {/foreach}
+        </table>
+        {/if}
+    </div>
+
+{/if}
+{if $act eq 'add'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <form name="ruleEditForm" method="post">
+            规则名：<input type="text" name="name" /><br />
+            关键词/事件：<input type="text" name="rule" /><br />
+            匹配模式：<input type="radio" name="matchMode" value="0" checked="checked"/>模糊匹配
+            <input type="radio" name="matchMode" value="1" />精确匹配<br />
+            排序：<input type="text" name="orderView" /><br />
+            默认回复：<input type="radio" name="isDefault" value="0" checked="checked"/>否
+            <input type="radio" name="isDefault" value="1"/>是<br />
+            回复：
+            <select name="responseId">
+                <option value="0">请选择</option>
+                {foreach from=$responses item=response}
+                <option value="{$response.id}">{$response.name}</option>
+                {/foreach}
+            </select><br />
+            客服：
+            <select name="kfId">
+                <option value="0">请选择</option>
+                {foreach from=$kfAccounts item=kfAccount}
+                <option value="{$kfAccount.id}">{$kfAccount.kf_account}</option>
+                {/foreach}
+            </select><br />
+            <input type="submit" name="submit" value="提交" />
+            <input type="hidden" name="opera" value="add" />
+        </form>
+    </div>
+{/if}
+{if $act eq 'edit'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <form name="ruleEditForm" method="post">
+            规则名：<input type="text" name="name" value="{$rule.name}" /><br />
+            关键词/事件：<input type="text" name="rule" value="{$rule.rule}"  /><br />
+            匹配模式：<input type="radio" name="matchMode" value="0" {if $rule.matchMode eq 0} checked="checked" {/if}/>模糊匹配
+            <input type="radio" name="matchMode" value="1" {if $rule.matchMode eq 1} checked="checked" {/if}/>精确匹配<br />
+            排序：<input type="text" name="orderView" value="{$rule.orderView}" /><br />
+            默认回复：<input type="radio" name="isDefault" value="0" {if $rule.isDefault eq 0} checked="checked" {/if}/>否
+            <input type="radio" name="isDefault" value="1" {if $rule.isDefault eq 1} checked="checked" {/if}/>是<br />
+            回复：
+            <select name="responseId">
+                <option value="0">请选择</option>
+                {foreach from=$responses item=response}
+                <option value="{$response.id}" {if $rule.responseId eq $response.id}selected="selected"{/if}>{$response.name}</option>
+                {/foreach}
+            </select><br />
+            客服：
+            <select name="kfId">
+                <option value="0">请选择</option>
+                {foreach from=$kfAccounts item=kfAccount}
+                <option value="{$kfAccount.id}" {if $rule.kfId eq $kfAccount.id}selected="selected"{/if}>{$kfAccount.kf_account}</option>
+                {/foreach}
+            </select><br />
+            <input type="submit" name="submit" value="提交" />
+            <input type="hidden" name="opera" value="edit" />
+            <input type="hidden" name="id" value="{$rule.id}" />
+        </form>
+    </div>
+{/if}
+</div>
+{include file="foot.phtml"}
+</body>
+</html>

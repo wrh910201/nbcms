@@ -3209,11 +3209,11 @@ div.error label.error:before {
 }
 
 .signinpanel .uname {
-    background: #fff url(../images/user.png) no-repeat 95% center; 
+    background: #fff url(../../images/user.png) no-repeat 95% center;
 }
 
 .signinpanel .pword {
-    background: #fff url(../images/locked.png) no-repeat 95% center; 
+    background: #fff url(../../images/locked.png) no-repeat 95% center;
 }
 
 .signinpanel .btn {
@@ -4614,4 +4614,28 @@ div.error label.error:before {
 
 .popover {
     min-width: 328px;
+}
+
+#article-list_wrapper {
+    padding: 10px 20px 0 20px;
+}
+
+#article-list_info {
+    margin-top: 10px;
+}
+
+#article-list_paginate {
+    margin-top: 10px;
+}
+
+#distributor-list_wrapper {
+    padding: 10px 20px 0 20px;
+}
+
+#distributor-list_info {
+    margin-top: 10px;
+}
+
+#distributor-list_paginate {
+    margin-top: 10px;
 }

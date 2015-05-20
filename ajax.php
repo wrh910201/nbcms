@@ -2,13 +2,13 @@
 
 include 'library/init.inc.php';
 
-//if( !check_cross_domain() ) {
-//    echo json_encode(array(
-//        'error' => 1,
-//        'message' => '请从本站提交数据',
-//    ));
-//    exit;
-//};
+if( !check_cross_domain() ) {
+    echo json_encode(array(
+        'error' => 1,
+        'message' => '请从本站提交数据',
+    ));
+    exit;
+};
 $opera = getPOST('opera');
 
 if( $opera == 'get_distributors' ) {

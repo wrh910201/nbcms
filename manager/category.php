@@ -61,7 +61,8 @@ if('add' == $opera)
     }
 
     $addcategory  = 'insert into `'.DB_PREFIX.'category` (`name`,`parentId`,`keywords`,`description`) ';
-    $addcategory .= 'values(\''.$name.'\','.$parentId.',\''.$keywords.'\',\''.$description.'\')';
+    $addcategory .= 'values (\''.$name.'\','.$parentId.',\''.$keywords.'\',\''.$description.'\')';
+    echo $addcategory;exit;
 
     if($db->insert($addcategory))
     {

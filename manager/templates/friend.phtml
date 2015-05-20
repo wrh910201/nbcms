@@ -1,51 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+
+    <title>{$pageTitle}</title>
+
+    <link href="css/style.default.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <script src="js/jquery-1.11.1.min.js"></script>
+</head>
 {include file="library/sidebar.lbi"}
 <div class="contentpanel">
 {if $act eq 'list'}
-<a href="friend.php?act=add">新增友情链接</a>
-<table>
-{foreach from=$friends item=friend}
-<tr><td>{$friend.name}</td><td>{$friend.url}</td><td>{$friend.orderView}</td><td>{$friend.type}</td>
-    <td>
-        <a href="friend.php?act=edit&id={$friend.id}">编辑</a>|
-        <a href="friend.php?act=delete&id={$friend.id}">删除</a>
-    </td>
-</tr>
-{/foreach}
-</table>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <!--            <h4 class="panel-title">添加导航条</h4>-->
+            <a class="btn btn-primary" href="friend.php?act=add">新增友情链接</a>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <table class="table mb30" style="width: 98%; margin: 0 auto">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>名称</th>
+                    <th>url</th>
+                    <th>类型</th>
+                    <th>传递权重</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach from=$friends item=friend name=friends}
+                <tr>
+                    <td>{$smarty.foreach.friends.iteration}</td>
+                    <td>{$friend.name}</td>
+                    <td>{$friend.url}</td>
+                    <td>{if $friend.type eq 'text'}文本{else}图片{/if}</td>
+                    <td>{if $friend.isFollow eq '1'}是{else}否{/if}</td>
+                    <td>
+                        <a href="friend.php?act=edit&id={$friend.id}" title="编辑"><i class="fa fa-pencil"></i></a>&nbsp;|
+                        <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" class="delete-row" href="friend.php?act=delete&id={$friend.id}" title="删除"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+
+    </div>
 {/if}
 
 {if $act eq 'add'}
-<form name="friendAddForm" method="POST" enctype="multipart/form-data">
-友情链接名称：<input type="text" name="name"/><br/>
-友情链接URL：<input type="text" name="url"/><br/>
-友情链接类型：<input type="radio" name="type" value="text" checked="checked"/>文本
-              <input type="radio" name="type" value="image"/>图片<br/>
-链接图片：<input type="file" name="img"/><br/>
-允许权重传递：<input type="radio" name="isFollow" value="1" checked="checked"/>是
-              <input type="radio" name="isFollow" value="0"/>否<br/>
-排序：<input type="text" name="orderView" value="50"/>
-<input type="submit" name="submit" value="添加"/>
-<input type="hidden" name="opera" value="add"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">添加-友情链接</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="friendAddForm" method="POST" enctype="multipart/form-data"  class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">友情链接名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="name" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">友情链接URL</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="url" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">友情链接类型</label>
+                    <div class="col-sm-6">
+                        <div class="radio"><label><input type="radio" name="type" value="text" checked="checked"> 文本</label></div>
+                        <div class="radio"><label><input type="radio"  name="type" value="image"> 图片</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">链接图片</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="" name="img" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">允许传递权重</label>
+                    <div class="col-sm-6">
+                        <div class="radio"><label><input type="radio" name="isFollow" value="1" checked="checked"> 是</label></div>
+                        <div class="radio"><label><input type="radio"  name="isFollow" value="0"> 否</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="orderView" value="50">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">添加</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="add"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
 {/if}
 
 {if $act eq 'edit'}
-<form name="friendEdiForm" method="POST" enctype="multipart/form-data">
-友情链接名称：<input type="text" name="name" value="{$friend.name}"/><br/>
-友情链接URL：<input type="text" name="url" value="{$friend.url}"/><br/>
-友情链接类型：<input type="radio" name="type" value="text" {if $friend.type eq 'text'}checked="checked"{/if}/>文本
-              <input type="radio" name="type" value="image" {if $friend.type eq 'image'}checked="checked"{/if}/>图片<br/>
-链接图片：<input type="file" name="img"/>
-{if $friend.img neq ''}
-<img src="../{$friend.img}"/>
-{/if}<br/>
-允许权重传递：<input type="radio" name="isFollow" value="1" {if $friend.isFollow eq 1}checked="checked"{/if}/>是
-              <input type="radio" name="isFollow" value="0" {if $friend.isFollow eq 0}checked="checked"{/if}/>否<br/>
-排序：<input type="text" name="orderView" value="{$friend.orderView}"/>
-<input type="submit" name="submit" value="添加"/>
-<input type="hidden" name="opera" value="edit"/>
-<input type="hidden" name="id" value="{$friend.id}"/>
-</form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-btns">
+                <a class="minimize" href="">−</a>
+            </div>
+            <h4 class="panel-title">编辑-{$friend.name}</h4>
+        </div>
+        <div class="panel-body panel-body-nopadding">
+            <form name="friendEditForm" method="POST" enctype="multipart/form-data"  class="form-horizontal form-bordered">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">友情链接名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="name" value="{$friend.name}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">友情链接URL</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="url" value="{$friend.url}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">友情链接类型</label>
+                    <div class="col-sm-6">
+                        <div class="radio"><label><input type="radio" name="type" value="text" {if $friend.type eq 'text'} checked="checked"{/if} /> 文本</label></div>
+                        <div class="radio"><label><input type="radio"  name="type" value="image" {if $friend.type eq 'image'} checked="checked"{/if} /> 图片</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">链接图片</label>
+                    <div class="col-sm-4">
+                        <input type="file" class="" name="img" value="">
+                    </div>
+                    {if $friend.img}
+                    <img src="./../{$friend.img}" />
+                    {/if}
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">允许传递权重</label>
+                    <div class="col-sm-6">
+                        <div class="radio"><label><input type="radio" name="isFollow" value="1" {if $friend.isFollow eq 1}checked="checked"{/if} /> 是</label></div>
+                        <div class="radio"><label><input type="radio"  name="isFollow" value="0" {if $friend.isFollow eq 0}checked="checked"{/if} /> 否</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="" name="orderView" value="{$friend.orderView}">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">更新</button>&nbsp;
+                </div>
+                <input type="hidden" name="opera" value="edit"/>
+                <input type="hidden" name="id" value="{$friend.id}"/>
+            </form>
+        </div><!-- panel-body -->
+
+        <div class="panel-footer">
+        </div><!-- panel-footer -->
+    </div>
+<!--<form name="friendEdiForm" method="POST" enctype="multipart/form-data">-->
+<!--友情链接名称：<input type="text" name="name" value="{$friend.name}"/><br/>-->
+<!--友情链接URL：<input type="text" name="url" value="{$friend.url}"/><br/>-->
+<!--友情链接类型：<input type="radio" name="type" value="text" {if $friend.type eq 'text'}checked="checked"{/if}/>文本-->
+<!--              <input type="radio" name="type" value="image" {if $friend.type eq 'image'}checked="checked"{/if}/>图片<br/>-->
+<!--链接图片：<input type="file" name="img"/>-->
+<!--{if $friend.img neq ''}-->
+<!--<img src="../{$friend.img}"/>-->
+<!--{/if}<br/>-->
+<!--允许权重传递：<input type="radio" name="isFollow" value="1" {if $friend.isFollow eq 1}checked="checked"{/if}/>是-->
+<!--              <input type="radio" name="isFollow" value="0" {if $friend.isFollow eq 0}checked="checked"{/if}/>否<br/>-->
+<!--排序：<input type="text" name="orderView" value="{$friend.orderView}"/>-->
+<!--<input type="submit" name="submit" value="添加"/>-->
+<!--<input type="hidden" name="opera" value="edit"/>-->
+<!--<input type="hidden" name="id" value="{$friend.id}"/>-->
+<!--</form>-->
 {/if}
 </div><!-- contentpanel -->
 {include file="library/footer.lbi"}

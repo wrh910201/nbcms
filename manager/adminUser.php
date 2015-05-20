@@ -150,6 +150,7 @@ if('edit' == $opera)
     $mobile = getPOST('mobile');
     $photo = '';
 
+
     if('' == $account)
     {
         showSystemMessage('参数错误', array());
@@ -232,7 +233,7 @@ if('edit' == $opera)
     }
 
     $updateAdmin  = 'update `'.DB_PREFIX.'admin` set `name`=\''.$name.'\',';
-    $updateAdmin .= '`roleId`='.$roleid.',`sex`=\''.$sex.'\',`email`=\''.$email.'\',`mobile`=\''.$mobile.'\'';
+    $updateAdmin .= '`roleId`='.$roleId.',`sex`=\''.$sex.'\',`email`=\''.$email.'\',`mobile`=\''.$mobile.'\'';
     if('' != $photo)
     {
         $updateAdmin .= ',`photo`=\''.$photo.'\'';
@@ -243,7 +244,7 @@ if('edit' == $opera)
         $updateAdmin .= ',`password`=\''.$password.'\'';
     }
     $updateAdmin .= ' where `account`=\''.$account.'\' limit 1';
-
+    echo $updateAdmin;exit;
     if($db->update($updateAdmin))
     {
         if( '' != $photo ) {

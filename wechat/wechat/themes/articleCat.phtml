@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+
+{* 显示所有文章分类 *}
+{if $act eq 'list'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <h2>文章分类<a href="articleCat.php?act=add" class="header-edit">新增分类</a></h2>
+        {if count($articleCat) gt 0}
+        <table cellspacing="0" class="table">
+            <tr class="thead">
+                <th class="th-table-cell">{$lang.serial_number}</th>
+                <th class="th-table-cell">{$lang.articleCat}</th>
+                <th class="th-table-cell">{$lang.operation}</th>
+            </tr>
+            {foreach from=$articleCat item=cat}
+            <tr class="trow">
+                <td class="table-cell">{$cat.id}</td>
+                <td class="table-cell">{$cat.show_name}</td>
+                <td class="table-cell">{$cat.operation}</td>
+            </tr>
+            {/foreach}
+        </table>
+        <script type="text/javascript">
+        function deleteCat(id) {
+            if(confirm("{$lang.sure_to_delete_cat}")) {
+                window.location.href = "articleCat.php?act=delete&id="+id;
+            }
+        }
+        </script>
+        {else}
+        <div class="empty-notice">{$lang.warning.no_article_cat}</div>
+        {/if}
+    </div>
+{/if}
+
+{* 新增文章分类 *}
+{if $act eq 'add'}
+{include file="menu.phtml"}
+<div class="content">
+<h2>新增文章分类</h2>
+<form action="articleCat.php?act=add" method="post" name="addForm" onsubmit="return checkAdd();">
+    <ul>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.articleCat}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="name"/></span>
+                <p class="input-notice" id="name-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.parentCat}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                    <select name="parentId" class="input-select">
+                        <option value="0">顶级分类</option>
+                        {foreach from=$articleCat item=cat}
+                        <option value="{$cat.id}">{$cat.show_name}</option>
+                        {/foreach}
+                    </select>
+                </span>
+                <p class="input-notice" id="parentId-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.description}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="description"/></span>
+                <p class="input-notice" id="description-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.keywords}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="keywords"/></span>
+                <p class="input-notice" id="keywords-error"></p>
+            </div>
+        </li>
+    </ul>
+    <div class="toolbar">
+        <input type="submit" name="submit" class="button" value="{$lang.submit}"/>
+        <a class="button button-gray" href="articleCat.php">{$lang.cancel}</a>
+        <input type="hidden" name="opera" value="add"/>
+    </div>
+</form>
+<script type="text/javascript">
+function checkAdd() {
+    var form = document.forms.addForm;
+    var flag = true;
+
+    if(form.name.value.trim() == '') {
+        flag = false;
+        document.getElementById("name-error").innerHTML = '{$lang.warning.article_cat_empty}';
+    } else {
+        document.getElementById("name-error").innerHTML = '';
+    }
+
+    if(form.parentId.value.trim() == '') {
+        flag = false;
+        document.getElementById("parentId-error").innerHTML = '{$lang.warning.parent_cat_empty}';
+    } else {
+        document.getElementById("parentId-error").innerHTML = '';
+    }
+
+    if(form.description.value.trim() == '') {
+        flag = false;
+        document.getElementById("description-error").innerHTML = '{$lang.warning.description_empty}';
+    } else {
+        document.getElementById("description-error").innerHTML = '';
+    }
+
+    if(form.keywords.value.trim() == '') {
+        flag = false;
+        document.getElementById("keywords-error").innerHTML = '{$lang.warning.parent_cat_empty}';
+    } else {
+        document.getElementById("keywords-error").innerHTML = '';
+    }
+
+    return flag;
+}
+</script>
+</div>
+{/if}
+
+{* 编辑文章 *}
+{if $act eq 'edit'}
+{include file="menu.phtml"}
+<div class="content">
+<h2>编辑文章分类--{$cat.name}</h2>
+<form action="articleCat.php" method="post" name="addForm" onsubmit="return checkEdit();">
+    <ul>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.articleCat}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="name" value="{$cat.name}"/></span>
+                <p class="input-notice" id="name-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.parentCat}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                    <select name="parentId" class="input-select">
+                        <option value="0">顶级分类</option>
+                        {foreach from=$articleCat item=c}
+                        <option value="{$c.id}" {if $cat.parentId eq $c.id}selected="selected"{/if}>{$c.show_name}</option>
+                        {/foreach}
+                    </select>
+                </span>
+                <p class="input-notice" id="parentId-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.description}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="description" value="{$cat.description}"/></span>
+                <p class="input-notice" id="description-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.keywords}</label>
+            <div class="info-item-value">
+                <span class="input-box"><input class="input-text" type="text" name="keywords" value="{$cat.keywords}"/></span>
+                <p class="input-notice" id="keywords-error"></p>
+            </div>
+        </li>
+    </ul>
+    <div class="toolbar">
+        <input type="submit" name="submit" class="button" value="{$lang.submit}"/>
+        <a class="button button-gray" href="articleCat.php">{$lang.cancel}</a>
+        <input type="hidden" name="opera" value="edit"/>
+        <input type="hidden" name="eid" value="{$cat.id}"/>
+    </div>
+</form>
+<script type="text/javascript">
+function checkEdit() {
+    var form = document.forms.editForm;
+    var flag = true;
+
+    if(form.name.value.trim() == '') {
+        flag = false;
+        document.getElementById("name-error").innerHTML = '{$lang.warning.article_cat_empty}';
+    } else {
+        document.getElementById("name-error").innerHTML = '';
+    }
+
+    if(form.parentId.value.trim() == '') {
+        flag = false;
+        document.getElementById("parentId-error").innerHTML = '{$lang.warning.parent_cat_empty}';
+    } else {
+        document.getElementById("parentId-error").innerHTML = '';
+    }
+
+    if(form.description.value.trim() == '') {
+        flag = false;
+        document.getElementById("description-error").innerHTML = '{$lang.warning.description_empty}';
+    } else {
+        document.getElementById("description-error").innerHTML = '';
+    }
+
+    if(form.keywords.value.trim() == '') {
+        flag = false;
+        document.getElementById("keywords-error").innerHTML = '{$lang.warning.parent_cat_empty}';
+    } else {
+        document.getElementById("keywords-error").innerHTML = '';
+    }
+
+    return flag;
+}
+</script>
+</div>
+{/if}
+
+</div>
+{include file="foot.phtml"}
+</body>
+</html>

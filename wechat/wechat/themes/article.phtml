@@ -1,0 +1,736 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/themes/default/default.css"/>
+    <link rel="stylesheet" type="text/css" href="js/plugins/code/prettify.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/kindeditor-min.js"></script>
+    <script type="text/javascript" src="js/lang/zh_CN.js"></script>
+    <script type="text/javascript" src="js/plugins/code/prettify.js"></script>
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+
+{* 显示所有文章分类 *}
+{if $act eq 'list'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <h2>文章列表<a href="article.php?act=add" class="header-edit">新增文章</a></h2>
+        {if count($articles) gt 0}
+        <table cellspacing="0" class="table">
+            <tr class="thead">
+                <th class="th-table-cell">{$lang.serial_number}</th>
+                <th class="th-table-cell">{$lang.article_title}</th>
+                <th class="th-table-cell">{$lang.operation}</th>
+            </tr>
+            {foreach from=$articles item=article}
+            <tr class="trow">
+                <td class="table-cell">{$article.id}</td>
+                <td class="table-cell">{$article.title|escape}</td>
+                <td class="table-cell">{$article.operation}</td>
+            </tr>
+            {/foreach}
+        </table>
+        <script type="text/javascript">
+        function deleteArticle(id) {
+            if(confirm("{$lang.sure_to_delete_article}")) {
+                window.location.href = "article.php?act=delete&id="+id;
+            }
+        }
+        </script>
+        {else}
+        <div class="empty-notice">{$lang.warning.no_article}</div>
+        {/if}
+    </div>
+{/if}
+
+{* 新增文章 *}
+{if $act eq 'add'}
+{include file="menu.phtml"}
+<div class="content">
+<h2>新增文章</h2>
+<form action="article.php?act=add" method="post" name="addForm" onsubmit="return checkAdd();">
+    <ul class="tagbar">
+        <li class="tag-item tag-item-active" onclick="backStep(1);">基本信息</li>
+        <li class="tag-item" onclick="nextStep(1);">PC端信息</li>
+        <li class="tag-item" onclick="nextStep(2);">手机端信息</li>
+        <li class="tag-item" onclick="nextStep(3);">其他信息</li>
+    </ul>
+    <!--  第一步 -->
+    <div class="tag-block tag-block-active">
+        <ul>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.article_title}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="title"/></span>
+                    <p class="input-notice" id="title-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.article_author}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="author"/></span>
+                    <p class="input-notice" id="author-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.article_publish_time}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="publishTime" value="{date('Y-m-d')}"/></span>
+                    <p class="input-notice" id="publishTime-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.articleCat}</label>
+                <div class="info-item-value">
+                    <span class="input-box">
+                        <select class="input-select" name="catId">
+                            <option value="0">请选择分类</option>
+                            {foreach from=$articleCat item=cat}
+                            <option value="{$cat.id}">{$cat.show_name}</option>
+                            {/foreach}
+                        </select>
+                    </span>
+                    <p class="input-notice" id="catId-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.keywords}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="keywords"/></span>
+                    <p class="input-notice" id="keywords-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.description}</label>
+                <div class="info-item-value">
+                    <textarea class="single-textarea" name="description"></textarea>
+                    <p class="input-notice" id="description-error"></p>
+                </div>
+            </li>
+        </ul>
+        <div class="toolbar">
+            <input type="button" class="button" name="step" onclick="nextStep(1);" value="{$lang.next_step}"/>
+        </div>
+    </div>
+    <!-- 第二步 -->
+    <div class="tag-block">
+        <p class="input-notice" id="content-error"></p>
+        <textarea name="content" class="pc-content" style="width: 740px;"></textarea>
+        <div class="toolbar">
+            <input type="button" class="button" name="step" onclick="nextStep(2);" value="{$lang.next_step}"/>
+            <a class="button button-gray" href="javascript:void(0);" onclick="backStep(1);">{$lang.back_step}</a>
+        </div>
+    </div>
+    <!-- 第三步 -->
+    <div class="tag-block">
+        <p class="input-notice" style="width: 730px;" id="wapContent-error"></p>
+        <textarea name="wapContent" class="wap-content" style="width: 480px;"></textarea>
+        <div class="toolbar">
+            <input type="button" class="button" name="step" onclick="nextStep(3);" value="{$lang.next_step}"/>
+            <a class="button button-gray" href="javascript:void(0);" onclick="backStep(2);">{$lang.back_step}</a>
+        </div>
+    </div>
+    <!-- 第四步 -->
+    <div class="tag-block">
+        <ul>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.assocation_goods}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="assocGoods"/></span>
+                    <p class="input-notice" id="assocGoods-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.assocation_article}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="assocArticle"/></span>
+                    <p class="input-notice" id="assocArticle-error"></p>
+                </div>
+            </li>
+        </ul>
+        <div class="toolbar">
+            <input type="submit" name="submit" class="button" value="{$lang.finish}"/>
+            <a class="button button-gray" href="javascript:void(0);" onclick="backStep(3);">{$lang.cancel}</a>
+            <input type="hidden" name="opera" value="add"/>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+var editor1 = null;
+var editor2 = null;
+
+KindEditor.ready(function(K) {
+    $('input[name="publishTime"]').datepicker({
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        dateFormat: "yy-mm-dd",
+        monthNames: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],  
+        dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],  
+        dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],  
+        dayNamesMin: ['日','一','二','三','四','五','六']
+    });
+    editor1 = K.create('textarea[name="content"]', {
+        id : 'content',
+		cssPath : 'js/plugins/code/prettify.css',
+		uploadJson : 'fileManager/upload_json.php',
+		fileManagerJson : 'fileManager/file_manager_json.php',
+        allowFileManager : true,
+        resizeType: 1,
+        width: "738px",
+        height: "480px",
+		afterCreate : function() {
+			var self = this;
+			K.ctrl(document, 13, function() {
+				self.sync();
+				K('form[name=addForm]')[0].submit();
+			});
+			K.ctrl(self.edit.doc, 13, function() {
+				self.sync();
+				K('form[name=addForm]')[0].submit();
+			});
+		}
+    });
+
+    editor2 = K.create('textarea[name="wapContent"]', {
+        id : 'wap-content',
+		cssPath : 'js/plugins/code/prettify.css',
+		uploadJson : 'fileManager/upload_json.php',
+		fileManagerJson : 'fileManager/file_manager_json.php',
+        allowFileManager : true,
+        minWidth : "500px",
+        width: "500px",
+        resiezeType: 1,
+        height: "480px",
+        wyswygMode: true,
+        items : ['preview', 'source', '|', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 
+                 'italic', 'underline','removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 
+                 'insertorderedlist','insertunorderedlist', '|', 'emoticons', 'image', 'link'],                
+		afterCreate : function() {
+			var self = this;
+			K.ctrl(document, 13, function() {
+				self.sync();
+				K('form[name=addForm]')[0].submit();
+			});
+			K.ctrl(self.edit.doc, 13, function() {
+				self.sync();
+				K('form[name=addForm]')[0].submit();
+			});
+		}
+	});
+
+	prettyPrint();
+});
+
+function checkAdd() {
+    if(validate1() && validate2() && validate3()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function setError(tag, str) {
+    var o = document.getElementById(tag+"-error");
+    if(o != undefined) {
+        o.innerHTML = str;
+    }
+}
+
+function validate2() {
+    var form = document.forms.addForm;
+    var flag = true;
+
+    if(form.content.value.trim() == '') {
+        setError("content", "{$lang.warning.content_empty}");
+        flag = false;
+    } else {
+        setError("content", "");
+    }
+
+    return flag;
+}
+
+function validate3() {
+    var form = document.forms.addForm;
+    var flag = true;
+
+    if(form.wapContent.value.trim() == '') {
+        setError("wapContent", "{$lang.warning.wap_content_empty}");
+        flag = false;
+    } else {
+        setError("wapContent", "");
+    }
+
+    return flag;
+}
+
+function validate1() {
+    var form = document.forms.addForm;
+    var flag = true;
+
+    if(form.title.value.trim() == '') {
+        setError("title", "{$lang.warning.article_title_empty}");
+        flag = false;
+    } else {
+        setError("title", "");
+    }
+
+    if(form.author.value.trim() == '') {
+        setError("author", "{$lang.warning.author_empty}");
+        flag = false;
+    } else {
+        setError("author", "");
+    }
+
+    if(form.publishTime.value.trim() == '') {
+        setError("publishTime", "{$lang.warning.publish_time_empty}");
+        flag = false;
+    {literal}
+    } else if(!/^(\d{4})-(\d{1,2})-(\d{2})$/.test(form.publishTime.value.trim())) {
+    {/literal}
+        setError("publishTime", "{$lang.warning.publish_time_format_error}");
+        flag = false;
+    } else {
+        setError("publishTime", "");
+    }
+
+    if(form.keywords.value.trim() == '') {
+        setError("keywords", "{$lang.warning.keywords_empty}");
+        flag = false;
+    } else {
+        setError("keywords", "");
+    }
+
+    if(form.description.value.trim() == '') {
+        setError("description", "{$lang.warning.description_empty}");
+        flag = false;
+    } else {
+        setError("description", "");
+    }
+
+    if(form.catId.value <= 0) {
+        setError("catId", "{$lang.warning.choose_article_cat_empty}");
+        flag = false;
+    } else {
+        setError("catId", "");
+    }
+
+    return flag;
+}
+
+function backStep(num) {
+    var tags = document.getElementsByClassName("tag-item");
+    var blocks = document.getElementsByClassName("tag-block");
+
+    num--;
+
+    for(var i = 0; i < tags.length; i++) {
+        if(i == num) {
+            tags[i].className += " tag-item-active";
+            blocks[i].style.display = "block";
+        } else {
+            tags[i].className = "tag-item";
+            blocks[i].style.display = "none";
+        }
+    }
+}
+
+function nextStep(num) {
+    var tags = document.getElementsByClassName("tag-item");
+    var blocks = document.getElementsByClassName("tag-block");
+    var flag = true;
+    var tag = 0;
+
+    flag = validate1();
+    if(!flag) {
+        tag = 1;
+    }
+    console.info(flag);
+    if(num >= 2 && flag) {
+        editor1.sync();
+        flag = validate2() && flag;
+        if(!validate2() && tag == 0) {
+            tag = 2;
+        }
+        console.info(flag);
+    }
+    if(num >= 3 && flag) {
+        editor2.sync();
+        flag = validate3() && flag;
+        if(!validate3() && tag == 0) {
+            tag = 3;
+        }
+        console.info(flag);
+    }
+
+    console.info(tag+"<="+num);
+    if(tag <= num && !flag) {
+        num = --tag;
+    }
+
+    for(var i = 0; i < tags.length; i++) {
+        if(i == num) {
+            tags[i].className += " tag-item-active";
+            blocks[i].style.display = "block";
+        } else {
+            tags[i].className = "tag-item";
+            blocks[i].style.display = "none";
+        }
+    }
+}
+</script>
+</div>
+{/if}
+
+{* 编辑文章 *}
+{if $act eq 'edit'}
+{include file="menu.phtml"}
+<div class="content">
+<h2>编辑文章分类--{$article.title}</h2>
+<form action="article.php?act=add" method="post" name="editForm" onsubmit="return checkEdit();">
+    <ul class="tagbar">
+        <li class="tag-item tag-item-active" onclick="backStep(1);">基本信息</li>
+        <li class="tag-item" onclick="nextStep(1);">PC端信息</li>
+        <li class="tag-item" onclick="nextStep(2);">手机端信息</li>
+        <li class="tag-item" onclick="nextStep(3);">其他信息</li>
+    </ul>
+    <!--  第一步 -->
+    <div class="tag-block tag-block-active">
+        <ul>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.article_title}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="title" value="{$article.title}"/></span>
+                    <p class="input-notice" id="title-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.article_author}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="author" value="{$article.author}"/></span>
+                    <p class="input-notice" id="author-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.article_publish_time}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="publishTime" value="{date('Y-m-d', $article.publishTime)}"/></span>
+                    <p class="input-notice" id="publishTime-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.articleCat}</label>
+                <div class="info-item-value">
+                    <span class="input-box">
+                        <select class="input-select" name="catId">
+                            <option value="0">请选择分类</option>
+                            {foreach from=$articleCat item=cat}
+                            <option value="{$cat.id}" {if $article.catId eq $cat.id}selected="selected"{/if}>{$cat.show_name}</option>
+                            {/foreach}
+                        </select>
+                    </span>
+                    <p class="input-notice" id="catId-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.keywords}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="keywords" value="{$article.keywords}"/></span>
+                    <p class="input-notice" id="keywords-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.description}</label>
+                <div class="info-item-value">
+                    <textarea class="single-textarea" name="description">{$article.description}</textarea>
+                    <p class="input-notice" id="description-error"></p>
+                </div>
+            </li>
+        </ul>
+        <div class="toolbar">
+            <input type="button" class="button" name="step" onclick="nextStep(1);" value="{$lang.next_step}"/>
+        </div>
+    </div>
+    <!-- 第二步 -->
+    <div class="tag-block">
+        <p class="input-notice" id="content-error"></p>
+        <textarea name="content" class="pc-content" style="width: 740px;">{$article.content}</textarea>
+        <div class="toolbar">
+            <input type="button" class="button" name="step" onclick="nextStep(2);" value="{$lang.next_step}"/>
+            <a class="button button-gray" href="javascript:void(0);" onclick="backStep(1);">{$lang.back_step}</a>
+        </div>
+    </div>
+    <!-- 第三步 -->
+    <div class="tag-block">
+        <p class="input-notice" style="width: 730px;" id="wapContent-error"></p>
+        <textarea name="wapContent" class="wap-content" style="width: 480px;">{$article.wapContent}</textarea>
+        <div class="toolbar">
+            <input type="button" class="button" name="step" onclick="nextStep(3);" value="{$lang.next_step}"/>
+            <a class="button button-gray" href="javascript:void(0);" onclick="backStep(2);">{$lang.back_step}</a>
+        </div>
+    </div>
+    <!-- 第四步 -->
+    <div class="tag-block">
+        <ul>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.assocation_goods}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="assocGoods"/></span>
+                    <p class="input-notice" id="assocGoods-error"></p>
+                </div>
+            </li>
+            <li class="info-item">
+                <label class="info-item-label">{$lang.assocation_article}</label>
+                <div class="info-item-value">
+                    <span class="input-box"><input class="input-text" type="text" name="assocArticle"/></span>
+                    <p class="input-notice" id="assocArticle-error"></p>
+                </div>
+            </li>
+        </ul>
+        <div class="toolbar">
+            <input type="submit" name="submit" class="button" value="{$lang.finish}"/>
+            <a class="button button-gray" href="javascript:void(0);" onclick="backStep(3);">{$lang.cancel}</a>
+            <input type="hidden" name="opera" value="edit"/>
+            <input type="hidden" name="eid" value="{$article.id}"/>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+var editor1 = null;
+var editor2 = null;
+
+KindEditor.ready(function(K) {
+    $('input[name="publishTime"]').datepicker({
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        dateFormat: "yy-mm-dd",
+        monthNames: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],  
+        dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],  
+        dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],  
+        dayNamesMin: ['日','一','二','三','四','五','六']
+    });
+    editor1 = K.create('textarea[name="content"]', {
+        id : 'content',
+		cssPath : 'js/plugins/code/prettify.css',
+		uploadJson : 'fileManager/upload_json.php',
+		fileManagerJson : 'fileManager/file_manager_json.php',
+        allowFileManager : true,
+        resizeType: 1,
+        width: "738px",
+        height: "480px",
+		afterCreate : function() {
+			var self = this;
+			K.ctrl(document, 13, function() {
+				self.sync();
+				K('form[name=addForm]')[0].submit();
+			});
+			K.ctrl(self.edit.doc, 13, function() {
+				self.sync();
+				K('form[name=addForm]')[0].submit();
+			});
+		}
+    });
+
+    editor2 = K.create('textarea[name="wapContent"]', {
+        id : 'wap-content',
+		cssPath : 'js/plugins/code/prettify.css',
+		uploadJson : 'fileManager/upload_json.php',
+		fileManagerJson : 'fileManager/file_manager_json.php',
+        allowFileManager : true,
+        minWidth : "500px",
+        width: "500px",
+        resiezeType: 1,
+        height: "480px",
+        wyswygMode: true,
+        items : ['preview', 'source', '|', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 
+                 'italic', 'underline','removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 
+                 'insertorderedlist','insertunorderedlist', '|', 'emoticons', 'image', 'link'],                
+		afterCreate : function() {
+			var self = this;
+			K.ctrl(document, 13, function() {
+				self.sync();
+				K('form[name=addForm]')[0].submit();
+			});
+			K.ctrl(self.edit.doc, 13, function() {
+				self.sync();
+				K('form[name=addForm]')[0].submit();
+			});
+		}
+	});
+
+	prettyPrint();
+});
+
+function checkAdd() {
+    if(validate1() && validate2() && validate3()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function setError(tag, str) {
+    var o = document.getElementById(tag+"-error");
+    if(o != undefined) {
+        o.innerHTML = str;
+    }
+}
+
+function validate2() {
+    var form = document.forms.editForm;
+    var flag = true;
+
+    if(form.content.value.trim() == '') {
+        setError("content", "{$lang.warning.content_empty}");
+        flag = false;
+    } else {
+        setError("content", "");
+    }
+
+    return flag;
+}
+
+function validate3() {
+    var form = document.forms.editForm;
+    var flag = true;
+
+    if(form.wapContent.value.trim() == '') {
+        setError("wapContent", "{$lang.warning.wap_content_empty}");
+        flag = false;
+    } else {
+        setError("wapContent", "");
+    }
+
+    return flag;
+}
+
+function validate1() {
+    var form = document.forms.editForm;
+    var flag = true;
+
+    if(form.title.value.trim() == '') {
+        setError("title", "{$lang.warning.article_title_empty}");
+        flag = false;
+    } else {
+        setError("title", "");
+    }
+
+    if(form.author.value.trim() == '') {
+        setError("author", "{$lang.warning.author_empty}");
+        flag = false;
+    } else {
+        setError("author", "");
+    }
+
+    if(form.publishTime.value.trim() == '') {
+        setError("publishTime", "{$lang.warning.publish_time_empty}");
+        flag = false;
+    {literal}
+    } else if(!/^(\d{4})-(\d{1,2})-(\d{2})$/.test(form.publishTime.value.trim())) {
+    {/literal}
+        setError("publishTime", "{$lang.warning.publish_time_format_error}");
+        flag = false;
+    } else {
+        setError("publishTime", "");
+    }
+
+    if(form.keywords.value.trim() == '') {
+        setError("keywords", "{$lang.warning.keywords_empty}");
+        flag = false;
+    } else {
+        setError("keywords", "");
+    }
+
+    if(form.description.value.trim() == '') {
+        setError("description", "{$lang.warning.description_empty}");
+        flag = false;
+    } else {
+        setError("description", "");
+    }
+
+    if(form.catId.value <= 0) {
+        setError("catId", "{$lang.warning.choose_article_cat_empty}");
+        flag = false;
+    } else {
+        setError("catId", "");
+    }
+
+    return flag;
+}
+
+function backStep(num) {
+    var tags = document.getElementsByClassName("tag-item");
+    var blocks = document.getElementsByClassName("tag-block");
+
+    num--;
+
+    for(var i = 0; i < tags.length; i++) {
+        if(i == num) {
+            tags[i].className += " tag-item-active";
+            blocks[i].style.display = "block";
+        } else {
+            tags[i].className = "tag-item";
+            blocks[i].style.display = "none";
+        }
+    }
+}
+
+function nextStep(num) {
+    var tags = document.getElementsByClassName("tag-item");
+    var blocks = document.getElementsByClassName("tag-block");
+    var flag = true;
+    var tag = 0;
+
+    flag = validate1();
+    if(!flag) {
+        tag = 1;
+    }
+    console.info(flag);
+    if(num >= 2 && flag) {
+        editor1.sync();
+        flag = validate2() && flag;
+        if(!validate2() && tag == 0) {
+            tag = 2;
+        }
+        console.info(flag);
+    }
+    if(num >= 3 && flag) {
+        editor2.sync();
+        flag = validate3() && flag;
+        if(!validate3() && tag == 0) {
+            tag = 3;
+        }
+        console.info(flag);
+    }
+
+    console.info(tag+"<="+num);
+    if(tag <= num && !flag) {
+        num = --tag;
+    }
+
+    for(var i = 0; i < tags.length; i++) {
+        if(i == num) {
+            tags[i].className += " tag-item-active";
+            blocks[i].style.display = "block";
+        } else {
+            tags[i].className = "tag-item";
+            blocks[i].style.display = "none";
+        }
+    }
+}
+</script>
+</div>
+{/if}
+
+</div>
+{include file="foot.phtml"}
+</body>
+</html>

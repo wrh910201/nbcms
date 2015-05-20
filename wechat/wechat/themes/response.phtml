@@ -1,0 +1,367 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/themes/default/default.css"/>
+    <link rel="stylesheet" type="text/css" href="js/plugins/code/prettify.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/kindeditor-min.js"></script>
+    <script type="text/javascript" src="js/lang/zh_CN.js"></script>
+    <script type="text/javascript" src="js/plugins/code/prettify.js"></script>
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+
+{* 显示所有文章分类 *}
+{if $act eq 'list'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <h2>回复列表<a href="response.php?act=add" class="header-edit">{$lang.add_response}</a></h2>
+        {if count($responses) gt 0}
+        <table cellspacing="0" class="table">
+            <tr class="thead">
+                <th class="th-table-cell">{$lang.serial_number}</th>
+                <th class="th-table-cell">{$lang.response_title}</th>
+                <th class="th-table-cell">{$lang.response_type}</th>
+                <th class="th-table-cell">{$lang.operation}</th>
+            </tr>
+            {foreach from=$responses item=response}
+            <tr class="trow">
+                <td class="table-cell">{$response.id}</td>
+                <td class="table-cell">{$response.name|escape}</td>
+                <td class="table-cell">{$response.msgType}</td>
+                <td class="table-cell">{$response.operation}</td>
+            </tr>
+            {/foreach}
+        </table>
+        <script type="text/javascript">
+        function deleteResponse(id) {
+            if(confirm("{$lang.sure_to_delete_response}")) {
+                window.location.href = "response.php?act=delete&id="+id;
+            }
+        }
+        </script>
+        {else}
+        <div class="empty-notice">{$lang.warning.no_response}</div>
+        {/if}
+    </div>
+{/if}
+
+{* 新增回复 *}
+{if $act eq 'add'}
+{include file="menu.phtml"}
+<div class="content">
+<h2>{$lang.add_response}</h2>
+<form action="response.php?act=add" method="post" name="addForm" onsubmit="return checkAdd();">
+    <ul>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.response_name}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                <input class="input-text" type="text" name="name"/>
+                </span>
+                <p class="input-notice" id="name-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.response_type}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                <select class="input-select" name="msgType" onchange="switchTab(this.value);">
+                    <option value="text">文本消息</option>
+                    <option value="themes">插件回复</option>
+                </select>
+                </span>
+                <p class="input-notice" id="msgType-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="content">
+            <label class="info-item-label">{$lang.response_content}</label>
+            <div class="info-item-value">
+                <textarea class="single-textarea" name="content"></textarea>
+                <p class="input-notice" id="content-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="picUrls">
+            <label class="info-item-label">{$lang.response_picUrls}</label>
+            <div class="info-item-value">
+                <p class="input-notice" id="picUrls-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="articles">
+            <label class="info-item-label">{$lang.response_articles}</label>
+        </li>
+        <li class="info-item" id="themes">
+            <label class="info-item-label">{$lang.response_themes}</label>
+            <div class="theme-list">
+            {foreach from=$themes item=theme}
+            <div class="theme-item" onclick="selectTheme('{$theme->content}');" id="{$theme->content}">
+                <p class="theme-name">{$theme->name}</p>
+                <p class="theme-desc">{$theme->description}</p>
+            </div>
+            {/foreach}
+            </div>
+            <p class="input-notice" id="theme-error"></p>
+        </li>
+    </ul>
+    <div class="toolbar">
+        <input type="submit" name="submit" class="button" value="{$lang.finish}"/>
+        <input type="hidden" name="opera" value="add"/>
+    </div>
+</form>
+<script type="text/javascript">
+window.onload = function() {
+    switchTab("text");
+}
+
+function selectTheme(content) {
+    if(document.getElementsByClassName("theme-on").length > 0) {
+        document.getElementsByClassName("theme-on")[0].className = "theme-item";
+    }
+    document.getElementById(content).className += " theme-on";
+    document.forms['addForm'].content.value = content;
+}
+
+function switchTab(msgType) {
+    document.forms['addForm'].reset();
+    document.forms['addForm'].msgType.value = msgType;
+
+    document.getElementById("content").style.display = "none";
+    document.getElementById("picUrls").style.display = "none";
+    document.getElementById("articles").style.display = "none";
+    document.getElementById("themes").style.display = "none";
+
+    switch(msgType) {
+    case 'text':
+        document.getElementById("content").style.display = "block";
+        break;
+    case 'news':
+        document.getElementById("picUrls").style.display = "block";
+        document.getElementById("articles").style.display = "block";
+        break;
+    case 'themes':
+        document.getElementById("themes").style.display = "block";
+        break;
+    }
+}
+
+function setError(tag, str) {
+    var o = document.getElementById(tag+"-error");
+    if(o != undefined) {
+        o.innerHTML = str;
+    }
+}
+
+function checkAdd() {
+    var form = document.forms['addForm'];
+    var flag = true;
+    var msgType = form.msgType.value;
+
+    if(msgType == '') {
+        setError("msgType", "{$lang.warning.response_msgType_empty}");
+        flag = false;
+    }
+
+    if(form.name.value == '')
+    {
+        setError("name", "{$lang.warning.response_name_empty}");
+        flag = false;
+    }
+
+    switch(msgType) {
+    case "text":
+        if(form.content.value == '') {
+            setError("content", "{$lang.warning.response_content_empty}");
+            flag = false;
+        }
+        break;
+    case "news":
+        if(form.picUrls.value == '') {
+            setError("picUrls", "{$lang.warning.response_picUrl_empty}");
+            flag = false;
+        }
+
+        if(form.articles.value == '') {
+            setError("articles", "{$lang.warning.response_article_empty}");
+            flag = false;
+        }
+        break;
+    case "themes":
+        if(form.content.value == '') {
+            setError("theme", "{$lang.warning.response_theme_empty}");
+            flag = false;
+        }
+        break;
+    }
+
+    return flag;
+}
+</script>
+</div>
+{/if}
+
+{* 编辑文章 *}
+{if $act eq 'edit'}
+{include file="menu.phtml"}
+<div class="content">
+<h2>{$lang.edit_response}</h2>
+<form action="response.php?act=edit" method="post" name="editForm" onsubmit="return checkEdit();">
+    <ul>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.response_name}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                <input class="input-text" type="text" name="name" value="{$response.name}"/>
+                </span>
+                <p class="input-notice" id="name-error"></p>
+            </div>
+        </li>
+        <li class="info-item">
+            <label class="info-item-label">{$lang.response_type}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                <select class="input-select" name="msgType" onchange="switchTab(this.value);">
+                    <option value="text">文本消息</option>
+                    <option value="themes">插件回复</option>
+                </select>
+                </span>
+                <p class="input-notice" id="msgType-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="content">
+            <label class="info-item-label">{$lang.response_content}</label>
+            <div class="info-item-value">
+                <textarea class="single-textarea" name="content">{$response.content}</textarea>
+                <p class="input-notice" id="content-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="picUrls">
+            <label class="info-item-label">{$lang.response_picUrls}</label>
+            <div class="info-item-value">
+                <p class="input-notice" id="picUrls-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="articles">
+            <label class="info-item-label">{$lang.response_articles}</label>
+        </li>
+        <li class="info-item" id="themes">
+            <label class="info-item-label">{$lang.response_themes}</label>
+            <div class="theme-list">
+            {foreach from=$themes item=theme}
+            <div class="theme-item {if $response.content eq $theme->content}theme-on{/if}" onclick="selectTheme('{$theme->content}');" id="{$theme->content}">
+                <p class="theme-name">{$theme->name}</p>
+                <p class="theme-desc">{$theme->description}</p>
+            </div>
+            {/foreach}
+            </div>
+            <p class="input-notice" id="theme-error"></p>
+        </li>
+    </ul>
+    <div class="toolbar">
+        <input type="submit" name="submit" class="button" value="{$lang.finish}"/>
+        <input type="hidden" name="opera" value="edit"/>
+        <input type="hidden" name="eid" value="{$response.id}"/>
+    </div>
+</form>
+<script type="text/javascript">
+window.onload = function() {
+    switchTab("{$response.msgType}");
+    document.forms['editForm'].msgType.value = "{$response.msgType}";
+}
+
+function selectTheme(content) {
+    if(document.getElementsByClassName("theme-on").length > 0) {
+        document.getElementsByClassName("theme-on")[0].className = "theme-item";
+    }
+    document.getElementById(content).className += " theme-on";
+    document.forms['editForm'].content.value = content;
+}
+
+function switchTab(msgType) {
+    document.forms['editForm'].reset();
+    document.forms['editForm'].msgType.value = msgType;
+
+    document.getElementById("content").style.display = "none";
+    document.getElementById("picUrls").style.display = "none";
+    document.getElementById("articles").style.display = "none";
+    document.getElementById("themes").style.display = "none";
+
+    switch(msgType) {
+    case 'text':
+        document.getElementById("content").style.display = "block";
+        break;
+    case 'news':
+        document.getElementById("picUrls").style.display = "block";
+        document.getElementById("articles").style.display = "block";
+        break;
+    case 'themes':
+        document.getElementById("themes").style.display = "block";
+        break;
+    }
+}
+
+function setError(tag, str) {
+    var o = document.getElementById(tag+"-error");
+    if(o != undefined) {
+        o.innerHTML = str;
+    }
+}
+
+function checkEdit() {
+    var form = document.forms['editForm'];
+    var flag = true;
+    var msgType = form.msgType.value;
+
+    if(msgType == '') {
+        setError("msgType", "{$lang.warning.response_msgType_empty}");
+        flag = false;
+    }
+
+    if(form.name.value == '')
+    {
+        setError("name", "{$lang.warning.response_name_empty}");
+        flag = false;
+    }
+
+    switch(msgType) {
+    case "text":
+        if(form.content.value == '') {
+            setError("content", "{$lang.warning.response_content_empty}");
+            flag = false;
+        }
+        break;
+    case "news":
+        if(form.picUrls.value == '') {
+            setError("picUrls", "{$lang.warning.response_picUrl_empty}");
+            flag = false;
+        }
+
+        if(form.articles.value == '') {
+            setError("articles", "{$lang.warning.response_article_empty}");
+            flag = false;
+        }
+        break;
+    case "themes":
+        if(form.content.value == '') {
+            setError("theme", "{$lang.warning.response_theme_empty}");
+            flag = false;
+        }
+        break;
+    }
+
+    return flag;
+}
+</script>
+</div>
+{/if}
+
+</div>
+{include file="foot.phtml"}
+</body>
+</html>

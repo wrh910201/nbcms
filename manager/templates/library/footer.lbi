@@ -24,10 +24,6 @@
 <script src="js/morris.min.js"></script>
 <script src="js/raphael-2.1.0.min.js"></script>
 
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="js/bootstrap-timepicker.min.js"></script>
-<script src="js/bootstrap-datetimepicker.js"></script>
-
 <script src="js/custom.js"></script>
 <!--script src="js/dashboard.js"></script-->
 

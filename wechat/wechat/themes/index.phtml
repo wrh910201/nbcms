@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+<body>
+<div>
+    <form method="post" action="index.php" onsubmit="return checkLogin();" name="loginForm">
+    {$lang.account}:<input type="text" name="account"/><p id="account-error"></p>
+    {$lang.password}:<input type="password" name="password"/><p id="password-error"></p>
+    <input type="submit" name="submit" value="{$lang.login}"/>
+    <input type="hidden" name="opera" value="login"/>
+    <input type="hidden" name="token" value="{$token}"/>
+    </form>
+</div>
+<script type="text/javascript">
+function checkLogin() {
+    var form = document.forms.loginForm;
+    var flag = true;
+
+    if(form.account.value.trim() == "") {
+        document.getElementById("account-error").innerHTML = "{$lang.warning.account_empty}";
+        flag = false;
+    } else {
+        document.getElementById("account-error").innerHTML = "";
+    }
+
+    if(form.password.value.trim() == "") {
+        document.getElementById("password-error").innerHTML = "{$lang.warning.account_empty}";
+        flag = false;
+    } else {
+        document.getElementById("password-error").innerHTML = "";
+    }
+
+    return flag;
+}
+</script>
+</body>
+</html>
