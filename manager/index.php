@@ -57,8 +57,8 @@ if('login' == $opera)
                 /**
                  * 是否有微信管理权限
                  */
-                if( checkPurview('pur_wechat_bind', $role['purview']) && checkPurview('pur_wechat_manager', $role['purview']) ) {
-                    $getPublicAccount = 'select `publicAccount` from `wx_publicAccount` where adminUserAccount = \''.$account.'\' limit 1;';
+                if( checkPurview('pur_wechat_bind', $role['purview']) || checkPurview('pur_wechat_manager', $role['purview']) ) {
+                    $getPublicAccount = 'select `account` from `wx_publicAccount` where adminUserAccount = \''.$account.'\' limit 1;';
                     $publicAccount = $db->fetchOne($getPublicAccount);
                     if( $publicAccount ) {
                         $_SESSION['public_account'] = $publicAccount;
