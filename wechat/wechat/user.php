@@ -203,6 +203,10 @@ if( 'move' == $act ) {
     $getUser = 'select id, groupId from '.$db_prefix.'user where id = '.$id;
     $user = $db->fetchOne($getUser);
     assign('user', $user);
+
+    $getGroups = 'select id, name from '.$db_prefix.'group where publicAccount = \''.$_SESSION['public_account'].'\' order by wechatId asc';
+    $groups = $db->fetchAll($getGroups);
+    assign('groups', $groups);
 }
 
 if( 'remark' == $act ) {
@@ -215,9 +219,6 @@ if( 'remark' == $act ) {
     $user = $db->fetchOne($getUser);
     assign('user', $user);
 
-    $getGroups = 'select id, name from '.$db_prefix.'group where publicAccount = \''.$_SESSION['public_account'].'\' order by wechatId asc';
-    $groups = $db->fetchAll($getGroups);
-    assign('groups', $group);
 }
 
 if( 'sync' == $act ) {
