@@ -20,10 +20,7 @@ if( 'move' == $opera ) {
         showSystemMessage($lang['warning']['param_error']);
     }
     $groupId = getPOST('groupId');
-    if( empty($remark) ) {
-        showSystemMessage('备注不能为空');
-    }
-    $remark = $db->escape(htmlspecialchars($remark));
+    
     $getOpenId = 'select openId, from '.$db_prefix.'user where id = '.$id;
     $openId = $db->fetchOne($getOpenId);
     if( empty($openId) ) {
