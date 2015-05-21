@@ -70,6 +70,9 @@ if('bind' == $opera)
     if($db->insert($addPublicAccount))
     {
         $_SESSION['public_account'] = $account;
+        if( $$accountType == 1 ) {
+            sync_user_group();
+        }
         showSystemMessage($lang['warning']['bind_success']);
     } else {
         showSystemMessage($lang['warning']['bind_fail']);

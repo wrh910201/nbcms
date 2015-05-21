@@ -383,3 +383,76 @@ function checkAdminLogin()
 function wechat_back_base_init() {
     checkAdminLogin();
 }
+
+/**
+ * 绑定服务号时同步已有用户分组
+ */
+function sync_user_group() {
+    global $db, $lang, $errors;
+    $getInfo = 'select `appID`,`appsecret`,`expireTime`,`accessToken` from `'.$db_prefix.'publicAccount` where `account`=\''.$_SESSION['public_account'].'\'';
+    $info = $db->fetchRow($getInfo);
+
+    if($info)
+    {
+        $accessToken = '';
+        if($info['expireTime'] >= time())
+        {
+            $accessToken = $info['accessToken'];
+        } else {
+            $accessToken = getAccessToken($info['appID'], $info['appsecret']);
+        }
+
+        if($accessToken)
+        {
+            $updateAccessToken = 'update `'.$db_prefix.'publicAccount` set `accessToken`=\''.$accessToken.'\',`expireTime`='.(time()+7200).' where `account`=\''.$_SESSION['public_account'].'\'';
+            $db->update($updateAccessToken);
+            //2.发送分组列表请求
+            $url = 'https://api.weixin.qq.com/cgi-bin/groups/get?access_token='.$accessToken;
+            $curl = curl_init();
+            $this_header = array("content-type: application/x-www-form-urlencoded; charset=UTF-8");
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $this_header);
+            curl_setopt($curl, CURLOPT_URL, $url);
+//                curl_setopt($curl, CURLOPT_HEADER, 0);
+//            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+//            curl_setopt($curl, CURLOPT_POSTFIELDS, urldecode($data));
+            if( defined('CURL_SSLVERSION_TLSv1') ) {
+                curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+            }
+            $data = curl_exec($curl);
+            curl_close($curl);
+
+            $data = json_decode($data);
+            //3.判断状态码
+            if( empty($data->errcode) )
+            {
+                $groups = array();
+                foreach( $data->groups as $group ) {
+                    $temp = array();
+                    $temp['wechatId'] = $group->id;
+                    $temp['name'] = $group->name;
+                    $temp['count'] = $group->count;
+                    $exists = 'select id from '.$db_prefix.'group where wechatId=\''.$group->id.'\' limit 1';
+                    $temp_id = $db->fetchOne($exists);
+                    if( $temp_id ) {
+                        $update = 'update '.$db_prefix.'group set name = \''.$group->name.'\', count = '.$group->count.' where wechatId=\''.$group->id.'\' limit 1;';
+                        $db->update($update);
+                    } else {
+                        $insert = 'insert into '.$db_prefix.'group (id, wechatId, name, count, addTime, publicAccount) values ';
+                        $insert .= ' (null, \''.$group->id.'\', \''.$group->name.'\', \''.$group->count.'\', '.time().', \''.$_SESSION['public_account'].'\');';
+                        $db->insert($insert);
+                    }
+                    $groups[] = $temp;
+                }
+                assign('groups', $groups);
+            } else {
+                $response['msg'] = $errors[$data->errcode];
+            }
+        } else {
+            $response['msg'] = $lang['warning']['get_access_token_fail'];
+        }
+    } else {
+        $response['msg'] = $lang['warning']['param_error'];
+    }
+    !empty($response['msg']) ? showSystemMessage($response['msg']) : true;
+}

@@ -10,8 +10,9 @@
 <body>
 {include file="head.phtml"}
 <div class="main clearfix">
-    {if $act eq 'list'}
+{if $act eq 'list'}
     {include file="menu.phtml"}
+    <a href="userGroup.php?act=sync">同步</a>
     {if count($groups) eq 0}
     <p>没有分组</p>
     {else}
@@ -31,8 +32,8 @@
             <td>{$group.addTime}</td>
             <td>{$group.count}</td>
             <td>
-                <a href="rule.php?act=edit&id={$group.id}">编辑</a>
-                <a href="rule.php?act=delete&id={$group.id}">删除</a>
+                <a href="userGroup.php?act=edit&id={$group.id}">编辑</a>
+                <a href="userGroup.php?act=delete&id={$group.wechatId}">删除</a>
             </td>
 
         </tr>
@@ -40,7 +41,54 @@
         </tbody>
     </table>
     {/if}
-    {/if}
+{/if}
+{if $act eq 'add'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <form name="userGroupAddForm" method="post">
+            分组名：<input type="text" name="name" /><br />
+            <input type="submit" name="submit" value="提交" />
+            <input type="hidden" name="opera" value="add" />
+        </form>
+    </div>
+{/if}
+{if $act eq 'edit'}
+{include file="menu.phtml"}
+<div class="content">
+    <form name="userGroupEidtForm" method="post">
+        分组名：<input type="text" name="name" value="{$group.name}"/><br />
+        <input type="submit" name="submit" value="提交" />
+        <input type="hidden" name="opera" value="edit" />
+        <input type="hidden" name="id" value="{$group.id}" />
+    </form>
+</div>
+{/if}
+{if $act eq 'sync'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <table>
+            <thead>
+            <th>id</th>
+            <th>分组名</th>
+            <th>粉丝数量</th>
+            <th>操作</th>
+            </thead>
+            <tbody>
+            {foreach $groups as $group}
+            <tr>
+                <td>{$group.wechatId}</td>
+                <td>{$group.name}</td>
+                <td>{$group.count}</td>
+                <td>
+                    <a href="userGroup.php?act=delete&id={$group.wechatId}">删除</a>
+                </td>
+
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+{/if}
 </div>
 {include file="foot.phtml"}
 </body>

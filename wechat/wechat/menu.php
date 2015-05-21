@@ -233,7 +233,9 @@ if('post' == $opera)
                 curl_setopt($curl, CURLOPT_POST, 1);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, urldecode(json_encode(array('button'=>$format))));
-                curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+                if( defined('CURL_SSLVERSION_TLSv1') ) {
+                    curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+                }
                 $data = curl_exec($curl);
                 curl_close($curl);
 

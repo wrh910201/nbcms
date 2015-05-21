@@ -33,7 +33,7 @@
                 <td>{$user.unsubscribed}</td>
                 <td>{$user.groupName}</td>
                 <td>
-                    <a href="rule.php?act=edit&id={$user.id}">编辑</a>
+                    <a href="rule.php?act=remark&id={$user.id}">备注</a>
                     <a href="rule.php?act=move&id={$user.id}">移动分组</a>
                     <a href="rule.php?act=sync&id={$user.id}">同步</a>
                 </td>
@@ -43,6 +43,26 @@
         </tbody>
     </table>
     {/if}
+{/if}
+{if $act eq 'remark'}
+    <form name="userRemarkForm" method="post">
+        备注名：<input type="text" name="remark" value="{$user.remark}" />
+        <input type="hidden" name="id" value="{$user.id}" />
+        <input type="hidden" name="opera" value="remark" />
+        <input type="submit" name="提交" value="提交" />
+    </form>
+{/if}
+{if $act eq 'move'}
+<form name="userMoveForm" method="post">
+    分组：<select name="groupId">
+        {foreach from=$groups item=group}
+        <option value="{$group.id}" {if $user.groupId eq $group.id}selected="selected" {/if}>{$group.name}</option>
+        {/foreach}
+    </select>
+    <input type="hidden" name="id" value="{$user.id}" />
+    <input type="hidden" name="opera" value="move" />
+    <input type="submit" name="提交" value="提交" />
+</form>
 {/if}
 </div>
 {include file="foot.phtml"}
