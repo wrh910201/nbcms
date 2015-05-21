@@ -7,8 +7,8 @@ if(!checkPurview('pur_wechat_manager', $_SESSION['purview']))
     showSystemMessage('权限不足', array());
     exit;
 }
-$action = 'add|edit|list|delete|sync';
-$operation = 'add|edit';
+$action = 'add|edit|list|move|sync';
+$operation = 'add|edit|move';
 
 $act = checkAction($action, getGET('act'), 'list');
 $opera = checkAction($operation, getPOST('opera'));
@@ -35,6 +35,10 @@ if( 'list' == $act ) {
         }
     }
     assign('users', $users);
+}
+
+if( 'move' == $act ) {
+    
 }
 
 assign('act', $act);

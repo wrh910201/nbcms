@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+    {if $act eq 'list'}
+    {include file="menu.phtml"}
+    {if count($groups) eq 0}
+    <p>没有分组</p>
+    {else}
+    <table>
+        <thead>
+        <th>id</th>
+        <th>分组名</th>
+        <th>创建时间</th>
+        <th>粉丝数量</th>
+        <th>操作</th>
+        </thead>
+        <tbody>
+        {foreach $groups as $group}
+        <tr>
+            <td>{$group.id}</td>
+            <td>{$group.name}</td>
+            <td>{$group.addTime}</td>
+            <td>{$group.count}</td>
+            <td>
+                <a href="rule.php?act=edit&id={$group.id}">编辑</a>
+                <a href="rule.php?act=delete&id={$group.id}">删除</a>
+            </td>
+
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {/if}
+    {/if}
+</div>
+{include file="foot.phtml"}
+</body>
+</html>
