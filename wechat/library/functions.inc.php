@@ -388,7 +388,7 @@ function wechat_back_base_init() {
  * 绑定服务号时同步已有用户分组
  */
 function sync_user_group() {
-    global $db, $lang, $errors;
+    global $db, $lang, $errors, $db_prefix;
     $getInfo = 'select `appID`,`appsecret`,`expireTime`,`accessToken` from `'.$db_prefix.'publicAccount` where `account`=\''.$_SESSION['public_account'].'\'';
     $info = $db->fetchRow($getInfo);
 
