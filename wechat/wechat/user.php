@@ -21,7 +21,7 @@ if( 'move' == $opera ) {
     }
     $groupId = getPOST('groupId');
 
-    $getOpenId = 'select openId, from '.$db_prefix.'user where id = '.$id;
+    $getOpenId = 'select openId from '.$db_prefix.'user where id = '.$id;
     $openId = $db->fetchOne($getOpenId);
     if( empty($openId) ) {
         showSystemMessage('该用户不存在');
