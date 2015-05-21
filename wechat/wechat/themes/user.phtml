@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+{if $act eq 'list'}
+{include file="menu.phtml"}
+    {if count($users) eq 0}
+    <p>没有粉丝T T</p>
+    {else}
+    <table>
+        <thead>
+            <th>id</th>
+            <th>open id</th>
+            <th>关注时间</th>
+            <th>是否已关注</th>
+            <th>分组</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+        {foreach $users as $user}
+            <tr>
+                <td>{$user.id}</td>
+                <td>{$user.openId}</td>
+                <td>{$user.addTime}</td>
+                <td>{$user.unSubscribed}</td>
+                <td>{$user.groupName}</td>
+                <td>
+                    <a href="rule.php?act=edit&id={$user.id}">编辑</a>
+                    <a href="rule.php?act=delete&id={$user.id}">删除</a>
+                    <a href="rule.php?act=sync&id={$user.id}">同步</a>
+                </td>
+
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {/if}
+{/if}
+</div>
+{include file="foot.phtml"}
+</body>
+</html>
