@@ -216,7 +216,7 @@ if( 'remark' == $act ) {
         showSystemMessage($lang['warning']['param_error']);
     }
     $getUser = 'select id, remark from '.$db_prefix.'user where id = '.$id;
-    $user = $db->fetchOne($getUser);
+    $user = $db->fetchRow($getUser);
     assign('user', $user);
 
 }

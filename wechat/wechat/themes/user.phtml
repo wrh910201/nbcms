@@ -45,6 +45,7 @@
     {/if}
 {/if}
 {if $act eq 'remark'}
+    {include file="menu.phtml"}
     <form name="userRemarkForm" method="post">
         备注名：<input type="text" name="remark" value="{$user.remark}" />
         <input type="hidden" name="id" value="{$user.id}" />
@@ -53,6 +54,7 @@
     </form>
 {/if}
 {if $act eq 'move'}
+    {include file="menu.phtml"}
 <form name="userMoveForm" method="post">
     分组：<select name="groupId">
         {foreach from=$groups item=group}
