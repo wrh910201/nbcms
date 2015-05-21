@@ -20,7 +20,7 @@ if( 'move' == $opera ) {
         showSystemMessage($lang['warning']['param_error']);
     }
     $groupId = getPOST('groupId');
-    
+
     $getOpenId = 'select openId, from '.$db_prefix.'user where id = '.$id;
     $openId = $db->fetchOne($getOpenId);
     if( empty($openId) ) {
@@ -198,7 +198,7 @@ if( 'move' == $act ) {
         showSystemMessage($lang['warning']['param_error']);
     }
     $getUser = 'select id, groupId from '.$db_prefix.'user where id = '.$id;
-    $user = $db->fetchOne($getUser);
+    $user = $db->fetchRow($getUser);
     assign('user', $user);
 
     $getGroups = 'select id, name from '.$db_prefix.'group where publicAccount = \''.$_SESSION['public_account'].'\' order by wechatId asc';
