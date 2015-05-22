@@ -101,3 +101,5 @@ $errors = array(
     48001 => 'api功能未授权',
     50001 => '用户未授权该api'
 );
+
+include 'wechatFormat.inc.php';

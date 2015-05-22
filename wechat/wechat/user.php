@@ -219,7 +219,62 @@ if( 'remark' == $act ) {
 }
 
 if( 'sync' == $act ) {
+    $id = intval(getGET('id'));
+    if($id <= 0)
+    {
+        showSystemMessage($lang['warning']['param_error']);
+    }
 
+    $getUser = 'select unsubscribed, openId, unionid from '.$db_prefix.'user where id = '.$id.' limit 1';
+    $user = $db->fetchRow($getUser);
+    if( $user['unsubscribed'] == 1 ) {
+        showSystemMessage('用户已取消关注');
+    }
+
+    //发送请求
+    //1.获得access_token
+    $getInfo = 'select `appID`,`appsecret`,`expireTime`,`accessToken` from `'.$db_prefix.'publicAccount` where `account`=\''.$_SESSION['public_account'].'\'';
+    $info = $db->fetchRow($getInfo);
+
+    if($info)
+    {
+        $accessToken = '';
+        if($info['expireTime'] >= time())
+        {
+            $accessToken = $info['accessToken'];
+        } else {
+            $accessToken = getAccessToken($info['appID'], $info['appsecret']);
+        }
+
+        if($accessToken)
+        {
+            $updateAccessToken = 'update `'.$db_prefix.'publicAccount` set `accessToken`=\''.$accessToken.'\',`expireTime`='.(time()+7200).' where `account`=\''.$_SESSION['public_account'].'\'';
+            $db->update($updateAccessToken);
+
+            $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$accessToken;
+            $params = 'openid='.$user['openId'].'&lang=zh_CN';
+            $data = get($url, $params);
+            $data = json_decode($data);
+
+            //3.判断状态码
+            if( empty($data->errcode) )
+            {
+                $syncUser = array();
+                foreach( $userFormat as $key => $value ) {
+                    $syncUser[$key] = $data->$key;
+                }
+                assign('syncUser', $syncUser);
+                assign('userFormat', $userFormat);
+            } else {
+                $response['msg'] = $errors[$data->errcode];
+            }
+        } else {
+            $response['msg'] = $lang['warning']['get_access_token_fail'];
+        }
+    } else {
+        $response['msg'] = $lang['warning']['param_error'];
+    }
+    !empty($response['msg']) ? showSystemMessage($response['msg']) : true;
 }
 
 assign('act', $act);

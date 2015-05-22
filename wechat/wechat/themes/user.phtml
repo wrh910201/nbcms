@@ -66,6 +66,14 @@
     <input type="submit" name="提交" value="提交" />
 </form>
 {/if}
+{if $act eq 'sync'}
+    {include file="menu.phtml"}
+    <ul>
+    {foreach from=$syncUser item=data name=key}
+        <li>{$userFormat.$key}:$data</li>
+    {/foreach}
+    </ul>
+{/if}
 </div>
 {include file="foot.phtml"}
 </body>
