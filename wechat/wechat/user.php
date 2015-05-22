@@ -21,18 +21,20 @@ if( 'move' == $opera ) {
     }
     $groupId = getPOST('groupId');
 
-    $getOpenId = 'select openId from '.$db_prefix.'user where id = '.$id;
-    $openId = $db->fetchOne($getOpenId);
-    if( empty($openId) ) {
+    $getUser = 'select groupId, openId from '.$db_prefix.'user where id = '.$id;
+    $user = $db->fetchRow($getUser);
+    if( empty($user) ) {
         showSystemMessage('该用户不存在');
     }
+    $openId = $user['openId'];
+    $old_groupId = $user['groupId'];
 
     $getWechatId = 'select wechatId from '.$db_prefix.'group where id = '.$groupId;
     $wechatId = $db->fetchOne($getWechatId);
 
     $data = json_encode(array(
         'openid' => $openId,
-        'to_groupid ' => $wechatId
+        'to_groupid' => intval($wechatId)
     ));
     //发送请求
     //1.获得access_token
@@ -75,6 +77,10 @@ if( 'move' == $opera ) {
             {
                 $updateGroupId = 'update '.$db_prefix.'user set groupId = \''.$groupId.'\' where id = '.$id.' limit 1';
                 if( $db->update($updateGroupId) ) {
+                    $updateOldGroup = 'update '.$db_prefix.'group set count = count - 1 where id = '.$old_groupId.' limit 1';
+                    $db->update($updateOldGroup);
+                    $updateNewGroup = 'update '.$db_prefix.'group set count = count + 1 where id = '.$groupId.' limit 1';
+                    $db->update($updateNewGroup);
                     $response['msg'] = '移动分组成功';
                 } else {
                     $response['msg'] = '移动分组失败';
@@ -103,7 +109,7 @@ if( 'remark' == $opera ) {
         showSystemMessage('备注不能为空');
     }
     $remark = $db->escape(htmlspecialchars($remark));
-    $getOpenId = 'select openId, from '.$db_prefix.'user where id = '.$id;
+    $getOpenId = 'select openId from '.$db_prefix.'user where id = '.$id;
     $openId = $db->fetchOne($getOpenId);
     if( empty($openId) ) {
         showSystemMessage('该用户不存在');
@@ -212,7 +218,7 @@ if( 'remark' == $act ) {
     {
         showSystemMessage($lang['warning']['param_error']);
     }
-    $getUser = 'select id, remark from '.$db_prefix.'user where id = '.$id;
+    $getUser = 'select id, remark from '.$db_prefix.'user where id = '.$id.' limit 1';
     $user = $db->fetchRow($getUser);
     assign('user', $user);
 
@@ -246,14 +252,27 @@ if( 'sync' == $act ) {
             $accessToken = getAccessToken($info['appID'], $info['appsecret']);
         }
 
-        if($accessToken)
-        {
-            $updateAccessToken = 'update `'.$db_prefix.'publicAccount` set `accessToken`=\''.$accessToken.'\',`expireTime`='.(time()+7200).' where `account`=\''.$_SESSION['public_account'].'\'';
+        if($accessToken) {
+            $updateAccessToken = 'update `' . $db_prefix . 'publicAccount` set `accessToken`=\'' . $accessToken . '\',`expireTime`=' . (time() + 7200) . ' where `account`=\'' . $_SESSION['public_account'] . '\'';
             $db->update($updateAccessToken);
 
             $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$accessToken;
-            $params = 'openid='.$user['openId'].'&lang=zh_CN';
-            $data = get($url, $params);
+            $params = '&openid='.$user['openId'].'&lang=zh_CN';
+            $url .= $params;
+            $curl = curl_init();
+            $this_header = array("content-type: application/x-www-form-urlencoded; charset=UTF-8");
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $this_header);
+            curl_setopt($curl, CURLOPT_URL, $url);
+//                curl_setopt($curl, CURLOPT_HEADER, 0);
+//            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+//            curl_setopt($curl, CURLOPT_POSTFIELDS, urldecode($data));
+            if( defined('CURL_SSLVERSION_TLSv1') ) {
+                curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+            }
+            $data = curl_exec($curl);
+            curl_close($curl);
+
             $data = json_decode($data);
 
             //3.判断状态码
@@ -261,7 +280,8 @@ if( 'sync' == $act ) {
             {
                 $syncUser = array();
                 foreach( $userFormat as $key => $value ) {
-                    $syncUser[$key] = $data->$key;
+                    if( property_exists($data, $key)  )
+                        $syncUser[$key] = $data->$key;
                 }
                 assign('syncUser', $syncUser);
                 assign('userFormat', $userFormat);

@@ -22,6 +22,7 @@
             <th>关注时间</th>
             <th>是否已关注</th>
             <th>分组</th>
+            <th>备注</th>
             <th>操作</th>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@
                 <td>{$user.addTime}</td>
                 <td>{$user.unsubscribed}</td>
                 <td>{$user.groupName}</td>
+                <td>{$user.remark}</td>
                 <td>
                     <a href="user.php?act=remark&id={$user.id}">备注</a>
                     <a href="user.php?act=move&id={$user.id}">移动分组</a>
@@ -69,8 +71,8 @@
 {if $act eq 'sync'}
     {include file="menu.phtml"}
     <ul>
-    {foreach from=$syncUser item=data name=key}
-        <li>{$userFormat.$key}:$data</li>
+    {foreach from=$syncUser item=data key=k}
+        <li>{$userFormat.$k}:{$data}</li>
     {/foreach}
     </ul>
 {/if}

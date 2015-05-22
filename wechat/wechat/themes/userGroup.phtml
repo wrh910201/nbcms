@@ -27,14 +27,16 @@
         <tbody>
         {foreach $groups as $group}
         <tr>
-            <td>{$group.id}</td>
+            <td>{$group.wechatId}</td>
             <td>{$group.name}</td>
             <td>{$group.addTime}</td>
             <td>{$group.count}</td>
+            {if $group.wechatId gt 99}
             <td>
                 <a href="userGroup.php?act=edit&id={$group.id}">编辑</a>
                 <a href="userGroup.php?act=delete&id={$group.wechatId}">删除</a>
             </td>
+            {/if}
 
         </tr>
         {/foreach}
@@ -45,6 +47,7 @@
 {if $act eq 'add'}
     {include file="menu.phtml"}
     <div class="content">
+        <p>暂时无法删除分组，请谨慎建立分组</p>
         <form name="userGroupAddForm" method="post">
             分组名：<input type="text" name="name" /><br />
             <input type="submit" name="submit" value="提交" />

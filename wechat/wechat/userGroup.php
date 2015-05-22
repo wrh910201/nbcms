@@ -98,8 +98,11 @@ if( 'edit' == $opera ) {
     }
     $getWechatId = 'select wechatId from '.$db_prefix.'group where id = \''.$id.'\' limit 1';
     $wechatId = $db->fetchOne($getWechatId);
-    if( empty($wechatId) ) {
+    if( !is_numeric($wechatId) ) {
         showSystemMessage('该分组不存在');
+    }
+    if( $wechatId < 99 ) {
+        showSystemMessage('请勿修改系统分组');
     }
     //调用接口创建用户分组
     $data = json_encode(array(
@@ -165,7 +168,7 @@ if( 'edit' == $opera ) {
 
 
 if( 'list' == $act ) {
-    $getGroups = 'select * from '.$db_prefix.'group where publicAccount = \''.$_SESSION['public_account'].'\' order by addTime asc';
+    $getGroups = 'select * from '.$db_prefix.'group where publicAccount = \''.$_SESSION['public_account'].'\' order by wechatId asc';
     $groups = $db->fetchAll($getGroups);
     if( $groups ) {
         foreach( $groups as $key => $group ) {
@@ -192,18 +195,23 @@ if( 'edit' == $act ) {
 
 if( 'delete' == $act ) {
     $wechatId = intval(getGET('id'));
-    if($wechatId <= 0)
+    if($wechatId < 0)
     {
         showSystemMessage($lang['warning']['param_error']);
     }
-    $getId = 'select id from '.$db_prefix.'group where wechatId = \''.$wechatId.'\' limit 1';
-    $id = $db->fetchOne($getId);
-    if( empty($id) ) {
+    $getGroup = 'select id, count from '.$db_prefix.'group where wechatId = \''.$wechatId.'\' limit 1';
+    $group = $db->fetchRow($getGroup);
+    if( empty($group) ) {
         showSystemMessage('该分组不存在');
     }
+    if( $wechatId < 99 ) {
+        showSystemMessage('请勿修改系统分组');
+    }
+    $id = $group['id'];
+    $count = $group['count'];
     $data = json_encode(array(
         'group' => array(
-            'id' => $wechatId,
+            'id' => intval($wechatId),
         )
     ));
 
@@ -248,6 +256,10 @@ if( 'delete' == $act ) {
             {
                 $deleteGroup = 'delete from '.$db_prefix.'group where id = '.$id.' limit 1';
                 if( $db->delete($deleteGroup) ) {
+                    $updateUsers = 'update '.$db_prefix.'user set groupId = 1 where groupId = '.$id;
+                    $db->update($updateUsers);
+                    $updateDefaultGroup = 'update '.$db_prefix.'group set `count` = `count` + '.$count.' where id = 1 limit 1';
+                    $db->update($updateDefaultGroup);
                     $response['msg'] = '删除分组成功';
                 } else {
                     $response['msg'] = '删除分组失败';
