@@ -293,7 +293,7 @@ if(0 < $responseId)
                     $items[] = array(
                         'title' => $subNew['title'],
                         'description' => $subNew['description'],
-                        'picUrl' => $subNew['picUrl'],
+                        'picUrl' => img_url_to_wechat($subNew['picUrl']),
                         'url' => $subNew['url'],
                     );
                 }
