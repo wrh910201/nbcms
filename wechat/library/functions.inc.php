@@ -619,5 +619,5 @@ function upload_with_choice($file, $type = '', $required = false) {
 }
 
 function img_url_to_wechat($url) {
-    return $_SERVER['SERVER_NAME'].'/wechat'.$url;
+    return 'http://'.$_SERVER['SERVER_NAME'].'/wechat'.$url;
 }

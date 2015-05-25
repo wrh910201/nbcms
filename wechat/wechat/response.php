@@ -230,6 +230,9 @@ if('list' == $act)
 
     foreach($responses as $k=>$val)
     {
+//        if( $val['msgType'] == 'news' ) {
+//            echo '<img src="'.img_url_to_wechat($val['picUrl']).'">';exit;
+//        }
         $val['operation'] = '<a href="response.php?act=edit&id='.$val['id'].'">'.$lang['edit'].'</a>&nbsp;|&nbsp;'.
                             '<a href="javascript:deleteResponse('.$val['id'].');">'.$lang['delete'].'</a>';
         $responses[$k] = $val;
