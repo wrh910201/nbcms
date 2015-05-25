@@ -58,7 +58,7 @@
 {include file="menu.phtml"}
 <div class="content">
 <h2>{$lang.add_response}</h2>
-<form action="response.php?act=add" method="post" name="addForm" onsubmit="return checkAdd();">
+<form action="response.php?act=add" method="post" name="addForm" enctype="multipart/form-data" onsubmit="return checkAdd();">
     <ul>
         <li class="info-item">
             <label class="info-item-label">{$lang.response_name}</label>
@@ -75,10 +75,20 @@
                 <span class="input-box">
                 <select class="input-select" name="msgType" onchange="switchTab(this.value);">
                     <option value="text">文本消息</option>
+                    <option value="news">图文消息</option>
                     <option value="themes">插件回复</option>
                 </select>
                 </span>
                 <p class="input-notice" id="msgType-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="title">
+            <label class="info-item-label">{$lang.response_title}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                <input class="input-text" type="text" name="title"/>
+                </span>
+                <p class="input-notice" id="name-error"></p>
             </div>
         </li>
         <li class="info-item" id="content">
@@ -91,11 +101,43 @@
         <li class="info-item" id="picUrls">
             <label class="info-item-label">{$lang.response_picUrls}</label>
             <div class="info-item-value">
+                <input type="file" name="picUrls" />
                 <p class="input-notice" id="picUrls-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="description">
+            <label class="info-item-label">{$lang.response_description}</label>
+            <div class="info-item-value">
+                <textarea class="single-textarea" name="description"></textarea>
             </div>
         </li>
         <li class="info-item" id="articles">
             <label class="info-item-label">{$lang.response_articles}</label>
+            <div class="info-item-value">
+                <textarea class="single-textarea" name="articles-content"></textarea>
+            </div>
+        </li>
+        <li class="info-item" id="url">
+            <label class="info-item-label">{$lang.response_url}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                    <input class="input-text" type="text" name="url" />
+                </span>
+                <p class="input-notice" id="picUrls-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="multi">
+            <label class="info-item-label">{$lang.response_multi}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                <select class="input-select" name="multi[]" multiple="multiple">
+                {foreach from=$news item=new}
+                    <option value="{$new.id}">{$new.name}</option>
+                {/foreach}
+                </select>
+                </span>
+                <p class="input-notice" id="picUrls-error"></p>
+            </div>
         </li>
         <li class="info-item" id="themes">
             <label class="info-item-label">{$lang.response_themes}</label>
@@ -116,6 +158,30 @@
     </div>
 </form>
 <script type="text/javascript">
+    KindEditor.ready(function(K)
+    {
+        var editor1 = K.create("textarea[name='articles-content']", {
+            height: '400px',
+            width: '100%',
+            cssPath : '../../plugins/kindeditor/plugins/code/prettify.css',
+            uploadJson : '../../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../../plugins/kindeditor/file_manager_json.php',
+            allowFileManager : true,
+            afterCreate : function() {
+                var self = this;
+                K.ctrl(document, 13, function() {
+                    self.sync();
+                    K('form[name=articleAddForm]')[0].submit();
+                });
+                K.ctrl(self.edit.doc, 13, function() {
+                    self.sync();
+                    K('form[name=articleAddForm]')[0].submit();
+                });
+            }
+        });
+//    prettyPrint();
+    });
+
 window.onload = function() {
     switchTab("text");
 }
@@ -134,8 +200,13 @@ function switchTab(msgType) {
 
     document.getElementById("content").style.display = "none";
     document.getElementById("picUrls").style.display = "none";
+    document.getElementById("url").style.display = "none";
+    document.getElementById("multi").style.display = "none";
     document.getElementById("articles").style.display = "none";
     document.getElementById("themes").style.display = "none";
+    document.getElementById("description").style.display = "none";
+    document.getElementById("title").style.display = "none";
+
 
     switch(msgType) {
     case 'text':
@@ -144,6 +215,10 @@ function switchTab(msgType) {
     case 'news':
         document.getElementById("picUrls").style.display = "block";
         document.getElementById("articles").style.display = "block";
+        document.getElementById("url").style.display = "block";
+        document.getElementById("multi").style.display = "block";
+        document.getElementById("description").style.display = "block";
+        document.getElementById("title").style.display = "block";
         break;
     case 'themes':
         document.getElementById("themes").style.display = "block";
@@ -159,6 +234,7 @@ function setError(tag, str) {
 }
 
 function checkAdd() {
+
     var form = document.forms['addForm'];
     var flag = true;
     var msgType = form.msgType.value;
@@ -211,7 +287,7 @@ function checkAdd() {
 {include file="menu.phtml"}
 <div class="content">
 <h2>{$lang.edit_response}</h2>
-<form action="response.php?act=edit" method="post" name="editForm" onsubmit="return checkEdit();">
+<form action="response.php?act=edit" method="post" name="editForm" enctype="multipart/form-data" onsubmit="return checkEdit();">
     <ul>
         <li class="info-item">
             <label class="info-item-label">{$lang.response_name}</label>
@@ -222,12 +298,22 @@ function checkAdd() {
                 <p class="input-notice" id="name-error"></p>
             </div>
         </li>
+        <li class="info-item" id="title">
+            <label class="info-item-label">{$lang.response_title}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                <input class="input-text" type="text" name="title" value="{$response.title}"/>
+                </span>
+                <p class="input-notice" id="name-error"></p>
+            </div>
+        </li>
         <li class="info-item">
             <label class="info-item-label">{$lang.response_type}</label>
             <div class="info-item-value">
                 <span class="input-box">
                 <select class="input-select" name="msgType" onchange="switchTab(this.value);">
                     <option value="text">文本消息</option>
+                    <option value="news">图文消息</option>
                     <option value="themes">插件回复</option>
                 </select>
                 </span>
@@ -244,11 +330,52 @@ function checkAdd() {
         <li class="info-item" id="picUrls">
             <label class="info-item-label">{$lang.response_picUrls}</label>
             <div class="info-item-value">
+                <input type="file" name="picUrls" />
                 <p class="input-notice" id="picUrls-error"></p>
+            </div>
+            {if $response.picUrl}
+            <img src="./..{$response.picUrl}" />
+            {/if}
+        </li>
+        <li class="info-item" id="description">
+            <label class="info-item-label">{$lang.response_description}</label>
+            <div class="info-item-value">
+                <textarea class="single-textarea" name="description">{$response.description}</textarea>
             </div>
         </li>
         <li class="info-item" id="articles">
             <label class="info-item-label">{$lang.response_articles}</label>
+            <div class="info-item-value">
+                <textarea class="single-textarea" name="articles-content">{$response.content}</textarea>
+            </div>
+        </li>
+        <li class="info-item" id="url">
+            <label class="info-item-label">{$lang.response_url}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                    <input class="input-text" type="text" name="url" value="{$response.url}"/>
+                </span>
+                <p class="input-notice" id="url-error"></p>
+            </div>
+        </li>
+        <li class="info-item" id="multi">
+            <label class="info-item-label">{$lang.response_multi}</label>
+            <div class="info-item-value">
+                <span class="input-box">
+                <select class="input-select" name="multi[]" multiple="multiple">
+                    {foreach from=$news item=new}
+                        {$isSelected = false}
+                        {foreach from=$subNews item=subNew}
+                            {if $new.id eq $subNew.subId}
+                                {$isSelected = true}
+                            {/if}
+                        {/foreach}
+                    <option value="{$new.id}" {if $isSelected eq true}selected="selected"{/if}>{$new.name}</option>
+                    {/foreach}
+                </select>
+                </span>
+                <p class="input-notice" id="picUrls-error"></p>
+            </div>
         </li>
         <li class="info-item" id="themes">
             <label class="info-item-label">{$lang.response_themes}</label>
@@ -270,6 +397,29 @@ function checkAdd() {
     </div>
 </form>
 <script type="text/javascript">
+    KindEditor.ready(function(K)
+    {
+        var editor1 = K.create("textarea[name='articles-content']", {
+            height: '400px',
+            width: '100%',
+            cssPath : '../../plugins/kindeditor/plugins/code/prettify.css',
+            uploadJson : '../../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../../plugins/kindeditor/file_manager_json.php',
+            allowFileManager : true,
+            afterCreate : function() {
+                var self = this;
+                K.ctrl(document, 13, function() {
+                    self.sync();
+                    K('form[name=articleAddForm]')[0].submit();
+                });
+                K.ctrl(self.edit.doc, 13, function() {
+                    self.sync();
+                    K('form[name=articleAddForm]')[0].submit();
+                });
+            }
+        });
+//    prettyPrint();
+    });
 window.onload = function() {
     switchTab("{$response.msgType}");
     document.forms['editForm'].msgType.value = "{$response.msgType}";
@@ -289,16 +439,25 @@ function switchTab(msgType) {
 
     document.getElementById("content").style.display = "none";
     document.getElementById("picUrls").style.display = "none";
+    document.getElementById("url").style.display = "none";
+    document.getElementById("multi").style.display = "none";
     document.getElementById("articles").style.display = "none";
     document.getElementById("themes").style.display = "none";
+    document.getElementById("description").style.display = "none";
+    document.getElementById("title").style.display = "none";
+
 
     switch(msgType) {
-    case 'text':
-        document.getElementById("content").style.display = "block";
-        break;
-    case 'news':
-        document.getElementById("picUrls").style.display = "block";
-        document.getElementById("articles").style.display = "block";
+        case 'text':
+            document.getElementById("content").style.display = "block";
+            break;
+        case 'news':
+            document.getElementById("picUrls").style.display = "block";
+            document.getElementById("articles").style.display = "block";
+            document.getElementById("url").style.display = "block";
+            document.getElementById("multi").style.display = "block";
+            document.getElementById("description").style.display = "block";
+            document.getElementById("title").style.display = "block";
         break;
     case 'themes':
         document.getElementById("themes").style.display = "block";

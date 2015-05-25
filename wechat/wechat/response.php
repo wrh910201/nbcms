@@ -27,7 +27,10 @@ if('add' == $opera)
     $content = getPOST('content');
     $msgType = getPOST('msgType');
     $url = getPOST('url');
-    $picUrl = getPOST('picUrl');
+    //$picUrl = getPOST('picUrl');
+
+    $articleContent = getPOST('articles-content');
+    $multi = getPOST('multi');
 
     if($msgType == '')
     {
@@ -54,11 +57,53 @@ if('add' == $opera)
         $addResponse = 'insert into `'.$db_prefix.'response` (`name`,`msgType`,`content`) values (\'%s\',\'%s\',\'%s\')';
         $addResponse = sprintf($addResponse, $name, $msgType, $content);
         break;
-    }
+    case 'news':
+        if($title == '')
+        {
+            showSystemMessage($lang['warning']['response_title_empty']);
+        } else {
+            $title = $db->escape($title);
+        }
+        if($description == '')
+        {
+            showSystemMessage($lang['warning']['response_description_empty']);
+        } else {
+            $title = $db->escape($description);
+        }
 
+
+        $uploadResult = upload($_FILES['picUrls'], 'image');
+        if( $uploadResult['error'] != 0 ) {
+            showSystemMessage($uploadResult['msg']);
+        } else {
+            $picUrl = $uploadResult['msg'];
+        }
+
+        if( count($multi) > 9 ) {
+            showSystemMessage('多图文最大数量为10');
+        }
+
+        $addResponse = 'insert into `'.$db_prefix.'response` (`name`,`msgType`,`content`,`picUrl`,`url`,`title`,`description`) values (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')';
+        $addResponse = sprintf($addResponse, $name, $msgType, $articleContent, $picUrl, $url, $title, $description);
+
+
+        break;
+    }
 
     if($db->insert($addResponse))
     {
+        if( $msgType == 'news' ) {
+            $mainId = $db->getLastId();
+            if (count($multi) > 0) {
+                $addMapping = 'insert into ' . $db_prefix . 'newsMapping (mainId, subId) values ';
+                foreach ($multi as $value) {
+                    if (intval($value) > 0) {
+                        $tempSql = $addMapping . ' (\'' . $mainId . '\', \'' . intval($value) . '\');';
+                        $db->insert($tempSql);
+                    }
+                }
+            }
+        }
         showSystemMessage($lang['warning']['add_response_success'], array(array('alt'=>'回复列表', 'link'=>'response.php')));
     } else {
         showSystemMessage($lang['warning']['add_response_fail']);
@@ -74,7 +119,10 @@ if('edit' == $opera)
     $content = getPOST('content');
     $msgType = getPOST('msgType');
     $url = getPOST('url');
-    $picUrl = getPOST('picUrl');
+    $picUrl = '';
+
+    $articleContent = getPOST('articles-content');
+    $multi = getPOST('multi');
 
     if($id <= 0)
     {
@@ -113,11 +161,62 @@ if('edit' == $opera)
         $updateResponse = 'update `'.$db_prefix.'response` set `name`=\'%s\',`msgType`=\'%s\',`content`=\'%s\' where `id`=%d';
         $updateResponse = sprintf($updateResponse, $name, $msgType, $content, $id);
         break;
+    case 'news':
+        if($title == '')
+        {
+            showSystemMessage($lang['warning']['response_title_empty']);
+        } else {
+            $title = $db->escape($title);
+        }
+        if($description == '')
+        {
+            showSystemMessage($lang['warning']['response_description_empty']);
+        } else {
+            $title = $db->escape($description);
+        }
+
+        $uploadResult = upload_with_choice($_FILES['picUrls'], 'image');
+        if( $uploadResult['error'] != 0 ) {
+            showSystemMessage($uploadResult['msg']);
+        } else {
+            $picUrl = $uploadResult['msg'];
+        }
+
+
+        if( count($multi) > 9 ) {
+            showSystemMessage('多图文最大数量为10');
+        }
+
+        $updateResponse = 'update '.$db_prefix.'response set ';
+        $updateResponse .= ' name =\''.$name.'\'';
+        $updateResponse .= ' ,title = \''.$title.'\'';
+        $updateResponse .= ' ,description = \''.$description.'\'';
+        $updateResponse .= ' ,content = \''.$articleContent.'\'';
+        $updateResponse .= ' ,url = \''.$url.'\'';
+        $updateResponse .= ($picUrl != '' ) ? ' ,picUrl = \''.$picUrl.'\'' : '';
+        $updateResponse .= ' where id = '.$id;
+        break;
     }
 
 
     if($db->update($updateResponse))
     {
+        if( $msgType == 'news' ) {
+
+            $deleteMapping = 'delete from '.$db_prefix.'newsMapping where mainId = '.$id;
+            $db->delete($deleteMapping);
+
+            $mainId = $id;
+            if (count($multi) > 0) {
+                $addMapping = 'insert into ' . $db_prefix . 'newsMapping (mainId, subId) values ';
+                foreach ($multi as $value) {
+                    if (intval($value) > 0) {
+                        $tempSql = $addMapping . ' (\'' . $mainId . '\', \'' . intval($value) . '\');';
+                        $db->insert($tempSql);
+                    }
+                }
+            }
+        }
         showSystemMessage($lang['warning']['update_response_success'], array(array('alt'=>'回复列表', 'link'=>'response.php')));
     } else {
         showSystemMessage($lang['warning']['update_response_fail']);
@@ -145,6 +244,11 @@ if('add' == $act)
     $xml = simplexml_load_string($xml);
 
     $smarty->assign('themes', $xml->item);
+
+    $getNews = 'select id, name from '.$db_prefix.'response where msgType=\'news\';';
+//    echo $getNews;exit;
+    $news = $db->fetchAll($getNews);
+    assign('news', $news);
 }
 
 if('edit' == $act)
@@ -171,6 +275,15 @@ if('edit' == $act)
     $smarty->assign('themes', $xml->item);
 
     $smarty->assign('response', $response);
+
+    $getNews = 'select id, name from '.$db_prefix.'response where msgType=\'news\' and id <> '.$id;
+//    echo $getNews;exit;
+    $news = $db->fetchAll($getNews);
+    assign('news', $news);
+
+    $getSubNews = 'select subId from '.$db_prefix.'newsMapping where mainId = '.$id;
+    $subNews = $db->fetchAll($getSubNews);
+    assign('subNews', $subNews);
 }
 
 if('delete' == $act)
@@ -197,6 +310,10 @@ if('delete' == $act)
 
             if($db->delete($deleteResponse))
             {
+                if( $response['msgType'] == 'news' ) {
+                    $deleteMapping = 'delete from '.$db_prefix.'newsMapping where mainId = '.$id;
+                    $db->delete($deleteMapping);
+                }
                 showSystemMessage($lang['warning']['delete_response_success']);
             } else {
                 showSystemMessage($lang['warning']['delete_response_fail']);

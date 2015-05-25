@@ -266,7 +266,7 @@ if($responseId <= 0)
 }
 if(0 < $responseId)
 {
-    $getResponse  = 'select `msgType`,`content`,`title`,`description`,`musicUrl`,`HQMusicUrl`,`url`,`picUrl`,`mediaId`,`thumbMediaId` from ';
+    $getResponse  = 'select `id`,`msgType`,`content`,`title`,`description`,`musicUrl`,`HQMusicUrl`,`url`,`picUrl`,`mediaId`,`thumbMediaId` from ';
     $getResponse .= '`'.$db_prefix.'response` where `id`='.$responseId;
 
     $responseRule = $db->fetchRow($getResponse);
@@ -278,21 +278,42 @@ if(0 < $responseId)
             $response = $responseObj->__toString();
             break;
         case 'news':
-            $title = unserialize($responseRule['title']);
-            $description = unserialize($responseRule['description']);
-            $picUrl = unserialize($responseRule['picUrl']);
-            $url = unserialize($responseRule['url']);
-
-            $items = array();
-            foreach($title as $key=>$value)
-            {
-                $items[] = array(
-                    'title' => $value,
-                    'description' => $description[$key],
-                    'picUrl' => $picUrl[$key],
-                    'url' => $url[$key]
-                );
+            $items[] = array(
+                'title' => $responseRule['title'],
+                'description' => $responseRule['description'],
+                'picUrl' => $responseRule['picUrl'],
+                'url' => $responseRule['url'],
+            );
+            $getSubNews = 'select r.* from '.$db_prefix.'newsMapping as m';
+            $getSubNews .= ' left join '.$db_prefix.'response as r on m.subId = r.id';
+            $getSubNews = ' where r.msgType = \'news\' and m.mainId = '.$responseRule['id'];
+            $subNews = $db->fetchAll($getSubNews);
+            if( $subNews ) {
+                foreach( $subNews as $subNew) {
+                    $items[] = array(
+                        'title' => $subNew['title'],
+                        'description' => $subNew['description'],
+                        'picUrl' => $subNew['picUrl'],
+                        'url' => $subNew['url'],
+                    );
+                }
             }
+
+//            $title = unserialize($responseRule['title']);
+//            $description = unserialize($responseRule['description']);
+//            $picUrl = unserialize($responseRule['picUrl']);
+//            $url = unserialize($responseRule['url']);
+//
+//            $items = array();
+//            foreach($title as $key=>$value)
+//            {
+//                $items[] = array(
+//                    'title' => $value,
+//                    'description' => $description[$key],
+//                    'picUrl' => $picUrl[$key],
+//                    'url' => $url[$key]
+//                );
+//            }
 
             $responseObj = new NewsResponse($data->ToUserName, $data->FromUserName, $items);
             $response = $responseObj->__toString();

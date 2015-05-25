@@ -172,6 +172,17 @@ $sql[] = 'create table if not exists `'.$db_prefix.'article` (
     `description` varchar(255) not null
 ) default charset='.$charset.';';
 
+$table[] = '微信分组';
+$sql[] = 'create table if not exists `'.$db_prefix.'group` (
+    `id` int(11) NOT NULL COMMENT \'id\',
+    `wechatId` int(11) NOT NULL COMMENT \'分组id，由微信分配\',
+    `name` varchar(255) NOT NULL COMMENT \'分组名字，UTF8编码\',
+    `count` int(11) NOT NULL DEFAULT \'0\' COMMENT \'分组内用户数量\',
+    `addTime` int(11) NOT NULL COMMENT \'添加时间\',
+    `publicAccount` varchar(255) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET='.$charset.';';
+
+
 foreach($sql as $k=>$v)
 {
    // if($db->runSQL($v))
