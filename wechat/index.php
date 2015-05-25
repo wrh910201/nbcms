@@ -286,7 +286,7 @@ if(0 < $responseId)
             );
             $getSubNews = 'select r.* from '.$db_prefix.'newsMapping as m';
             $getSubNews .= ' left join '.$db_prefix.'response as r on m.subId = r.id';
-            $getSubNews = ' where r.msgType = \'news\' and m.mainId = '.$responseRule['id'];
+            $getSubNews .= ' where r.msgType = \'news\' and m.mainId = '.$responseRule['id'];
             $subNews = $db->fetchAll($getSubNews);
             if( $subNews ) {
                 foreach( $subNews as $subNew) {
