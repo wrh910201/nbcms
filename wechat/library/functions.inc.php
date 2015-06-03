@@ -472,9 +472,9 @@ function upload($file, $type = '')
     $php_path = dirname(__FILE__) . '/';
     $php_url = dirname($_SERVER['PHP_SELF']) . '/';
     //文件保存目录路径
-    $save_path = '../upload/';
+    $save_path = '../../wechat/upload/';
     //文件保存目录URL
-    $save_url = '../upload/';
+    $save_url = '../../wechat/upload/';
 
 
     //PHP上传失败
@@ -620,4 +620,119 @@ function upload_with_choice($file, $type = '', $required = false) {
 
 function img_url_to_wechat($url) {
     return 'http://'.$_SERVER['SERVER_NAME'].'/wechat'.$url;
+}
+
+function uploadMedia($url, $media) {
+    set_time_limit(0);
+    $curl = curl_init();
+    $header = array('Content-Type: multipart/form-data; charset=UTF-8');
+    if( class_exists('\CURLFile') ) {
+        $media['media'] = new \CURLFile($media['media']);
+    } else {
+        $media['media'] = '@'.$media['media'];
+        if( defined('CURLOPT_SAFE_UPLOAD') ) {
+            curl_setopt($curl, CURLOPT_SAFE_UPLOAD, false);
+        }
+    }
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+    curl_setopt ( $curl, CURLOPT_URL, $url );
+    curl_setopt ( $curl, CURLOPT_POST, 1 );
+    curl_setopt ( $curl, CURLOPT_RETURNTRANSFER, 1 );
+    curl_setopt ( $curl, CURLOPT_SSL_VERIFYPEER, FALSE );
+    curl_setopt ( $curl, CURLOPT_SSL_VERIFYHOST, false );
+    curl_setopt ( $curl, CURLOPT_POSTFIELDS, ($media));
+    $data = curl_exec($curl);
+    curl_close($curl);
+    return $data;
+}
+
+/**
+ * 永久素材同步，获取微信端素材
+ * @param $data
+ * @return mixed|string
+ */
+function sync_material($data) {
+    global $db, $lang, $errors, $db_prefix;
+    //发送请求
+    //1.获得access_token
+    $getInfo = 'select `appID`,`appsecret`,`expireTime`,`accessToken` from `' . $db_prefix . 'publicAccount` where `account`=\'' . $_SESSION['public_account'] . '\'';
+    $info = $db->fetchRow($getInfo);
+    if ($info) {
+        $accessToken = '';
+        if ($info['expireTime'] >= time()) {
+            $accessToken = $info['accessToken'];
+        } else {
+            $accessToken = getAccessToken($info['appID'], $info['appsecret']);
+        }
+
+        if ($accessToken) {
+            $updateAccessToken = 'update `' . $db_prefix . 'publicAccount` set `accessToken`=\'' . $accessToken . '\',`expireTime`=' . (time() + 7200) . ' where `account`=\'' . $_SESSION['public_account'] . '\'';
+            $db->update($updateAccessToken);
+            $url = 'https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token='.$accessToken;
+            $data = rawPost($url, $data);
+            $data = json_decode($data);
+            //3.判断状态码
+            if( empty($data->errcode) )
+            {
+                return $data;
+            } else {
+                $response['msg'] = $errors[$data->errcode];
+            }
+        } else {
+            $response['msg'] = $lang['warning']['get_access_token_fail'];
+        }
+    } else {
+        $response['msg'] = $lang['warning']['param_error'];
+    }
+    showSystemMessage($response['msg']);
+}
+
+/**
+ * @param $url
+ * @param $data
+ * @param bool $errcode true返回的正确数据格式存在errcode
+ * @param bool $isMedia
+ * @return mixed|string
+ */
+function wechat_request($url, $data, $errcode = true, $isMedia = false) {
+    global $db, $lang, $errors, $db_prefix;
+    //发送请求
+    //1.获得access_token
+    $getInfo = 'select `appID`,`appsecret`,`expireTime`,`accessToken` from `' . $db_prefix . 'publicAccount` where `account`=\'' . $_SESSION['public_account'] . '\'';
+    $info = $db->fetchRow($getInfo);
+    if ($info) {
+        $accessToken = '';
+        if ($info['expireTime'] >= time()) {
+            $accessToken = $info['accessToken'];
+        } else {
+            $accessToken = getAccessToken($info['appID'], $info['appsecret']);
+        }
+
+        if ($accessToken) {
+            $updateAccessToken = 'update `' . $db_prefix . 'publicAccount` set `accessToken`=\'' . $accessToken . '\',`expireTime`=' . (time() + 7200) . ' where `account`=\'' . $_SESSION['public_account'] . '\'';
+            $db->update($updateAccessToken);
+            $url .= $accessToken;
+            if( $isMedia ) {
+                $data = uploadMedia($url, $data);
+            } else {
+                $data = rawPost($url, $data);
+            }
+            $data = json_decode($data);
+            //3.判断状态码
+            if( $errcode == true && $data->errcode == 0 ) {
+                return $data;
+            } elseif( $errcode == false && empty($data->errcode) )
+            {
+                return $data;
+            } else {
+//                var_dump($data);exit;
+                $response['msg'] = $errors[$data->errcode];
+            }
+        } else {
+            $response['msg'] = $lang['warning']['get_access_token_fail'];
+        }
+    } else {
+        $response['msg'] = $lang['warning']['param_error'];
+    }
+    showSystemMessage($response['msg']);
 }

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/themes/default/default.css"/>
+    <link rel="stylesheet" type="text/css" href="js/plugins/code/prettify.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/kindeditor-min.js"></script>
+    <script type="text/javascript" src="js/lang/zh_CN.js"></script>
+    <script type="text/javascript" src="js/plugins/code/prettify.js"></script>
+
+
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+
+    {if $act eq 'list'}
+    {include file="menu.phtml"}
+    <div class="content">
+
+    </div>
+    {/if}
+    {if $act eq 'add'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <a href="broadcast.php?act=add&type=news">图文消息</a>&nbsp;&nbsp;
+        <a href="broadcast.php?act=add&type=text">文本</a>&nbsp;&nbsp;
+        <a href="broadcast.php?act=add&type=image">图片</a>&nbsp;&nbsp;
+        <a href="broadcast.php?act=add&type=voice">语音</a>&nbsp;&nbsp;
+        <a href="broadcast.php?act=add&type=video">视频</a>&nbsp;&nbsp;<br />
+        {if $type eq 'news'}
+        <form name="broadcastAddForm" method="post">
+            <select name="mediaId">
+            {foreach from=$newsList item=news}
+                <option value="{$news.mediaId}">{$news.name}</option>
+            {/foreach}
+            </select><br />
+            <input id="is_to_all" name="is_to_all" value="1" type="checkbox" checked="checked"/>全部用户<br />
+            <select name="groupId" style="display:none">
+            {foreach from=$groupList item=group}
+                <option value="{$group.wechatId}">{$group.name}</option>
+            {/foreach}
+            </select><br />
+            <input type="hidden" name="msgtype" value="mpnews" />
+            <input type="hidden" name="opera" value="add" />
+            <input name="发送" value="发送" type="submit" />
+        </form>
+        <script type="text/javascript">
+            $(function(){
+                $('#is_to_all').click(function(){
+                    console.log($(this).attr('checked'));
+                    if( $(this).is(':checked') ) {
+                        $('select[name=groupId]').css('display', 'none');
+                    } else {
+                        $('select[name=groupId]').css('display', 'block');
+                    }
+
+                });
+            });
+        </script>
+        {/if}
+        {if $type eq 'text'}
+
+        {/if}
+        {if $type eq 'image'}
+
+        {/if}
+        {if $type eq 'voice'}
+
+        {/if}
+        {if $type eq video}
+
+        {/if}
+    </div>
+    {/if}
+</div>
+{include file="foot.phtml"}
+</body>
+</html>

@@ -71,12 +71,13 @@ if('add' == $opera)
             $title = $db->escape($description);
         }
 
-
-        $uploadResult = upload($_FILES['picUrls'], 'image');
-        if( $uploadResult['error'] != 0 ) {
-            showSystemMessage($uploadResult['msg']);
+        $picUrl = getPOST('picUrls');
+        if( empty($picUrl) ) {
+            showSystemMessage('请选择一张图片作为封面');
         } else {
-            $picUrl = $uploadResult['msg'];
+            if( !file_exists(realpath('../../'.$picUrl)) ) {
+                showSystemMessage('图片不存在');
+            }
         }
 
         if( count($multi) > 9 ) {
@@ -175,11 +176,13 @@ if('edit' == $opera)
             $title = $db->escape($description);
         }
 
-        $uploadResult = upload_with_choice($_FILES['picUrls'], 'image');
-        if( $uploadResult['error'] != 0 ) {
-            showSystemMessage($uploadResult['msg']);
+        $picUrl = getPOST('picUrls');
+        if( empty($picUrl) ) {
+            showSystemMessage('请选择一张图片作为封面');
         } else {
-            $picUrl = $uploadResult['msg'];
+            if( !file_exists(realpath('../../'.$picUrl)) ) {
+                showSystemMessage('图片不存在');
+            }
         }
 
 

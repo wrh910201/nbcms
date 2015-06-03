@@ -240,6 +240,23 @@ case 'event':
         </xml>
          */
         break;
+    case 'masssendjobfinish'://群发结果推送
+        /*
+         *  <xml>
+            <ToUserName><![CDATA[gh_3e8adccde292]]></ToUserName>
+            <FromUserName><![CDATA[oR5Gjjl_eiZoUpGozMo7dbBJ362A]]></FromUserName>
+            <CreateTime>1394524295</CreateTime>
+            <MsgType><![CDATA[event]]></MsgType>
+            <Event><![CDATA[MASSSENDJOBFINISH]]></Event>
+            <MsgID>1988</MsgID>
+            <Status><![CDATA[sendsuccess]]></Status>
+            <TotalCount>100</TotalCount>
+            <FilterCount>80</FilterCount>
+            <SentCount>75</SentCount>
+            <ErrorCount>5</ErrorCount>
+            </xml>
+         */
+
     }
     break;
 //图片消息

@@ -101,7 +101,8 @@
         <li class="info-item" id="picUrls">
             <label class="info-item-label">{$lang.response_picUrls}</label>
             <div class="info-item-value">
-                <input type="file" name="picUrls" />
+                <input type="button" id="select-image" value="选择封面" />
+                <input type="hidden" name="picUrls" id="picUrl"/>
                 <p class="input-notice" id="picUrls-error"></p>
             </div>
         </li>
@@ -163,21 +164,38 @@
         var editor1 = K.create("textarea[name='articles-content']", {
             height: '400px',
             width: '100%',
-            cssPath : '../../plugins/kindeditor/plugins/code/prettify.css',
-            uploadJson : '../../plugins/kindeditor/upload_json.php',
-            fileManagerJson : '../../plugins/kindeditor/file_manager_json.php',
+            cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+            uploadJson : '../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
             allowFileManager : true,
             afterCreate : function() {
                 var self = this;
                 K.ctrl(document, 13, function() {
                     self.sync();
-                    K('form[name=articleAddForm]')[0].submit();
+                    K('form[name=addForm]')[0].submit();
                 });
                 K.ctrl(self.edit.doc, 13, function() {
                     self.sync();
-                    K('form[name=articleAddForm]')[0].submit();
+                    K('form[name=addForm]')[0].submit();
                 });
             }
+        });
+        var editor = K.editor({
+            allowFileManager : true,
+            uploadJson : '../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+        });
+        K('#select-image').click(function() {
+            editor.loadPlugin('image', function() {
+                editor.plugin.imageDialog({
+                    imageUrl : '',
+                    clickFn : function(url, title, width, height, border, align) {
+                        K('#picUrl').val(url);
+                        K('#select-image').val(url);
+                        editor.hideDialog();
+                    }
+                });
+            });
         });
 //    prettyPrint();
     });
@@ -330,11 +348,12 @@ function checkAdd() {
         <li class="info-item" id="picUrls">
             <label class="info-item-label">{$lang.response_picUrls}</label>
             <div class="info-item-value">
-                <input type="file" name="picUrls" />
+                <input type="button" id="select-image" value="{$response.picUrl}">
+                <input type="hidden" name="picUrls" id="picUrl" value="{$response.picUrl}"/>
                 <p class="input-notice" id="picUrls-error"></p>
             </div>
             {if $response.picUrl}
-            <img src="./..{$response.picUrl}" />
+            <img src="./../..{$response.picUrl}" />
             {/if}
         </li>
         <li class="info-item" id="description">
@@ -402,21 +421,38 @@ function checkAdd() {
         var editor1 = K.create("textarea[name='articles-content']", {
             height: '400px',
             width: '100%',
-            cssPath : '../../plugins/kindeditor/plugins/code/prettify.css',
-            uploadJson : '../../plugins/kindeditor/upload_json.php',
-            fileManagerJson : '../../plugins/kindeditor/file_manager_json.php',
+            cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+            uploadJson : '../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
             allowFileManager : true,
             afterCreate : function() {
                 var self = this;
                 K.ctrl(document, 13, function() {
                     self.sync();
-                    K('form[name=articleAddForm]')[0].submit();
+                    K('form[name=editForm]')[0].submit();
                 });
                 K.ctrl(self.edit.doc, 13, function() {
                     self.sync();
-                    K('form[name=articleAddForm]')[0].submit();
+                    K('form[name=editForm]')[0].submit();
                 });
             }
+        });
+        var editor = K.editor({
+            allowFileManager : true,
+            uploadJson : '../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+        });
+        K('#select-image').click(function() {
+            editor.loadPlugin('image', function() {
+                editor.plugin.imageDialog({
+                    imageUrl : '',
+                    clickFn : function(url, title, width, height, border, align) {
+                        K('#picUrl').val(url);
+                        K('#select-image').val(url);
+                        editor.hideDialog();
+                    }
+                });
+            });
         });
 //    prettyPrint();
     });

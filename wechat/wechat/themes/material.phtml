@@ -1,0 +1,594 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/themes/default/default.css"/>
+    <link rel="stylesheet" type="text/css" href="js/plugins/code/prettify.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/kindeditor-min.js"></script>
+    <script type="text/javascript" src="js/lang/zh_CN.js"></script>
+    <script type="text/javascript" src="js/plugins/code/prettify.js"></script>
+
+
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+
+    {if $act eq 'list'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <h2>素材管理</h2>
+        <a href="material.php?act=list&type=news&multi=0">单图文素材</a>&nbsp;
+        <a href="material.php?act=list&type=news&multi=1">多图文素材</a>&nbsp;
+        <a href="material.php?act=list&type=image">图片库</a>&nbsp;
+        <a href="material.php?act=list&type=voice">语音</a>&nbsp;
+        <a href="material.php?act=list&type=video">视频</a><br />
+        {if $type eq 'news'}
+            {if $multi eq 0}
+        <span id="query_tips">单图文列表</span>(共<span id="js_listCount">{$total_count}</span>个)
+        <div id="appmsgList" class="appmsg_list">
+            <div class="appmsg_col tj_item">
+                <div id="appmsgList1" class="inner">
+                    <span class="create_access">
+                        <i class="icon36_common add_gray"></i>
+                        <a href="material.php?act=add&type=news&multi=0">
+                            <i class="icon_appmsg_create"></i><strong>单图文消息</strong>
+                        </a>
+                        <a href="material.php?act=add&type=news&multi=1">
+                            <i class="icon_appmsg_create multi"></i><strong>多图文消息</strong>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $('.create_access').mouseover(function(e){
+                e.preventDefault();
+                $('.create_access a').css('display', 'inline-block');
+                $('.add_gray').hide();
+            });
+            $('.create_access').mouseout(function(e){
+                e.preventDefault();
+                $('.add_gray').show();
+                $('.create_access a').hide();
+            });
+        </script>
+
+        <table>
+            <thead>
+            <th>media_id</th>
+            <th>素材名称</th>
+            <th>添加时间</th>
+            <!--                <th>图片</th>-->
+            <th>操作</th>
+            </thead>
+            <tbody>
+            {foreach from=$materials item=material}
+            <tr>
+                <td>{$material.mediaId}</td>
+                <td>{$material.name}</td>
+                <td>{$material.addTime}</td>
+                <!--                    <td><img src="{$material.down_url}" width="200" height="200"/></td>-->
+                <td>
+                    <a href="material.php?act=edit&id={$material.mediaId}&type={$type}">编辑</a>
+                    <a href="material.php?act=delete&id={$material.mediaId}">删除</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+            {/if}
+            {if $multi eq 1}
+        <span id="query_tips">多图文列表</span>(共<span id="js_listCount">{$total_count}</span>个)
+        <div id="appmsgList" class="appmsg_list">
+            <div class="appmsg_col tj_item">
+                <div id="appmsgList1" class="inner">
+                    <span class="create_access">
+                        <i class="icon36_common add_gray"></i>
+                        <a href="material.php?act=add&type=news&multi=0">
+                            <i class="icon_appmsg_create"></i><strong>单图文消息</strong>
+                        </a>
+                        <a href="material.php?act=add&type=news&multi=1">
+                            <i class="icon_appmsg_create multi"></i><strong>多图文消息</strong>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $('.create_access').mouseover(function(e){
+                e.preventDefault();
+                $('.create_access a').css('display', 'inline-block');
+                $('.add_gray').hide();
+            });
+            $('.create_access').mouseout(function(e){
+                e.preventDefault();
+                $('.add_gray').show();
+                $('.create_access a').hide();
+            });
+        </script>
+
+        <table>
+            <thead>
+            <th>media_id</th>
+            <th>素材名称</th>
+            <th>添加时间</th>
+            <th>图片</th>
+            <th>操作</th>
+            </thead>
+            <tbody>
+            {foreach from=$materials item=material}
+            <tr>
+                <td>{$material.mediaId}</td>
+                <td>{$material.name}</td>
+                <td>{$material.addTime}</td>
+                <td>
+                {$i = 0}
+                {foreach from=$newsList item=news}
+                        <img src="../../{$news.picUrl}" {if $i eq 0}width="267" height="169"{else}width="78" height="78"{/if}/>
+                    {$i = $i + 1}
+                {/foreach}
+                </td>
+                <td>
+                    <a href="material.php?act=edit&id={$material.mediaId}&type={$type}&multi=1">编辑</a>
+                    <a href="material.php?act=delete&id={$material.mediaId}">删除</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+            {/if}
+        {/if}
+        {if $type eq 'image'}
+        <span id="query_tips">图片列表</span>(共<span id="js_listCount">{$total_count}</span>个)
+        <a href="material.php?act=sync&type=image" >同步</a>
+        <table>
+            <thead>
+                <th>media_id</th>
+                <th>素材名称</th>
+                <th>添加时间</th>
+                <th>图片</th>
+                <th>操作</th>
+            </thead>
+            <tbody>
+            {foreach from=$materials item=material}
+                <tr>
+                    <td>{$material.mediaId}</td>
+                    <td>{$material.name}</td>
+                    <td>{$material.addTime}</td>
+                    <td><img src="{$material.down_url}" width="200" height="200"/></td>
+                    <td>
+                        <a href="material.php?act=edit&id={$material.mediaId}&type={$type}">编辑</a>
+                        <a href="material.php?act=delete&id={$material.mediaId}">删除</a>
+                    </td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        {/if}
+    </div>
+    {/if}
+
+    {if $act eq 'add'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <h2>素材管理</h2>
+        <a href="material.php?act=add&type=news&multi=0">单图文消息</a>&nbsp;
+        <a href="material.php?act=add&type=news&multi=1">多图文消息</a>&nbsp;
+        <a href="material.php?act=add&type=image">图片库</a>&nbsp;
+        <a href="material.php?act=add&type=voice">语音</a>&nbsp;
+        <a href="material.php?act=add&type=video">视频</a><br />
+        {if $type eq 'image'}
+        <form name="materialImageAddForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" /><br />
+            图片文件：<input type="button" id="select-image" value="请选择图片"/>
+            <input type="hidden" name="picUrl" id="picUrl"/><br />
+            <input type="hidden" name="type" value="image" />
+            <input type="hidden" name="opera" value="add" />
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        <script type="text/javascript">
+            KindEditor.ready(function(K)
+            {
+                var editor = K.editor({
+                    allowFileManager : true,
+                    uploadJson : '../plugins/kindeditor/upload_json.php',
+                    fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+                });
+
+                K('#select-image').click(function() {
+                    editor.loadPlugin('image', function() {
+                        editor.plugin.imageDialog({
+                            imageUrl : '',
+                            clickFn : function(url, title, width, height, border, align) {
+                                K('#picUrl').val(url);
+                                K('#select-image').val(url);
+                                editor.hideDialog();
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+        {/if}
+        {if $type eq 'voice'}
+        <form name="materialVoiceAddForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" /><br />
+            语音文件：<input type="file" name="voiceUrl" /><br />
+            <input type="hidden" name="type" value="voice" />
+            <input type="hidden" name="opera" value="add" />
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        {/if}
+        {if $type eq 'video'}
+        <form name="materialVideoAddForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" /><br />
+            视频文件<input type="file" name="videoUrl" /><br />
+            标题：<input type="text" name="video_title" value="" /><br />
+            简介：<input type="text" name="introduction" value="" /><br />
+            <input type="hidden" name="type" value="video" />
+            <input type="hidden" name="opera" value="add" />
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        {/if}
+        {if $type eq 'news'}
+            {if $multi eq '0'}
+        <form name="materialNewsAddForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" /><br />
+            标题：<input type="text" name="title" /><br />
+            作者：<input type="text" name="author" /><br />
+            封面：<input type="button" id="select-image" value="选择封面"><br />
+            正文是否显示封面：<input type="checkbox" name="show_cover_pic" value="1" checked="checked"/><br />
+            摘要：<textarea name="digest"></textarea><br />
+            正文：<textarea name="content"></textarea><br />
+            原文连接：<input type="text" name="content_source_url" /><br />
+            <input type="submit" name="提交" value="提交" />
+            <input type="hidden" name="multi" value="0" />
+            <input type="hidden" name="type" value="news" />
+            <input type="hidden" name="opera" value="add" />
+            <input type="hidden" name="picUrl" id="picUrl" value=""/>
+        </form>
+        <script type="text/javascript">
+            KindEditor.ready(function(K)
+            {
+                var editor1 = K.create("textarea[name='content']", {
+                    height: '300px',
+                    width: '100%',
+                    cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+                    uploadJson : '../plugins/kindeditor/upload_json.php',
+                    fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
+                    allowFileManager : true,
+                    afterCreate : function() {
+                        var self = this;
+                        K.ctrl(document, 13, function() {
+                            self.sync();
+                            K('form[name=materialNewsAddForm]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function() {
+                            self.sync();
+                            K('form[name=materialNewsAddForm]')[0].submit();
+                        });
+                    }
+                });
+                var editor = K.editor({
+                    allowFileManager : true,
+                    uploadJson : '../plugins/kindeditor/upload_json.php',
+                    fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+                });
+                K('#select-image').click(function() {
+                    editor.loadPlugin('image', function() {
+                        editor.plugin.imageDialog({
+                            imageUrl : '',
+                            clickFn : function(url, title, width, height, border, align) {
+                                K('#picUrl').val(url);
+                                K('#select-image').val(url);
+                                editor.hideDialog();
+                            }
+                        });
+                    });
+                });
+//    prettyPrint();
+            });
+        </script>
+            {else }
+        <button class="add-news">追加图文</button>
+        <form name="materialNewsAddForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" /><br />
+            <hr/>
+            <div class="news" data-index="0">
+                标题：<input type="text" name="title[]" /><br />
+                作者：<input type="text" name="author[]" /><br />
+                封面：<input type="button" id="select-image-0" value="选择封面"><br />
+                正文是否显示封面：<input type="checkbox" name="show_cover_pic[]" value="1" checked="checked"/><br />
+                正文：<textarea name="content[]" id="content-0"></textarea><br />
+                原文连接：<input type="text" name="content_source_url[]" /><br />
+                <input type="hidden" name="picUrl[]" id="picUrl-0" value=""/>
+
+            <script type="text/javascript">
+                KindEditor.ready(function(K)
+                {
+                    var editor0 = K.create("#content-0", {
+                        height: '300px',
+                        width: '100%',
+                        cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+                        uploadJson : '../plugins/kindeditor/upload_json.php',
+                        fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
+                        allowFileManager : true,
+                        afterCreate : function() {
+                            var self = this;
+                            K.ctrl(document, 13, function() {
+                                self.sync();
+                                K('form[name=materialNewsAddForm]')[0].submit();
+                            });
+                            K.ctrl(self.edit.doc, 13, function() {
+                                self.sync();
+                                K('form[name=materialNewsAddForm]')[0].submit();
+                            });
+                        }
+                    });
+                    var editor = K.editor({
+                        allowFileManager : true,
+                        uploadJson : '../plugins/kindeditor/upload_json.php',
+                        fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+                    });
+                    K('#select-image-0').click(function() {
+                        editor.loadPlugin('image', function() {
+                            editor.plugin.imageDialog({
+                                imageUrl : '',
+                                clickFn : function(url, title, width, height, border, align) {
+                                    K('#picUrl-0').val(url);
+                                    K('#select-image-0').val(url);
+                                    editor.hideDialog();
+                                }
+                            });
+                        });
+                    });
+    //    prettyPrint();
+                });
+            </script>
+            </div>
+            <hr/>
+            <div class="news" data-index="1">
+                标题：<input type="text" name="title[]" /><br />
+                作者：<input type="text" name="author[]" /><br />
+                封面：<input type="button" id="select-image-1" value="选择封面"><br />
+                正文是否显示封面：<input type="checkbox" name="show_cover_pic[]" value="1" checked="checked"/><br />
+                正文：<textarea name="content[]" id="content-1"></textarea><br />
+                原文连接：<input type="text" name="content_source_url[]" /><br />
+                <input type="submit" name="提交" value="提交" />
+                <input type="hidden" name="multi" value="1" />
+                <input type="hidden" name="type" value="news" />
+                <input type="hidden" name="opera" value="add" />
+                <input type="hidden" name="picUrl[]" id="picUrl-1" value=""/>
+
+                <script type="text/javascript">
+                    KindEditor.ready(function(K)
+                    {
+                        var editor1 = K.create("#content-1", {
+                            height: '300px',
+                            width: '100%',
+                            cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+                            uploadJson : '../plugins/kindeditor/upload_json.php',
+                            fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
+                            allowFileManager : true,
+                            afterCreate : function() {
+                                var self = this;
+                                K.ctrl(document, 13, function() {
+                                    self.sync();
+                                    K('form[name=materialNewsAddForm]')[1].submit();
+                                });
+                                K.ctrl(self.edit.doc, 13, function() {
+                                    self.sync();
+                                    K('form[name=materialNewsAddForm]')[1].submit();
+                                });
+                            }
+                        });
+                        var editor = K.editor({
+                            allowFileManager : true,
+                            uploadJson : '../plugins/kindeditor/upload_json.php',
+                            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+                        });
+                        K('#select-image-1').click(function() {
+                            editor.loadPlugin('image', function() {
+                                editor.plugin.imageDialog({
+                                    imageUrl : '',
+                                    clickFn : function(url, title, width, height, border, align) {
+                                        K('#picUrl-1').val(url);
+                                        K('#select-image-1').val(url);
+                                        editor.hideDialog();
+                                    }
+                                });
+                            });
+                        });
+                        //    prettyPrint();
+                    });
+                </script>
+            </div>
+        </form>
+            {/if}
+        {/if}
+
+    </div>
+    {/if}
+    {if $act eq 'edit'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <h2>素材管理</h2>
+        <a href="material.php?act=add&type=news">图文消息</a>&nbsp;
+        <a href="material.php?act=add&type=image">图片库</a>&nbsp;
+        <a href="material.php?act=add&type=voice">语音</a>&nbsp;
+        <a href="material.php?act=add&type=video">视频</a><br />
+        {if $type eq 'image'}
+        <form name="materialImageEditForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" value="{$material.name}" /><br />
+            <input type="hidden" name="type" value="{$material.type}" />
+            <input type="hidden" name="opera" value="edit" />
+            <input type="hidden" name="id" value="{$material.mediaId}"/>
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        {/if}
+        {if $type eq 'voice'}
+        <form name="materialVoiceEditForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" value="{$material.name}" /><br />
+            <input type="hidden" name="type" value="{$material.type}" />
+            <input type="hidden" name="opera" value="edit" />
+            <input type="hidden" name="id" value="{$material.mediaId}"/>
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        {/if}
+        {if $type eq 'video'}
+        <form name="materialVideoEditForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" value="{$material.name}"  /><br />
+            标题：<input type="text" name="video_title" value="{$material.video_title}" /><br />
+            简介：<input type="text" name="introduction" value="{$material.introduction}" /><br />
+            <input type="hidden" name="type" value="{$material.type}" />
+            <input type="hidden" name="opera" value="edit" />
+            <input type="hidden" name="id" value="{$material.mediaId}"/>
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        {/if}
+        {if $type eq 'news'}
+            {if $material.multi eq 0}
+        <form name="materialNewsEidtForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" value="{$material.name}"/><br />
+            标题：<input type="text" name="title" value="{$materialNews.title}"/><br />
+            作者：<input type="text" name="author" value="{$materialNews.author}"/><br />
+            封面：<input type="button" id="select-image" value="{$materialNews.picUrl}"><br />
+            正文是否显示封面：<input type="checkbox" name="show_cover_pic" value="1" {if $materialNews.show_cover_pic eq 1}checked="checked"{/if}/><br />
+            摘要：<textarea name="digest">{$materialNews.digest}</textarea><br />
+            正文：<textarea name="content">{$materialNews.content}</textarea><br />
+            原文连接：<input type="text" name="content_source_url" value="{$materialNews.content_source_url}"/><br />
+            <input type="submit" name="提交" value="提交" />
+            <input type="hidden" name="multi" value="0" />
+            <input type="hidden" name="type" value="news" />
+            <input type="hidden" name="opera" value="edit" />
+            <input type="hidden" name="id" value="{$materialNews.mediaId}" />
+            <input type="hidden" name="picUrl" id="picUrl" value="{$materialNews.picUrl}"/>
+        </form>
+        <script type="text/javascript">
+            KindEditor.ready(function(K)
+            {
+                var editor1 = K.create("textarea[name='content']", {
+                    height: '300px',
+                    width: '100%',
+                    cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+                    uploadJson : '../plugins/kindeditor/upload_json.php',
+                    fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
+                    allowFileManager : true,
+                    afterCreate : function() {
+                        var self = this;
+                        K.ctrl(document, 13, function() {
+                            self.sync();
+                            K('form[name=materialNewsEditForm]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function() {
+                            self.sync();
+                            K('form[name=materialNewsEditForm]')[0].submit();
+                        });
+                    }
+                });
+                var editor = K.editor({
+                    allowFileManager : true,
+                    uploadJson : '../plugins/kindeditor/upload_json.php',
+                    fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+                });
+                K('#select-image').click(function() {
+                    editor.loadPlugin('image', function() {
+                        editor.plugin.imageDialog({
+                            imageUrl : '',
+                            clickFn : function(url, title, width, height, border, align) {
+                                K('#picUrl').val(url);
+                                K('#select-image').val(url);
+                                editor.hideDialog();
+                            }
+                        });
+                    });
+                });
+//    prettyPrint();
+            });
+        </script>
+            {else}
+        <button class="add-news">追加图文</button>
+        <form name="materialNewsEditForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" value="{$material.name}"/><br />
+            {$i = 0}
+            {foreach from=$materialNews item=news}
+            <hr/>
+            <div class="news" data-index="{$i}">
+                标题：<input type="text" name="title[]" value="{$news.title}"/><br />
+                作者：<input type="text" name="author[]" value="{$news.author}"/><br />
+                封面：<input type="button" id="select-image-{$i}" value="{$news.picUrl}"><br />
+                正文是否显示封面：<input type="checkbox" name="show_cover_pic[]" value="1" {if $news.show_cover_pic eq 1}checked="checked"{/if}/><br />
+                正文：<textarea name="content[]" id="content-{$i}">{$news.content}</textarea><br />
+                原文连接：<input type="text" name="content_source_url[]" value="{$news.content_source_url}"/><br />
+                <input type="hidden" name="picUrl[]" id="picUrl-{$i}" value="{$news.picUrl}"/>
+                <input type="hidden" name="newsId[]" value="{$news.id}"/>
+                <script type="text/javascript">
+                    KindEditor.ready(function(K)
+                    {
+                        var editor{$i} = K.create("#content-{$i}", {
+                            height: '300px',
+                            width: '100%',
+                            cssPath : '../plugins/kindeditor/plugins/code/prettify.css',
+                            uploadJson : '../plugins/kindeditor/upload_json.php',
+                            fileManagerJson : '../plugins/kindeditor/file_manager_json.php',
+                            allowFileManager : true,
+                            afterCreate : function() {
+                                var self = this;
+                                K.ctrl(document, 13, function() {
+                                    self.sync();
+                                    K('form[name=materialNewsEditForm]')[{$i}].submit();
+                                });
+                                K.ctrl(self.edit.doc, 13, function() {
+                                    self.sync();
+                                    K('form[name=materialNewsEditForm]')[{$i}].submit();
+                                });
+                            }
+                        });
+                        var editor = K.editor({
+                            allowFileManager : true,
+                            uploadJson : '../plugins/kindeditor/upload_json.php',
+                            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+                        });
+                        K('#select-image-{$i}').click(function() {
+                            editor.loadPlugin('image', function() {
+                                editor.plugin.imageDialog({
+                                    imageUrl : '',
+                                    clickFn : function(url, title, width, height, border, align) {
+                                        K('#picUrl-{$i}').val(url);
+                                        K('#select-image-{$i}').val(url);
+                                        editor.hideDialog();
+                                    }
+                                });
+                            });
+                        });
+                        //    prettyPrint();
+                    });
+                </script>
+            </div>
+            {$i = $i + 1}
+            {/foreach}
+            <div>
+                <input type="submit" name="提交" value="提交" />
+                <input type="hidden" name="multi" value="1" />
+                <input type="hidden" name="type" value="news" />
+                <input type="hidden" name="opera" value="edit" />
+                <input type="hidden" name="id" value="{$material.mediaId}" />
+            </div>
+        </form>
+            {/if}
+        {/if}
+    </div>
+    {/if}
+</div>
+{include file="foot.phtml"}
+</body>
+</html>

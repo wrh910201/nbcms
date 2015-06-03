@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
+<html>
+<head>
+    <title>全网合一管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/themes/default/default.css"/>
+    <link rel="stylesheet" type="text/css" href="js/plugins/code/prettify.css"/>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/kindeditor-min.js"></script>
+    <script type="text/javascript" src="js/lang/zh_CN.js"></script>
+    <script type="text/javascript" src="js/plugins/code/prettify.js"></script>
+
+
+</head>
+<body>
+{include file="head.phtml"}
+<div class="main clearfix">
+
+    {if $act eq 'list'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <a href="media.php?act=list&type=image">图片</a>&nbsp;&nbsp;
+        <a href="media.php?act=list&type=voice">语音</a>&nbsp;&nbsp;
+        <a href="media.php?act=list&type=video">视频</a>&nbsp;&nbsp;<br />
+        {if $type eq 'image'}
+        <table>
+            <th>素材名称</th>
+            <th>状态</th>
+            <th>过期时间</th>
+            <th>图片</th>
+            {foreach from=$mediaList item=media}
+            <tr>
+                <td>{$media.name}</td>
+                <td>{$media.status}</td>
+                <td>{$media.expiredTime}</td>
+                <td><img src="../../{$media.picUrl}" /></td>
+            </tr>
+            {/foreach}
+        </table>
+        {/if}
+        {if $type eq 'voice'}
+        <table>
+            <th>素材名称</th>
+            <th>状态</th>
+            <th>过期时间</th>
+            {foreach from=$mediaList item=media}
+            <tr>
+                <td>{$media.name}</td>
+                <td>{$media.status}</td>
+                <td>{$media.expiredTime}</td>
+            </tr>
+            {/foreach}
+        </table>
+        {/if}
+        {if $type eq 'video'}
+        <table>
+            <th>素材名称</th>
+            <th>状态</th>
+            <th>过期时间</th>
+            {foreach from=$mediaList item=media}
+            <tr>
+                <td>{$media.name}</td>
+                <td>{$media.status}</td>
+                <td>{$media.expiredTime}</td>
+            </tr>
+            {/foreach}
+        </table>
+        {/if}
+    </div>
+    {/if}
+    {if $act eq 'add'}
+    {include file="menu.phtml"}
+    <div class="content">
+        <a href="media.php?act=add&type=image">图片</a>&nbsp;&nbsp;
+        <a href="media.php?act=add&type=voice">语音</a>&nbsp;&nbsp;
+        <a href="media.php?act=add&type=video">视频</a>&nbsp;&nbsp;<br />
+        {if $type eq 'image'}
+        <form name="mediaImageAddForm" method="post">
+            素材名称：<input type="text" name="name" /><br />
+            图片文件：<input type="button" id="select-image" value="请选择图片"/>
+            <input type="hidden" name="picUrl" id="picUrl"/><br />
+            <input type="hidden" name="type" value="image" />
+            <input type="hidden" name="opera" value="add" />
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        <script type="text/javascript">
+            KindEditor.ready(function(K)
+            {
+                var editor = K.editor({
+                    allowFileManager : true,
+                    uploadJson : '../plugins/kindeditor/upload_json.php',
+                    fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+                });
+
+                K('#select-image').click(function() {
+                    editor.loadPlugin('image', function() {
+                        editor.plugin.imageDialog({
+                            imageUrl : '',
+                            clickFn : function(url, title, width, height, border, align) {
+                                K('#picUrl').val(url);
+                                K('#select-image').val(url);
+                                editor.hideDialog();
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+        {/if}
+        {if $type eq 'voice'}
+        <form name="mediaVoiceAddForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" /><br />
+            语音文件：<input type="file" name="voiceUrl" /><br />
+            <input type="hidden" name="type" value="voice" />
+            <input type="hidden" name="opera" value="add" />
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        {/if}
+        {if $type eq 'video'}
+        <form name="mediaVideoAddForm" enctype="multipart/form-data" method="post">
+            素材名称：<input type="text" name="name" /><br />
+            视频文件<input type="file" name="videoUrl" /><br />
+<!--            标题：<input type="text" name="video_title" value="" /><br />-->
+<!--            简介：<input type="text" name="introduction" value="" /><br />-->
+            <input type="hidden" name="type" value="video" />
+            <input type="hidden" name="opera" value="add" />
+            <input type="submit" name="提交" value="提交" />
+        </form>
+        {/if}
+    </div>
+    {/if}
+
+</div>
+{include file="foot.phtml"}
+</body>
+</html>
