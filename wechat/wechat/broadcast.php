@@ -75,6 +75,55 @@ if( 'add' == $opera ) {
             }
 
             break;
+        case 'image':
+            $mediaId = getPOST('mediaId');
+            $is_to_all = getPOST('is_to_all');
+            $groupId = getPOST('groupId');
+
+            //图片是否存在
+            $getNews = 'select mediaId from '.$db_prefix.'material where mediaId = \''.$mediaId.'\';';
+            $news = $db->fetchOne($getNews);
+            if( empty($news) ) {
+                showSystemMessage('图片不存在');
+            }
+
+            if( $is_to_all == 1 ) {
+                $groupId = -1;
+            } else {
+                $is_to_all = 0;
+                $groupId = intval($groupId);
+                $getGroup = 'select wechatId, count from '.$db_prefix.'group where wechatId = '.$groupId;
+                $group = $db->fetchRow($getGroup);
+                if( empty($group) ) {
+                    showSystemMessage('分组不存在');
+                }
+                if( $group['count'] <= 0 ) {
+                    showSystemMessage('该分组下无用户');
+                }
+            }
+            $data = array(
+                'filter' => array(
+                    'is_to_all' => ($is_to_all) == 1 ? true : false,
+                    'group_id' => $groupId,
+                ),
+                'image' => array(
+                    'media_id' => $mediaId,
+                ),
+                'msgtype' => 'image'
+            );
+            $data = json_encode($data);
+            $url = 'https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=';
+            $data = wechat_request($url, $data);
+            var_dump($data);
+            $addBroadcast = 'insert into '.$db_prefix.'broadcast (msg_id, is_to_all, group_id, msg_type, mediaId) values';
+            $addBroadcast .= ' (\''.$data->msg_id.'\', '.$is_to_all.','.$groupId.', \'image\', \''.$mediaId.'\');';
+            echo '<br />'.$addBroadcast;exit;
+            if( $db->insert($addBroadcast) ) {
+                showSystemMessage('群发成功');
+            } else {
+                showSystemMessage('群发失败');
+            }
+            break;
     }
 
 
@@ -106,7 +155,13 @@ if( 'add' == $act ) {
 
             break;
         case 'image':
+            $getImageList = 'select mediaId, name from '.$db_prefix.'material where type=\'image\'';
+            $imageList = $db->fetchAll($getImageList);
+            assign('imageList', $imageList);
 
+            $getGroupList = 'select wechatId, name from '.$db_prefix.'group where 1 order by wechatId asc';
+            $groupList = $db->fetchAll($getGroupList);
+            assign('groupList', $groupList);
             break;
         case 'voice':
 

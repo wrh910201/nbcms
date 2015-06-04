@@ -725,7 +725,7 @@ function wechat_request($url, $data, $errcode = true, $isMedia = false) {
             {
                 return $data;
             } else {
-//                var_dump($data);exit;
+                var_dump($data);exit;
                 $response['msg'] = $errors[$data->errcode];
             }
         } else {
